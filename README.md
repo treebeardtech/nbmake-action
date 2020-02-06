@@ -21,7 +21,7 @@ pip install -r requirements.txt
 jupyter notebook
 ```
 
-4. Set up treebeard (register for an account first)[treebeard.io]
+4. Set up treebeard ([register for an account first](treebeard.io))
 ```
 treebeard configure
 ```
