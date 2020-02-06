@@ -28,7 +28,7 @@ treebeard configure
 
 5. Schedule your notebook run
 ```
-treebeard deploy --daily
+treebeard run --daily
 ```
 
 6. Give it a sec - the outputs will appear on your admin page on your schedule!
