@@ -15,17 +15,13 @@ pip install -r requirements.txt
 
 3. _Optionally_ - run and edit the example notebook
 
-```
-jupyter notebook
-```
-
-4. Set up treebeard ([contact us for an API key](mailto:laurence@treebeard.io?subject=I%20would%20like%20an%20API%20key))
+4) Set up treebeard ([contact us for an API key](mailto:laurence@treebeard.io?subject=I%20would%20like%20an%20API%20key))
 
 ```
 treebeard configure
 ```
 
-5. Schedule your notebook run
+5. Deploy your notebook to our cloud and run on a schedule
 
 ```
 treebeard run --daily
