@@ -47,10 +47,10 @@ qtconsole==4.6.0
 requests==2.22.0
 Send2Trash==1.5.0
 six==1.14.0
-terminado==0.8.3
+terminado==0.8.2
 testpath==0.4.4
 tornado==6.0.3
-treebeard
+treebeard==0.0.25
 traitlets==4.3.3
 urllib3==1.25.8
 wcwidth==0.1.8
