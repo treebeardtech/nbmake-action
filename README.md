@@ -19,7 +19,7 @@ pip install -r requirements.txt
 jupyter notebook
 ```
 
-4. Set up treebeard ([contact us for an API key](mailto:laurence@treebeard.io))
+4. Set up treebeard ([contact us for an API key](mailto:laurence@treebeard.io?subject=I would like an API key))
 
 ```
 treebeard configure
@@ -36,4 +36,6 @@ treebeard run --daily
 ### Outputs
 
 Notebooks are rendered as HTML, they are not interactive.  
-Output notebooks are available at `https://treebeard.io/admin/<project_id>/<notebook>/<run_id>/ Notebook artifacts are available from links under Saved Items on the admin page. The artifact URL pattern is`https://URL/<project_id>/<notebook>/<run_id>/artifacts/filename`
+Output notebooks are available at `https://treebeard.io/admin/<project_id>/<notebook>/<run_id>/`  
+Notebook artifacts are available from links under Saved Items on the admin page.  
+The artifact URL pattern is`https://URL/<project_id>/<notebook>/<run_id>/artifacts/filename`
