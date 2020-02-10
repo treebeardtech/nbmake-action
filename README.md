@@ -1,10 +1,19 @@
 # Hello Treebeard!
 
-Treebeard allows very simple cloud deployment of jupyter notebooks from the command line. It expects a single notebook (for now) called `main.ipynb` and a requirements file. It sends your notebook to a cloud server, builds an image for it, and runs on a schedule you define. Tagged outputs (artifacts) from the notebook are made available for download.
+Treebeard allows simple cloud deployment for jupyter notebooks.
+Treebeard deploys your notebook to a cloud server, builds an image and runs on a schedule you define. Tagged outputs (artifacts) from the notebook are made available for download via an API. Every notebook run, build log and notebook output is stored and made accessible.
 
-Everything is immutable. Every notebook run, build log and notebook output is stored and made accessible.
+## Why?
+
+The main benefits are:
+
+1. **Automatic containerisation** -- just provide a notebook and requirements.txt/pipfile/environment.yml
+2. **Simple scheduling and logging** -- every time the notebook runs you can view the output notebook as html
+3. **Output artifact management** -- saved files are stored and served via an API to simplify consumption in a web front end or other applications
 
 ## Getting started
+
+The treebeard command line interface expects a single notebook (for now) called `main.ipynb` and a requirements file.
 
 1. Clone this repository and install requirements into your python environment, for example using pip or pipenv:
 
