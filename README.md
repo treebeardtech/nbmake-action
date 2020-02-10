@@ -19,7 +19,7 @@ pip install -r requirements.txt
 jupyter notebook
 ```
 
-4. Set up treebeard ([contact us for an API key]("mailto:laurence@treebeard.io?subject=I would like an API key"))
+4. Set up treebeard ([contact us for an API key](mailto:laurence@treebeard.io?subject=I%20would%20like%20an%20API%20key))
 
 ```
 treebeard configure
