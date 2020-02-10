@@ -1,7 +1,10 @@
 # Hello Treebeard!
 
 Treebeard allows simple cloud deployment for jupyter notebooks.
-Treebeard deploys your notebook to a cloud server, builds an image and runs on a schedule you define. Tagged outputs (artifacts) from the notebook are made available for download via an API. Every notebook run, build log and notebook output is stored and made accessible.
+
+Treebeard deploys your notebook to a cloud server, builds an image and runs on a schedule you define.  
+Tagged outputs (artifacts) from the notebook are made available for download via an API.  
+Every notebook run, build log and notebook output is stored and made accessible.
 
 ## Why?
 
