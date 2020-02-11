@@ -20,7 +20,20 @@ The main benefits are:
 
 Using a virtual environment is good practice to ensure project dependencies don't affect each other, and to avoid installing everything as modules with the system python.
 
-We like
+We like `pipenv` for managing virtual environments. Check [this guide](https://realpython.com/pipenv-guide/#pipenv-introduction), follow these steps, or do your own thing:
+
+```
+pip install pipenv
+pipenv shell
+pipenv install -r requirements
+```
+
+This will create a `Pipfile` which will list the project dependencies.  
+But now there is requirements.txt and a Pipfile... so go ahead and delete the requirements.txt file as it is no longer needed.
+
+If you want to install more dependencies, you can do it on the command line in the pipenv shell, or in a notebook created from the pipenv shell. The command in a jupyter cell is `!pipenv install <my requirement>`, the `!` allows execution of shell commands.
+
+**_As long as there is some kind of dependency file at the project root - requirements.txt, Pipfile, or environment.yml - treebeard can complete the cloud build_**
 
 ### Deploying notebooks
 
