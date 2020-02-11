@@ -16,24 +16,8 @@ The main benefits are:
 
 ## Getting started
 
-### Setup a virtual environment
-
-Using a virtual environment is good practice to ensure project dependencies don't affect each other, and to avoid installing everything as modules with the system python.
-
-We like `pipenv` for managing virtual environments. Check [this guide](https://realpython.com/pipenv-guide/#pipenv-introduction), follow these steps, or do your own thing:
-
-```
-pip install pipenv
-pipenv shell
-pipenv install -r requirements
-```
-
-This will create a `Pipfile` which will list the project dependencies.  
-But now there is requirements.txt and a Pipfile... so go ahead and delete the requirements.txt file as it is no longer needed.
-
-If you want to install more dependencies, you can do it on the command line in the pipenv shell, or in a notebook created from the pipenv shell. The command in a jupyter cell is `!pipenv install <my requirement>`, the `!` allows execution of shell commands.
-
-**_As long as there is some kind of dependency file at the project root - requirements.txt, Pipfile, or environment.yml - treebeard can complete the cloud build_**
+We recommend working in a virtual python environment - see below for steps to do this.  
+Treebeard requires some kind of dependency file at the project root - `requirements.txt`, `Pipfile`, or `environment.yml` - to complete the cloud build.
 
 ### Deploying notebooks
 
@@ -84,3 +68,22 @@ The artifact URL pattern is`https://URL/<project_id>/<notebook>/<run_id>/artifac
 ### Options and arguments
 
 If you have a virtual environment folder in the directory, you should ignore it, using `--ignore <my_env_directory>`.
+
+### Setup a virtual environment
+
+Using a virtual environment is good practice to ensure project dependencies don't affect each other, and to avoid installing everything as modules with the system python.
+
+We like `pipenv` for managing virtual environments. Check [this guide](https://realpython.com/pipenv-guide/#pipenv-introduction), follow these steps, or do your own thing:
+
+```
+pip install pipenv
+pipenv shell
+pipenv install -r requirements
+```
+
+This will create a `Pipfile` which will list the project dependencies.  
+But now there is requirements.txt and a Pipfile... so go ahead and delete the requirements.txt file as it is no longer needed.
+
+If you want to install more dependencies, you can do it on the command line in the pipenv shell, or in a notebook created from the pipenv shell. The command in a jupyter cell is `!pipenv install <my requirement>`, the `!` allows execution of shell commands.
+
+**_As long as there is some kind of dependency file at the project root - requirements.txt, Pipfile, or environment.yml - treebeard can complete the cloud build_**
