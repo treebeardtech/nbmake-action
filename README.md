@@ -55,6 +55,11 @@ From step 6, if the run job is accepted, `treebeard` will create a link to an ad
 The current build status, build logs and any output artifacts can be found on this page.
 
 Example admin view:
+![admin view(https://storage.googleapis.com/treebeard_image_dump_public/admin_view.png)
+
+### Checking historical jobs
+
+`treebeard status` will show all historical notebook runs.
 
 ### Output
 

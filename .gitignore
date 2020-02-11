@@ -131,3 +131,4 @@ dmypy.json
 output/*
 .vscode
 .treebeard
+.DS_store
