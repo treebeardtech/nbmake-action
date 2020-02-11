@@ -16,9 +16,17 @@ The main benefits are:
 
 ## Getting started
 
+### Setup a virtual environment
+
+Using a virtual environment is good practice to ensure project dependencies don't affect each other, and to avoid installing everything as modules with the system python.
+
+We like
+
+### Deploying notebooks
+
 The treebeard command line interface expects a single notebook (for now) called `main.ipynb` and a requirements file.
 
-1. Clone this repository and install requirements into your python environment, for example using pip or pipenv:
+1. Clone this repository and install requirements into your python virtual environment, for example using pip or pipenv:
 
 ```
 git clone https://github.com/treebeardtech/hello_treebeard.git && cd hello_treebeard
@@ -40,6 +48,13 @@ treebeard run --daily
 ```
 
 6. Outputs (anything saved in the `output` directory) will shortly appear on the admin page at the link given by the CLI
+
+### Viewing deployments
+
+From step 6, if the run job is accepted, `treebeard` will create a link to an admin dashboard where a html version of the notebook will be created from the cloud run.  
+The current build status, build logs and any output artifacts can be found on this page.
+
+Example admin view:
 
 ### Output
 

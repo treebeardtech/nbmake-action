@@ -1,7 +1,6 @@
 jupyter
 treebeard
 requests
-json
 pandas
 numpy
 matplotlib
