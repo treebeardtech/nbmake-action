@@ -5,4 +5,3 @@ pandas
 numpy
 matplotlib
 seaborn
-treebeard
