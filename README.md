@@ -3,7 +3,7 @@
 Treebeard allows simple cloud deployment for jupyter notebooks.
 
 Treebeard deploys your notebook to a cloud server, builds an image and runs on a schedule you define.  
-Tagged outputs (artifacts) from the notebook are made available for download via an API.  
+Tagged output (artifacts) from the notebook are made available for download via an API.  
 Every notebook run, build log and notebook output is stored and made accessible.
 
 ## Why?
@@ -25,7 +25,7 @@ git clone https://github.com/treebeardtech/hello_treebeard.git && cd hello_treeb
 pip install -r requirements.txt
 ```
 
-3. _Optionally_ - run and edit the example notebook
+3. _Optionally_ - run and edit the example notebook. Any output that should be available on the cloud should be saved in a directory named `output`.
 
 4) Set up treebeard ([contact us for an API key](mailto:laurence@treebeard.io?subject=I%20would%20like%20an%20API%20key))
 
@@ -39,11 +39,15 @@ treebeard configure
 treebeard run --daily
 ```
 
-6. Outputs will shortly appear on the admin page at the link given by the CLI
+6. Outputs (anything saved in the `output` directory) will shortly appear on the admin page at the link given by the CLI
 
-### Outputs
+### Output
 
 Notebooks are rendered as HTML, they are not interactive.  
 Output notebooks are available at `https://treebeard.io/admin/<project_id>/<notebook>/<run_id>/`  
 Notebook artifacts are available from links under Saved Items on the admin page.  
 The artifact URL pattern is`https://URL/<project_id>/<notebook>/<run_id>/artifacts/filename`
+
+### Options and arguments
+
+If you have a virtual environment folder in the directory, you should ignore it, using `--ignore <my_env_directory>`.
