@@ -1,4 +1,4 @@
-name: Python application
+name: Run on Treebeard
 
 on: [push]
 
@@ -24,6 +24,4 @@ jobs:
           treebeard_api_key = ${{ secrets.TREEBEARD_API_KEY }}" >> ~/.treebeard
       - name: Test
         run: |
-          cd examples
-          cd example
           treebeard run --watch
