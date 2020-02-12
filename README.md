@@ -1,5 +1,7 @@
 # Hello Treebeard!
 
+![Run on Treebeard](https://github.com/treebeardtech/hello_treebeard/workflows/Run%20on%20Treebeard/badge.svg?event=push)
+
 Treebeard allows simple cloud deployment for jupyter notebooks.
 
 Treebeard deploys your notebook to a cloud server, builds an image and runs on a schedule you define.  
