@@ -89,3 +89,5 @@ But now there is requirements.txt and a Pipfile... so go ahead and delete the re
 If you want to install more dependencies, you can do it on the command line in the pipenv shell, or in a notebook created from the pipenv shell. The command in a jupyter cell is `!pipenv install <my requirement>`, the `!` allows execution of shell commands.
 
 **_As long as there is some kind of dependency file at the project root - requirements.txt, Pipfile, or environment.yml - treebeard can complete the cloud build_**
+
+Enjoy.
