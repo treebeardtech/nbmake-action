@@ -71,6 +71,8 @@ The artifact URL pattern is`https://URL/<project_id>/<notebook>/<run_id>/artifac
 
 If you have a virtual environment folder in the directory, you should ignore it, using `--ignore <my_env_directory>`.
 
+If you would like the command line to wait for the run to complete, returning the status use `--watch`
+
 ### Setup a virtual environment
 
 Using a virtual environment is good practice to ensure project dependencies don't affect each other, and to avoid installing everything as modules with the system python.
