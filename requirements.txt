@@ -1,5 +1,5 @@
 jupyter
-treebeard>=0.0.46
+treebeard==0.0.52
 requests
 pandas
 numpy
