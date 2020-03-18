@@ -5,8 +5,12 @@
    :hidden:
 
    Home <https://treebeard.readthedocs.io/>
-   features
+   project_config
+   running
+   outputs
    external_integrations
+   secrets
+   cli
    faq
 
 .. toctree::
@@ -24,7 +28,9 @@ Treebeard is an open source library which reproduces Python data science work in
 
 The goal is to allow data scientists to set up continuous integration with minimal changes to their project.
 
-Treebeard works by adding a config file in the same directory as your `requirements.txt`, `Pipfile`, or `environment.yml` like so:
+Treebeard works by adding the `treebeard` pip package to your `requirements.txt`, `Pipfile`, or `environment.yml`.
+
+Then placing a `treebeard.yaml` file in the same directory like so:
 
 ```yaml
 # treebeard.yaml
@@ -37,7 +43,7 @@ then running `treebeard run`.
 
 We host back-end infrastructure for running your notebook in the cloud, and serving output data.
 
-![Treebeard Admin Page Screenshot](https://treebeard.io/static/slack_integration-ba8ff89332c2e14c928973a841842e5b.png "Logo Title Text 1")
+![Treebeard Admin Page Screenshot](https://treebeard.io/static/slack_integration-ba8ff89332c2e14c928973a841842e5b.png)
 
 ## Install Treebeard
 
@@ -58,7 +64,10 @@ Authenticate your CLI with our backend infrastructure using an API key. If we ha
 
 ```bash
 ➜ treebeard configure --email test@example.com --key xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+🔑  Config saved in /Users/project_user/.treebeard
 ```
+
+You will then need to verify your email address.
 
 Clone our git repo to try the examples
 
