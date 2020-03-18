@@ -5,3 +5,5 @@ pandas
 numpy
 matplotlib
 seaborn
+sphinx_rtd_theme
+recommonmark
