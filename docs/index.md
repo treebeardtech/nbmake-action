@@ -9,8 +9,9 @@
    running
    outputs
    external_integrations
-   secrets
+   integrate_your_infra
    cli
+   on_prem
    faq
 
 .. toctree::

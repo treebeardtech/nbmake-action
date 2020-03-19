@@ -8,10 +8,16 @@ You can install our [Github App](https://github.com/marketplace/treebeard-build)
 
 Treebeard will set your commit status depenending on the output of your build, and you can use this to prevent merging to master from a broken branch.
 
-TODO screenshot of github check passing
+![Github Check Screenshot](https://storage.googleapis.com/treebeard_image_dump_public/github_check.png)
 
 ## Slack
 
 Slack users can enable notifications for results. Install this from the settings menu in the web page when viewing your build.
 
 ![Treebeard Admin Page Screenshot](https://treebeard.io/static/slack_integration-ba8ff89332c2e14c928973a841842e5b.png)
+
+You will then be prompted to select a channel and will receive a notification to confirm setup.
+
+## Disintegrating
+
+Both Github and Slack integrations can be removed via your Slack workspace and Github account settings.
