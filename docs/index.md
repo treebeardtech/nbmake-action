@@ -91,8 +91,17 @@ Clone our git repo to try the examples
 ✨  Run has been accepted! https://treebeard.io/admin/b44c784b10/treebeard_example_2/cf7a1475-6105-42b6-abeb-ba71420c6a55
 
 # get the latest outputs
-➜ curl -o my_data.csv \
-https://api.treebeard.io/63db2b28e1/example/latest/output/my_data.csv\?api_key\=xxxxxxxxxx
+
+# what's my API key?
+➜ cat ~/.treebeard
+[credentials]
+treebeard_email = laurence@treebeard.io
+treebeard_project_id = xxxxxx
+treebeard_api_key = xxxxxxxxx
+
+➜ curl -o my_data.json \
+https://api.treebeard.io/b44c784b10/treebeard_example_2/latest/output/my_data.json?api_key=xxxxxxxxxx
+{"mydata": "goes_here"}
 ```
 
 The entry example shows the basic capabilities of the cloud build service.  
