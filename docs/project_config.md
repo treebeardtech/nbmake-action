@@ -1,5 +1,7 @@
 # Configuring your project
 
+Note: Whichever form of dependency management you use, you will need to include `treebeard` as a dependency.
+
 Treebeard requires the directory which it is run in to contain:
 
 1. Some type of dependencies file (requirements.txt, Pipfile, or environment.yml)
@@ -60,3 +62,7 @@ Depending on your use case, you can use a minimal config file e.g.
 # treebeard.yaml
 notebook: run.ipynb
 ```
+
+## Advanced: Repo2Docker Configuration
+
+Treebeard is built on top of repo2docker, a great open source project which determines how to install your dependencies. If you need custom packages (usually installed via `apt-get install ...` ) then you can supply the config files such as _apt.txt_ which they accept and are listed in their [docs](https://repo2docker.readthedocs.io/en/latest/config_files.html).
