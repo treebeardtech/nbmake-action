@@ -1,7 +1,7 @@
 # Command-line interface
 
 ```eval_rst
-.. click:: treebeard.treebeard:cli
-   :prog: treebeard.treebeard
+.. click:: treebeard:cli
+   :prog: treebeard
    :show-nested:
 ```

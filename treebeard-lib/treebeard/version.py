@@ -1,5 +1,5 @@
 def get_version():
-    return "0.0.58"
+    return "0.0.59"
 
 
 # For spaceship prompt

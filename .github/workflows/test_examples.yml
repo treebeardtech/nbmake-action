@@ -3,7 +3,7 @@ name: Test Examples
 on: [push]
 
 jobs:
-  pipenv:
+  reddit_tracker:
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
@@ -23,7 +23,7 @@ jobs:
           cat ~/.treebeard
       - name: Test
         run: |
-          cd examples/pipenv
+          cd examples/reddit_tracker
           treebeard run --watch
 
   conda:

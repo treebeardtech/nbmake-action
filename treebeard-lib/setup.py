@@ -42,7 +42,7 @@ setuptools.setup(
     package_data={"treebeard": ["deploy/*", "treebeard"]},
     entry_points={
         "console_scripts": [
-            "treebeard = treebeard.treebeard:cli",
+            "treebeard = treebeard:cli",
             "treebeard-spaceship = treebeard.version:cli",
         ]
     },

@@ -81,7 +81,7 @@ def validate_notebook_directory(
 
     if not os.path.exists(treebeard_config.notebook):
         fatal_exit(
-            f"Cannot run non-existent notebook '{treebeard_config.notebook}', are you missing a treebeard.yaml file?"
+            f"Cannot run non-existent notebook '{treebeard_config.notebook}', you should be in a project directory with a treebeard.yaml file"
         )
 
 
