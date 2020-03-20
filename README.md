@@ -4,7 +4,7 @@ Treebeard is an open source library which reproduces Python data science work in
 
 The goal is to allow data scientists to set up continuous integration with minimal changes to their project.
 
-Interested in trying it out? Read the [docs](https://treebeard.readthedocs.io/en/latest/).
+Read the [docs](https://treebeard.readthedocs.io/en/latest/) to get started.
 
 ![admin view](https://storage.googleapis.com/treebeard_image_dump_public/admin_view.png "Admin view")
 
