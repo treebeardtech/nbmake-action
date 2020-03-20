@@ -25,7 +25,7 @@
 
 # 🌲 Welcome to Treebeard
 
-Treebeard is an open source library which reproduces Python data science work in the cloud, natively supporting Jupyter Notebooks.
+Treebeard is a library which reproduces Python data science work in the cloud, natively supporting Jupyter Notebooks.
 
 The goal is to allow data scientists to set up continuous integration with minimal changes to their project.
 
