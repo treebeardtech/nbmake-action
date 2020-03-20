@@ -15,6 +15,8 @@ pushd "$dir_name"
 . venv/bin/activate
 api_key=$(treebeard config get api_key)
 treebeard run --ignore venv --watch
+
+treebeard run --ignore venv --local
 treebeard status
 
 # check notebook has been stored
