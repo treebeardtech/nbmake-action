@@ -44,7 +44,7 @@ then running `treebeard run`.
 
 We host back-end infrastructure for running your notebook in the cloud, and serving output data.
 
-![Treebeard Admin Page Screenshot](https://treebeard.io/static/slack_integration-ba8ff89332c2e14c928973a841842e5b.png)
+![](https://treebeard.io/static/slack_integration-ba8ff89332c2e14c928973a841842e5b.png)
 
 ## Install Treebeard
 
@@ -61,10 +61,10 @@ pip 20.0.2 from /Users/.../python3.7/site-packages/pip (python 3.7)
 
 ## Get started
 
-Authenticate your CLI with our backend infrastructure using an API key. If we have not given you one, contact [alex@treebeard.io](mailto:alex@treebeard.io).
+Authenticate your CLI with our backend infrastructure using your email address.
 
 ```bash
-➜ treebeard configure --email test@example.com --key xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+➜ treebeard configure --email test@example.com
 🔑  Config saved in /Users/project_user/.treebeard
 ```
 

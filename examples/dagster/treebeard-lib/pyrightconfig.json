@@ -1,9 +1,0 @@
-{
-  "include": ["."],
-  "strict": ["."],
-  "reportUnusedImport": true,
-  "pythonVersion": "3.7",
-  "typeshedPath": "../typeshed",
-  "typingsPath": "../typestubs",
-  "enableTypeIgnoreComments": true
-}
