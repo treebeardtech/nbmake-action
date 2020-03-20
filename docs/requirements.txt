@@ -1,4 +1,4 @@
-treebeard
+treebeard>=0.0.59
 sphinx_rtd_theme
 recommonmark
 sphinx-click
