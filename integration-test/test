@@ -1,0 +1,23 @@
+#!/bin/bash
+set -euo pipefail
+set -x
+
+# ensure we are in the script dir
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+pushd "$DIR"
+
+dir_name="testrepo-$(date +%s)" # notebook_id will be the dir_name
+
+./install_hello_repo "$dir_name"
+
+pushd "$dir_name"
+# shellcheck disable=SC1091
+. venv/bin/activate
+api_key=$(treebeard config get api_key)
+treebeard run --ignore venv --watch
+treebeard status
+
+# check notebook has been stored
+wget "https://file-access-cvee2224cq-ew.a.run.app/d8a0c5b6c9/${dir_name}/latest/out.html?api_key=${api_key}"
+
+treebeard cancel # won't do anything, but should succeed

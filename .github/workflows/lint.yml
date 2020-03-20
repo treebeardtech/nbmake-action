@@ -14,8 +14,6 @@ jobs:
       - run: python3.7 -m pip install --pre black isort
       - run: npm install --global pyright
       - run: python3.7 -m isort --version # disabling isort until https://github.com/timothycrosley/isort/issues/1147
-      - run: cd scheduler && pyright && python3.7 -m black --check . # && python3.7 -m isort -m 3 -tc --check-only
       - run: cd treebeard-lib && pyright && python3.7 -m black --check . # && python3.7 -m isort -m 3 -tc --check-only
-      - run: cd file-access && pyright && python3.7 -m black --check . # && python3.7 -m isort -m 3 -tc --check-only
         env:
           CI: true
