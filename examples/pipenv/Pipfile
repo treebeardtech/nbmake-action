@@ -1,0 +1,26 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+
+[packages]
+spacy = "*"
+nltk = "*"
+pandas = "*"
+praw = "*"
+pprint = "*"
+seaborn = "*"
+matplotlib = "*"
+jupyter = "*"
+en_core_web_sm = {file = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz"}
+plotly = "*"
+treebeard = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

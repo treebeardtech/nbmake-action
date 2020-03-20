@@ -1,0 +1,2 @@
+#!/bin/bash
+conda install -c plotly plotly-orca psutil

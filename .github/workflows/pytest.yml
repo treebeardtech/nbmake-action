@@ -1,0 +1,20 @@
+name: Pytest
+on: [push]
+
+jobs:
+  pytest:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip pipenv
+          pushd ./treebeard-lib
+          pipenv install --dev --system --deploy
+
+          pytest

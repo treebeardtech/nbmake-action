@@ -1,0 +1,7 @@
+notebook: main.ipynb
+output_dirs:
+  - output
+ignore:
+  - .ipynb_checkpoints
+  - secrets.json
+  - .git
