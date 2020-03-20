@@ -2,9 +2,23 @@
 
 ## Why run my project in the cloud?
 
-1. **Collaboration**: To share the output of your work with others
-2. **Reproducibility**: So you never have to say 'works on my machine' again
-3. **Automation**: The cloud is better than your laptop for long or critical tasks
+**Collaboration**:
+
+- Share the output of your work with others
+- Consume pipeline outputs in other services
+- Work on multiple parts of a pipeline with confidence
+
+**Reproducibility**:
+
+- So you never have to say 'works on my machine' again
+- Catch breaking changes across your whole pipeline
+- Get rapid feedback as your project progresses
+
+**Automation**:
+
+- The cloud is better than your laptop for long or critical tasks
+- Get notifications via messages and develop asynchronously
+- Peace of mind as breaking changes are caught automatically
 
 ## How much does Treebeard cost?
 

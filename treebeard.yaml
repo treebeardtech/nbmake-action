@@ -1,0 +1,11 @@
+ignore:
+  - docs
+  - examples
+  - integration-test
+  - treebeard-lib
+  - typestubs
+  - .git
+  - .github
+  - .vscode
+  - .ipynb_checkpoints
+notebook: main.ipynb

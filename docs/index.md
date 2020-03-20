@@ -74,10 +74,26 @@ Clone our git repo to try the examples
 
 ```bash
 ➜ git clone https://github.com/treebeardtech/treebeard.git
-TODO cd examples, run, admin page, pull down file
 ```
 
 ### Running your first example
+
+```bash
+➜ cd treebeard/examples/hello_treebeard
+➜ jupyter notebook
+...
+
+➜ treebeard run --daily
+⠙ 🌲  Compressing repo
+  Including main.ipynb
+  Including requirements.txt
+  Including treebeard.yaml
+✨  Run has been accepted! https://treebeard.io/admin/b44c784b10/treebeard_example_2/cf7a1475-6105-42b6-abeb-ba71420c6a55
+
+# get the latest outputs
+➜ curl -o my_data.csv \
+https://api.treebeard.io/63db2b28e1/example/latest/output/my_data.csv\?api_key\=xxxxxxxxxx
+```
 
 The entry example shows the basic capabilities of the cloud build service.  
 The notebook uses some cloud credentials to call an API, saves an image to an output directory, and calls a separate python script.
