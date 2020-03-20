@@ -1,0 +1,7 @@
+treebeard
+jupyter
+requests
+pandas
+numpy
+matplotlib
+seaborn
