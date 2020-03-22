@@ -132,3 +132,5 @@ output/*
 .vscode
 .treebeard
 .DS_store
+
+typeshed
