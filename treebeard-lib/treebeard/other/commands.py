@@ -30,8 +30,14 @@ def configure(email: str):
     """Register with Treebeard services"""
     key = str(uuid.uuid4())
     project_id = set_credentials(email, key, signup_endpoint)
-    webbrowser.open_new_tab(
-        f"{treebeard_web_url}/cli_signup?email={email}&api_key={key}&project_id={project_id}"
+    web_signup_url = f"{treebeard_web_url}/cli_signup?email={email}&api_key={key}&project_id={project_id}"
+    webbrowser.open_new_tab(web_signup_url)
+
+    click.echo(
+        click.style(
+            f"Please ensure you complete web signup at {web_signup_url} before continuing!",
+            fg="red",
+        )
     )
 
 

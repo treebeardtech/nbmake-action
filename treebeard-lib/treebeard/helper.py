@@ -13,13 +13,10 @@ from treebeard.version import get_version
 
 def set_credentials(email: str, key: str, signup_endpoint: str):
     """Create user credentials"""
-    # key = secrets.token_urlsafe(16)
     config = configparser.RawConfigParser()
     config.add_section("credentials")
     config.set("credentials", "TREEBEARD_EMAIL", email)
-    # Project id is last 10 numbers of hash of email
 
-    click.echo(signup_endpoint)
     response = requests.post(signup_endpoint, headers={"api_key": key, "email": email},)
 
     if response.status_code != 200:
@@ -60,10 +57,12 @@ def check_for_updates():
 
 
 def get_service_status_message(service_status_url: str) -> Optional[str]:
-    data = json.loads(requests.get(service_status_url).text)
-    if "message" in data:
-        return data["message"]
-    return None
+    try:
+        data = json.loads(requests.get(service_status_url).text)
+        if "message" in data:
+            return data["message"]
+    except:  # Non-200 status/timeout, etc.
+        return None
 
 
 class CliContext(BaseModel):
