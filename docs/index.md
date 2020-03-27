@@ -54,7 +54,7 @@ We host back-end infrastructure for running your notebook in the cloud, and serv
 
 ## Install Treebeard
 
-Treebeard is available via pip. Please note only Python 3 is supported.
+Treebeard is available via pip. Please note only Python 3.6 or higher is supported.
 
 ```bash
 ➜ pip --version
@@ -114,7 +114,7 @@ The entry example shows the basic capabilities of the cloud build service.
 The notebook uses some cloud credentials to call an API, saves an image to an output directory, and calls a separate python script.
 `cd examples/hello_treebeard`
 
-We recommend working in a python virtual environment. Ensure your python 3 environment has jupyter and treebeard installed, and then start jupyter in the project directory.
+We recommend working in a python virtual environment. Ensure your python (3.6 or higher) environment has jupyter and treebeard installed, and then start jupyter in the project directory.
 `jupyter notebook`
 
 Open `main.ipynb` and check out the examples. When you're ready, return to the command line and instruct treebeard to build the project on the cloud with:

@@ -18,6 +18,8 @@ Read the [docs](https://treebeard.readthedocs.io/en/latest/) to get started.
 
 We want this library to be useful with existing services so it hooks into our minimal backend which runs the notebooks and talks to Slack and Github free of charge.
 
+Our runtime provides 24 hours of free usage per month for open source projects.
+
 Our docs describe how to check your repository for errors and produce notebook outputs when you push.
 
 ![Github Check](https://storage.googleapis.com/treebeard_image_dump_public/github_check.png "Github Check")

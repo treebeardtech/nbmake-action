@@ -22,11 +22,7 @@
 
 ## How much does Treebeard cost?
 
-Treebeard is free to use and most of it is open source (we're working on opening up the rest). View the code at [https://github.com/treebeardtech/treebeard](https://github.com/treebeardtech/treebeard)
-
-## How do you make money if Treebeard is free?
-
-Whilst we have free basic infrastructure available for running small projects, adding paid services may help companies get the most out of Treebeard in future. There will always be a free version available to the open source community.
+Treebeard is free to use for open source projects (up to 24h build time per month) and most of our code is open source (we're working on opening up the rest). View the code at [https://github.com/treebeardtech/treebeard](https://github.com/treebeardtech/treebeard)
 
 ## What does Treebeard do with my data?
 
