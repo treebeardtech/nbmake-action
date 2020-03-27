@@ -1,5 +1,9 @@
 # Welcome to Treebeard 🌲
 
+[![PyPI version](https://badge.fury.io/py/treebeard.svg)](https://badge.fury.io/py/treebeard)
+![Test Examples](https://github.com/treebeardtech/treebeard/workflows/Test%20Examples/badge.svg)
+![End to End Test](https://github.com/treebeardtech/treebeard/workflows/End%20to%20End%20Test/badge.svg)
+
 Treebeard is a library which reproduces Python data science work in the cloud, natively supporting Jupyter Notebooks.
 
 Treebeard allows you to do the following without bash scripts:
