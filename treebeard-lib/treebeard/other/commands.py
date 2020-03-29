@@ -12,7 +12,7 @@ from timeago import format as timeago_format  # type: ignore
 
 from treebeard.conf import signup_endpoint, treebeard_env, treebeard_web_url
 from treebeard.helper import set_credentials
-from version import get_version
+from treebeard.version import get_version
 
 pp = pprint.PrettyPrinter(indent=2)
 

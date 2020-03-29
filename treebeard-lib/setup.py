@@ -1,7 +1,5 @@
 import setuptools  # type: ignore
 
-from version import get_version
-
 install_requires = [
     "click",
     "halo",
@@ -24,9 +22,12 @@ install_requires = [
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+with open("treebeard/version.txt", "r") as fh:
+    version = fh.read()
+
 setuptools.setup(
     name="treebeard",
-    version=get_version(),
+    version=version,
     author="Treebeard Technologies",
     author_email="alex@treebeard.io",
     description="Tools for notebook hosting",
@@ -39,7 +40,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
-    package_data={"treebeard": ["treebeard"]},
+    package_data={"treebeard": ["version.txt"]},
     entry_points={
         "console_scripts": [
             "treebeard = treebeard:cli",

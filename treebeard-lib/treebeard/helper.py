@@ -8,7 +8,9 @@ import requests
 from pydantic import BaseModel
 
 from treebeard.conf import config_path
-from version import get_version
+from treebeard.version import get_version
+
+version = get_version()
 
 
 def set_credentials(email: str, key: str, signup_endpoint: str):
@@ -41,8 +43,6 @@ def set_credentials(email: str, key: str, signup_endpoint: str):
 
 
 def check_for_updates():
-    version = get_version()
-
     pypi_data = requests.get("https://pypi.org/pypi/treebeard/json")
     latest_version = json.loads(pypi_data.text)["info"]["version"]
 
