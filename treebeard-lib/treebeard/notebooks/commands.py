@@ -133,16 +133,18 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
         secrets_archive = get_secrets_archive()
         repo_url = f"file://{src_archive.name}"
         secrets_url = f"file://{secrets_archive.name}"
-        run_repo(
-            str(project_id),
-            str(notebook_id),
-            treebeard_env.run_id,
-            build_tag,
-            repo_url,
-            secrets_url,
-            local=True,
-        )
-        sys.exit(0)
+        try:
+            run_repo(
+                str(project_id),
+                str(notebook_id),
+                treebeard_env.run_id,
+                build_tag,
+                repo_url,
+                secrets_url,
+                local=True,
+            )
+        finally:
+            sys.exit(0)
 
     spinner.text = "🌲  submitting notebook to runner\n"
     response = requests.post(

@@ -1,10 +1,8 @@
 import os
 import pprint
 import subprocess
-import threading
 from shutil import move
-from typing import Callable
-
+from traceback import format_exc
 import papermill as pm  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
@@ -15,24 +13,6 @@ pp = pprint.PrettyPrinter(indent=2)
 bucket_name = "treebeard-notebook-outputs"
 global cancelled
 cancelled = False
-
-
-def set_interval(func: Callable, sec: int):
-    def func_wrapper():
-        if cancelled:
-            return
-        func()
-        set_interval(func, sec)
-
-    t = threading.Timer(sec, func_wrapper)
-    t.start()
-    return t
-
-
-def cancel_interval():
-    log("Cancelling Interval")
-    global cancelled
-    cancelled = True
 
 
 def save_artifacts():
@@ -72,11 +52,12 @@ def run(project_id: str, notebook_id: str, run_id: str):
     for output_dir in treebeard_config.output_dirs:
         os.makedirs(output_dir, exist_ok=True)
 
-    set_interval(save_artifacts, 10)
-
     failed_notebooks = []
 
-    for notebook_path in treebeard_config.deglobbed_notebooks:
+    for i, notebook_path in enumerate(treebeard_config.deglobbed_notebooks):
+        print(
+            f"Running {i}/{len(treebeard_config.deglobbed_notebooks)}: {notebook_path}"
+        )
         try:
             notebook_dir, notebook_name = os.path.split(notebook_path)
             log(f"Executing Notebook {notebook_name} in {notebook_dir}")
@@ -90,12 +71,11 @@ def run(project_id: str, notebook_id: str, run_id: str):
                 log_output=True,
                 cwd=f"{os.getcwd()}/{notebook_dir}",
             )
-        except Exception as ex:
+        except Exception:
             failed_notebooks.append(notebook_path)
-            print(f"Run failed!")
-            raise ex
+            tb = format_exc()
+            print(f"Notebook {notebook_path} failed!\n{tb}")
 
-    cancel_interval()
     save_artifacts()
     log("Finished")
 
