@@ -9,6 +9,7 @@ pushd "$DIR"
 
 rm -rf /tmp/local_install_test
 mkdir /tmp/local_install_test
+pip install virtualenv
 virtualenv /tmp/local_install_test/venv
 
 # shellcheck disable=SC1091
