@@ -1,3 +1,4 @@
-notebook: main.ipynb
+notebook:
+  - main.ipynb
 output_dirs:
-- output
+  - output

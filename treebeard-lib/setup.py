@@ -1,6 +1,6 @@
 import setuptools  # type: ignore
 
-from treebeard.version import get_version
+from version import get_version
 
 install_requires = [
     "click",
@@ -39,7 +39,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
-    package_data={"treebeard": ["deploy/*", "treebeard"]},
+    package_data={"treebeard": ["treebeard"]},
     entry_points={
         "console_scripts": [
             "treebeard = treebeard:cli",

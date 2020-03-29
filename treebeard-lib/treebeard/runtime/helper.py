@@ -14,7 +14,7 @@ def log(message: str):
     print(f'{datetime.now().strftime("%H:%M:%S")}: {message}')
 
 
-def upload_artifact(upload_path: str, filename: str):
+def upload_artifact(filename: str, upload_path: str):
     log(f"Saving {filename} to {upload_path}")
     content_type: str = mime.from_file(filename)
     with open(filename, "rb") as data:

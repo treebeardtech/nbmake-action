@@ -25,7 +25,8 @@ drwxr-xr-x  6 project_user  staff   192B 12 Mar 14:06 venv
 
 ```yaml
 # treebeard.yaml
-notebook: run.ipynb
+notebooks:
+  - run.ipynb
 ignore:
   - venv
   - .vscode
@@ -60,7 +61,8 @@ Depending on your use case, you can use a minimal config file e.g.
 
 ```yaml
 # treebeard.yaml
-notebook: run.ipynb
+notebooks:
+  - run.ipynb
 ```
 
 ## Advanced: Repo2Docker Configuration

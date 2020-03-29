@@ -1,1 +1,5 @@
-notebook: main.ipynb
+notebooks:
+  - "*.ipynb"
+  - "subdir/*.ipynb"
+ignore:
+  - venv

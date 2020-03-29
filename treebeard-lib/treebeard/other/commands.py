@@ -1,3 +1,5 @@
+import pprint
+import uuid
 import warnings
 import webbrowser
 from typing import List
@@ -7,11 +9,10 @@ import yaml
 from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
+
 from treebeard.conf import signup_endpoint, treebeard_env, treebeard_web_url
 from treebeard.helper import set_credentials
-from treebeard.version import get_version
-import uuid
-import pprint
+from version import get_version
 
 pp = pprint.PrettyPrinter(indent=2)
 
@@ -43,18 +44,22 @@ def configure(email: str):
 
 @click.command()
 @click.option(
-    "--notebook", prompt="Notebook file:", default="main.ipynb",
+    "--notebooks",
+    prompt="Notebook files/patterns e.g.: *.ipynb, subdir/run.ipynb:",
+    default=["main.ipynb"],
 )
 @click.option(
-    "--ignore", prompt="Files & folders to ignore (e.g: env, .git)", default=[""],
+    "--ignore", prompt="Files & folders to ignore e.g: env, .git", default=[""],
 )
 @click.option("--secret", prompt="Secrets files", default=[""])
 @click.option(
     "--output_dirs", prompt="Output directories (e.g: output, plots)", default=[""],
 )
-def setup(notebook: str, ignore: List[str], secret: List[str], output_dirs: List[str]):
+def setup(
+    notebooks: List[str], ignore: List[str], secret: List[str], output_dirs: List[str]
+):
     """Creates treebeard.yaml configuration file for the project"""
-    treebeard_yaml = dict(notebook=notebook)
+    treebeard_yaml = dict(notebooks=notebooks)
     if all(ignore):
         ignore = [x.strip() for x in str(ignore).split(",")]
         treebeard_yaml.update(ignore=ignore)

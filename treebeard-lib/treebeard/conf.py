@@ -2,6 +2,7 @@ import configparser
 import os
 import time
 from datetime import datetime
+from glob import glob
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -33,10 +34,17 @@ class TreebeardEnv(BaseModel):
 
 
 class TreebeardConfig(BaseModel):
-    notebook: str = "main.ipynb"
+    notebooks: Tuple[str, ...] = tuple()
     output_dirs: Tuple[str, ...] = tuple(["output"])
     ignore: Tuple[str, ...] = ()
     secret: Tuple[str, ...] = ()
+
+    @property
+    def deglobbed_notebooks(self):
+        deglobbed_notebooks = []
+        for pattern in self.notebooks:
+            deglobbed_notebooks.extend(glob(pattern, recursive=True))
+        return deglobbed_notebooks
 
 
 env = "production"
@@ -79,10 +87,11 @@ def validate_notebook_directory(
             err=True,
         )
 
-    if not os.path.exists(treebeard_config.notebook):
-        fatal_exit(
-            f"Cannot run non-existent notebook '{treebeard_config.notebook}', you should be in a project directory with a treebeard.yaml file"
-        )
+    for notebook in treebeard_config.deglobbed_notebooks:
+        if not os.path.exists(notebook):
+            fatal_exit(
+                f"Cannot run non-existent notebook '{notebook}', you should be in a project directory with a treebeard.yaml file"
+            )
 
 
 def get_treebeard_config() -> TreebeardConfig:

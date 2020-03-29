@@ -50,7 +50,7 @@ sklearn==0.0
 terminado==0.8.3
 testpath==0.4.4
 tornado==6.0.3
-treebeard==0.0.53
+treebeard==0.0.61
 traitlets==4.3.3
 wcwidth==0.1.8
 webencodings==0.5.1

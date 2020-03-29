@@ -1,3 +1,4 @@
-notebook: main.ipynb
+notebooks:
+  - main.ipynb
 ignore:
   - venv

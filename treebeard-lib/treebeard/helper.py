@@ -8,7 +8,7 @@ import requests
 from pydantic import BaseModel
 
 from treebeard.conf import config_path
-from treebeard.version import get_version
+from version import get_version
 
 
 def set_credentials(email: str, key: str, signup_endpoint: str):

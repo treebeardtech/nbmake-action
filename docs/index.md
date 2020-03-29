@@ -41,7 +41,8 @@ Then placing a `treebeard.yaml` file in the same directory like so:
 
 ```yaml
 # treebeard.yaml
-notebook: run.ipynb
+notebooks:
+  - run.ipynb
 ignore:
   - venv
 ```

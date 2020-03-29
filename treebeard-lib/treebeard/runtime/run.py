@@ -1,4 +1,5 @@
 import os
+import pprint
 import subprocess
 import threading
 from shutil import move
@@ -9,8 +10,9 @@ import papermill as pm  # type: ignore
 from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.runtime.helper import log, upload_artifact
 
+pp = pprint.PrettyPrinter(indent=2)
+
 bucket_name = "treebeard-notebook-outputs"
-output_notebook_local_path = "/tmp/out.ipynb"
 global cancelled
 cancelled = False
 
@@ -39,19 +41,16 @@ def save_artifacts():
     if treebeard_config is None:
         raise Exception("No Treebeard Config Present at runtime!")
 
-    notebook_upload_path = f"{run_path}/out.ipynb"
-    if os.path.exists(output_notebook_local_path):
-        log(f"Saving {output_notebook_local_path} to {notebook_upload_path}")
-        upload_artifact(notebook_upload_path, output_notebook_local_path)
-    else:
-        log("No output notebook to save")
+    for notebook_path in treebeard_config.deglobbed_notebooks:
+        notebook_upload_path = f"{run_path}/{notebook_path}"
+        upload_artifact(notebook_path, notebook_upload_path)
 
     for output_dir in treebeard_config.output_dirs:
         for root, _, files in os.walk(output_dir, topdown=False):
             for name in files:
                 full_name = os.path.join(root, name)
                 upload_path = f"{run_path}/{full_name}"
-                upload_artifact(upload_path, full_name)
+                upload_artifact(full_name, upload_path)
 
 
 def run(project_id: str, notebook_id: str, run_id: str):
@@ -74,27 +73,37 @@ def run(project_id: str, notebook_id: str, run_id: str):
         os.makedirs(output_dir, exist_ok=True)
 
     set_interval(save_artifacts, 10)
-    try:
-        path, notebook_name = os.path.split(treebeard_config.notebook)
-        log(f"Executing Notebook {notebook_name} in {path}")
-        if len(path) > 0:
-            os.chdir(path)
-        pm.execute_notebook(  # type: ignore
-            notebook_name,
-            output_notebook_local_path,
-            progress_bar=False,
-            request_save_on_cell_execute=True,
-            autosave_cell_every=10,
-            kernel_name="python3",
-            log_output=True,
+
+    failed_notebooks = []
+
+    for notebook_path in treebeard_config.deglobbed_notebooks:
+        try:
+            notebook_dir, notebook_name = os.path.split(notebook_path)
+            log(f"Executing Notebook {notebook_name} in {notebook_dir}")
+            pm.execute_notebook(  # type: ignore
+                notebook_path,
+                notebook_path,
+                progress_bar=False,
+                request_save_on_cell_execute=True,
+                autosave_cell_every=10,
+                kernel_name="python3",
+                log_output=True,
+                cwd=f"{os.getcwd()}/{notebook_dir}",
+            )
+        except Exception as ex:
+            failed_notebooks.append(notebook_path)
+            print(f"Run failed!")
+            raise ex
+
+    cancel_interval()
+    save_artifacts()
+    log("Finished")
+
+    if len(failed_notebooks) > 0:
+        print(f"Flagging failed run!")
+        raise Exception(
+            f"One or more notebooks failed!\n{pp.pformat(failed_notebooks)}"
         )
-    except Exception as ex:
-        print(f"Run failed!")
-        raise ex
-    finally:
-        cancel_interval()
-        save_artifacts()
-        log("Finished")
 
 
 if __name__ == "__main__":

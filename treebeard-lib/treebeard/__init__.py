@@ -15,7 +15,7 @@ from treebeard.helper import (
     get_service_status_message,
 )
 from treebeard.notebooks.commands import cancel, run, status
-from treebeard.other.commands import configure, config, setup, version
+from treebeard.other.commands import config, configure, setup, version
 from treebeard.secrets.commands import secrets
 
 msg = get_service_status_message(service_status_endpoint)

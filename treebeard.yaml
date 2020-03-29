@@ -8,4 +8,5 @@ ignore:
   - .github
   - .vscode
   - .ipynb_checkpoints
-notebook: main.ipynb
+notebooks:
+  - main.ipynb

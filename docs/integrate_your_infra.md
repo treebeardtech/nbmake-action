@@ -70,7 +70,8 @@ At this point, `treebeard run` should work. However if you are triggering runs f
 First, add your secret to your `treebeard.yaml` file.
 
 ```yaml
-notebook: run.ipynb
+notebooks:
+  - run.ipynb
 secret:
   - service-account.json
 ```
