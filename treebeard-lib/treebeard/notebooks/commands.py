@@ -18,6 +18,7 @@ from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
+from treebeard.secrets.commands import push_secrets
 from treebeard.buildtime.run_repo import run_repo
 from treebeard.conf import (
     config_path,
@@ -69,6 +70,11 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
     if t:
         params["schedule"] = t
 
+    if not local and not treebeard_config.secret == ():
+        should_push_secrets = click.confirm("Push secrets first?", default=True)
+        if should_push_secrets:
+            push_secrets([])
+
     click.echo("🌲  Compressing Repo")
 
     if treebeard_config:
@@ -78,25 +84,14 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
             + treebeard_config.output_dirs
         )
 
-    # Create a temporary file for the compressed directory
-    # compressed file accessible at f.name
-    # git_files: Set[str] = set(
-    #     subprocess.check_output(
-    #         "git ls-files || exit 0", shell=True, stderr=subprocess.DEVNULL
-    #     )
-    #     .decode()
-    #     .splitlines()
-    # )
-
     with tempfile.NamedTemporaryFile(
         "wb", suffix=".tar.gz", delete=False
     ) as src_archive:
-        click.echo("\n")
         with tarfile.open(fileobj=src_archive, mode="w:gz") as tar:
 
             def zip_filter(info: tarfile.TarInfo):
                 for ignored in ignore:
-                    if info.name in glob.glob(ignored):
+                    if info.name in glob.glob(ignored, recursive=True):
                         return None
 
                 # if len(git_files) > 0 and info.name not in git_files:
@@ -108,6 +103,11 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
                 os.getcwd(), arcname=os.path.basename(os.path.sep), filter=zip_filter
             )
             tar.add(config_path, arcname=os.path.basename(config_path))
+
+    if not click.confirm("Confirm source file set is correct?", default=True):
+        click.echo("Exiting")
+        sys.exit()
+
     size = os.path.getsize(src_archive.name)
     max_upload_size = "100MB"
     if size > parse_size(max_upload_size):
@@ -121,7 +121,6 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
                 fg="red",
             )
         )
-
     if local:
         build_tag = str(time.mktime(datetime.today().timetuple()))
         repo_image_name = (
@@ -144,7 +143,7 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
         finally:
             sys.exit(0)
 
-    click.echo("🌲  submitting notebook to runner")
+    click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
     response = requests.post(
         notebooks_endpoint,
         files={"repo": open(src_archive.name, "rb")},
@@ -181,12 +180,12 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
 def cancel():
     """Cancels the current notebook build and schedule"""
     validate_notebook_directory(treebeard_env, treebeard_config)
-    spinner: Any = Halo(text="cancelling", spinner="dots")
-    click.echo(f"🌲  Cancelling {notebook_id}")
+    notif = f"🌲  Cancelling {notebook_id}"
+    spinner: Any = Halo(text=notif, spinner="dots")
     spinner.start()
     requests.delete(notebooks_endpoint, headers=treebeard_env.dict())
     spinner.stop()
-    click.echo(f"🛑 Done!")
+    click.echo(f"{notif}...🛑 cancellation confirmed!")
 
 
 @click.command()

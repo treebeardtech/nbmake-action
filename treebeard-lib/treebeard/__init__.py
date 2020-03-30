@@ -8,19 +8,14 @@ from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
-from treebeard.conf import service_status_endpoint, treebeard_env
+from treebeard.conf import treebeard_env
 from treebeard.helper import (
     CliContext,
     check_for_updates,
-    get_service_status_message,
 )
 from treebeard.notebooks.commands import cancel, run, status
 from treebeard.other.commands import config, configure, setup, version
 from treebeard.secrets.commands import secrets
-
-msg = get_service_status_message(service_status_endpoint)
-if msg:
-    click.echo(click.style(msg, fg="red"), err=True)
 
 project_id = treebeard_env.project_id
 notebook_id = treebeard_env.notebook_id

@@ -21,6 +21,10 @@ def secrets():
 @secrets.command()
 @click.argument("files", type=click.File("r"), nargs=-1)
 def push(files: List[IO]):
+    push_secrets(files)
+
+
+def push_secrets(files: List[IO]):
     """Uploads files marked in treebeard.yaml as 'secret'"""
     click.echo(f"🌲 Pushing Secrets for project {treebeard_env.project_id}")
     validate_notebook_directory(treebeard_env, treebeard_config)
@@ -36,4 +40,4 @@ def push(files: List[IO]):
         )
         return
 
-    click.echo("🔐  done!")
+    click.echo("🔐  secrets pushed\n")

@@ -61,9 +61,13 @@ def run_repo(
     project_base_image = "docker.io/treebeardtech/project-base-image"
 
     try:
+        click.echo(f"Pulling {image_name}")
         client.images.pull(image_name)
     except ImageNotFound:
         try:
+            click.echo(
+                f"Could not pull {image_name}, instead pulling {project_base_image}"
+            )
             client.images.pull(project_base_image)
         except Exception as ex:
             click.echo(f"Error pulling project base image {ex}, continuing without...")

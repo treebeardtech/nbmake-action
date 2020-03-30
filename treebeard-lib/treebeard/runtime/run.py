@@ -96,5 +96,5 @@ if __name__ == "__main__":
     )
 
     if len(failed_notebooks) > 0:
-        print(f"One or more notebooks failed!\n{pp.pformat(failed_notebooks)}")
+        print(f"One or more notebooks failed: {pp.pformat(failed_notebooks)}")
         sys.exit(1)
