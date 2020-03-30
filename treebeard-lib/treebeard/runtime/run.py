@@ -1,8 +1,11 @@
 import os
 import pprint
 import subprocess
+import sys
 from shutil import move
 from traceback import format_exc
+from typing import List
+
 import papermill as pm  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
@@ -33,7 +36,7 @@ def save_artifacts():
                 upload_artifact(full_name, upload_path)
 
 
-def run(project_id: str, notebook_id: str, run_id: str):
+def run(project_id: str, notebook_id: str, run_id: str) -> List[str]:
     move(".treebeard", "/home/project_user/.treebeard")  # this may not be needed now...
     subprocess.run(
         [
@@ -79,11 +82,7 @@ def run(project_id: str, notebook_id: str, run_id: str):
     save_artifacts()
     log("Finished")
 
-    if len(failed_notebooks) > 0:
-        print(f"Flagging failed run!")
-        raise Exception(
-            f"One or more notebooks failed!\n{pp.pformat(failed_notebooks)}"
-        )
+    return failed_notebooks
 
 
 if __name__ == "__main__":
@@ -92,4 +91,10 @@ if __name__ == "__main__":
     if not treebeard_env.project_id:
         raise Exception("No project ID at buildtime")
 
-    run(treebeard_env.project_id, treebeard_env.notebook_id, treebeard_env.run_id)
+    failed_notebooks = run(
+        treebeard_env.project_id, treebeard_env.notebook_id, treebeard_env.run_id
+    )
+
+    if len(failed_notebooks) > 0:
+        print(f"One or more notebooks failed!\n{pp.pformat(failed_notebooks)}")
+        sys.exit(1)

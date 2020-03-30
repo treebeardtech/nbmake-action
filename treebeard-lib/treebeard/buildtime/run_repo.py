@@ -86,15 +86,14 @@ def run_repo(
         {abs_notebook_dir}
     """
     subprocess.check_output(["bash", "-c", r2d])
-    subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
+    if not local:
+        click.echo("Image run failed, pushing failed image...")
+        client.images.push(versioned_image_name)
 
-    try:
-        run_image(project_id, notebook_id, run_id, image_name)
-    except Exception as ex:
-        if not local:
-            click.echo("Image run failed, pushing failed image...")
-            client.images.push(latest_image_name)
-        raise ex
+    run_image(project_id, notebook_id, run_id, image_name)
+
+    subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
+    click.echo(f"tagged {versioned_image_name} as {latest_image_name}")
 
 
 if __name__ == "__main__":

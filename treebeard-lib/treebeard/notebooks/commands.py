@@ -69,8 +69,7 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
     if t:
         params["schedule"] = t
 
-    spinner: Any = Halo(text="🌲  Compressing Repo\n", spinner="dots")
-    spinner.start()
+    click.echo("🌲  Compressing Repo")
 
     if treebeard_config:
         ignore += (
@@ -124,7 +123,6 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
         )
 
     if local:
-        spinner.stop()
         build_tag = str(time.mktime(datetime.today().timetuple()))
         repo_image_name = (
             f"gcr.io/treebeard-259315/projects/{project_id}/{notebook_id}:{build_tag}"
@@ -146,7 +144,7 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
         finally:
             sys.exit(0)
 
-    spinner.text = "🌲  submitting notebook to runner\n"
+    click.echo("🌲  submitting notebook to runner")
     response = requests.post(
         notebooks_endpoint,
         files={"repo": open(src_archive.name, "rb")},
@@ -157,7 +155,6 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
     if response.status_code != 200:
         raise click.ClickException(f"Request failed: {response.text}")
 
-    spinner.stop()
     try:
         json_data = json.loads(response.text)
         click.echo(f"✨  Run has been accepted! {json_data['admin_url']}")
@@ -166,8 +163,6 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
         click.echo(sys.exc_info())
 
     if watch:
-        # spinner = Halo(text='watching build', spinner='dots')
-        # spinner.start()
         build_result = None
         while not build_result:
             time.sleep(5)
@@ -177,7 +172,6 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
             click.echo(f"{get_time()} Build status: {status}")
             if status == "SUCCESS":
                 build_result = status
-                # spinner.stop()
                 click.echo(f"Build result: {build_result}")
             elif status in ["FAILURE", "TIMEOUT", "INTERNAL_ERROR", "CANCELLED"]:
                 fatal_exit(f"Build failed")
