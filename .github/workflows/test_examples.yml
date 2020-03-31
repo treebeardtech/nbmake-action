@@ -21,10 +21,6 @@ jobs:
       - name: Check credentials
         run: |
           cat ~/.treebeard
-      - name: Test
-        run: |
-          cd examples/conda
-          treebeard run --watch --confirm
 
   virtualenv:
     timeout-minutes: 20
