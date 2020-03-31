@@ -123,7 +123,7 @@ def get_treebeard_env():
     email = None
     api_key = None
 
-    # .treebeard config is present in CLI and Runtime
+    # .treebeard config is present in CLI in place of env variables
     if os.path.exists(config_path):
         config = configparser.RawConfigParser()
         config.read(config_path)

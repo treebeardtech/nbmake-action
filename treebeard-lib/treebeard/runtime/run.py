@@ -2,10 +2,8 @@ import os
 import pprint
 import subprocess
 import sys
-from shutil import move
 from traceback import format_exc
 from typing import List
-
 import papermill as pm  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
@@ -37,7 +35,7 @@ def save_artifacts():
 
 
 def run(project_id: str, notebook_id: str, run_id: str) -> List[str]:
-    move(".treebeard", "/home/project_user/.treebeard")  # this may not be needed now...
+    log(f"🌲 treebeard runtime: running repo")
     subprocess.run(
         [
             "bash",

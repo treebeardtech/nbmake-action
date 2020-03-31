@@ -33,6 +33,7 @@ def run_repo(
     secrets_url: Optional[str],
     local: bool = False,
 ):
+    click.echo(f"🌲 Treebeard buildtime, running repo")
     client: Any = docker.from_env()  # type: ignore
 
     try:
