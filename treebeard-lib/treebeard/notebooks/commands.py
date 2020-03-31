@@ -58,7 +58,14 @@ project_id = treebeard_env.project_id
     help="Don't submit unneeded virtual envs and large files",
     multiple=True,
 )
-@click.option("--confirm/--no-confirm", default=False)
+@click.option(
+    "--confirm/--no-confirm", default=False, help="Confirm all prompt options"
+)
+@click.option(
+    "--confirm_no_secrets/--no-confirm_no_secrets",
+    default=False,
+    help="Confirm all prompt options except pushing secrets",
+)
 @click.pass_obj
 def run(
     cli_context: CliContext,
@@ -67,6 +74,7 @@ def run(
     ignore: List[str],
     local: bool,
     confirm: bool,
+    confirm_no_secrets: bool,
 ):
     """
     Run a notebook and optionally schedule it to run periodically
@@ -78,7 +86,7 @@ def run(
     if t:
         params["schedule"] = t
 
-    if not local and not treebeard_config.secret == ():
+    if not local and not treebeard_config.secret == () and not confirm_no_secrets:
         should_push_secrets = confirm or click.confirm(
             "Push secrets first?", default=True
         )
@@ -115,7 +123,9 @@ def run(
             tar.add(config_path, arcname=os.path.basename(config_path))
 
     if not (
-        confirm or click.confirm("Confirm source file set is correct?", default=True)
+        confirm
+        or confirm_no_secrets
+        or click.confirm("Confirm source file set is correct?", default=True)
     ):
         click.echo("Exiting")
         sys.exit()
