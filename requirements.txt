@@ -1,8 +1,8 @@
 jupyter
+jupyter-client==6.1.2
 treebeard==0.0.67
 requests
 pandas
 numpy
 matplotlib
 seaborn
-
