@@ -91,8 +91,9 @@ def run_repo(
         {abs_notebook_dir}
     """
     subprocess.check_output(["bash", "-c", r2d])
+
     if not local:
-        click.echo("Image run failed, pushing failed image...")
+        click.echo(f"Image built: Pushing built {versioned_image_name}...")
         client.images.push(versioned_image_name)
 
     run_image(project_id, notebook_id, run_id, image_name)
