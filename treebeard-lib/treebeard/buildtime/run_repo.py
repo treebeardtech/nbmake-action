@@ -9,7 +9,7 @@ import docker  # type: ignore
 from docker.errors import ImageNotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
-from treebeard.conf import treebeard_env
+from treebeard.conf import run_path, treebeard_env
 from treebeard.util import fatal_exit
 
 
@@ -33,7 +33,9 @@ def run_repo(
     secrets_url: Optional[str],
     local: bool = False,
 ):
-    click.echo(f"🌲 Treebeard buildtime, running repo")
+    click.echo(f"🌲 Treebeard buildtime, building repo")
+    click.echo(f"Run path: {run_path}")
+
     client: Any = docker.from_env()  # type: ignore
 
     try:
@@ -92,10 +94,14 @@ def run_repo(
     """
     subprocess.check_output(["bash", "-c", r2d])
 
-    if not local:
-        click.echo(f"Image built: Pushing built {versioned_image_name}...")
-        client.images.push(versioned_image_name)
+    # if not local:
+    #     try:
+    #         click.echo(f"Image built: Pushing {versioned_image_name}")
+    #         client.images.push(versioned_image_name)
+    #     except Exception:
+    #         click.echo(f"Failed to push image, will try again on success")
 
+    click.echo(f"Image built successfully, now running.")
     run_image(project_id, notebook_id, run_id, image_name)
 
     subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
