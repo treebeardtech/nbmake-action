@@ -58,8 +58,16 @@ project_id = treebeard_env.project_id
     help="Don't submit unneeded virtual envs and large files",
     multiple=True,
 )
+@click.option("--confirm/--no-confirm", default=False)
 @click.pass_obj
-def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: bool):
+def run(
+    cli_context: CliContext,
+    t: str,
+    watch: bool,
+    ignore: List[str],
+    local: bool,
+    confirm: bool,
+):
     """
     Run a notebook and optionally schedule it to run periodically
     """
@@ -71,9 +79,11 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
         params["schedule"] = t
 
     if not local and not treebeard_config.secret == ():
-        should_push_secrets = click.confirm("Push secrets first?", default=True)
+        should_push_secrets = confirm or click.confirm(
+            "Push secrets first?", default=True
+        )
         if should_push_secrets:
-            push_secrets([])
+            push_secrets([], confirm=confirm)
 
     click.echo("🌲  Compressing Repo")
 
@@ -104,7 +114,9 @@ def run(cli_context: CliContext, t: str, watch: bool, ignore: List[str], local: 
             )
             tar.add(config_path, arcname=os.path.basename(config_path))
 
-    if not click.confirm("Confirm source file set is correct?", default=True):
+    if not (
+        confirm or click.confirm("Confirm source file set is correct?", default=True)
+    ):
         click.echo("Exiting")
         sys.exit()
 

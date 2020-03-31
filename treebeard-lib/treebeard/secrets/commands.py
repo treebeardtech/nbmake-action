@@ -20,15 +20,16 @@ def secrets():
 
 @secrets.command()
 @click.argument("files", type=click.File("r"), nargs=-1)
-def push(files: List[IO]):
-    push_secrets(files)
+@click.option("--confirm/--no-confirm", default=False)
+def push(files: List[IO], confirm: bool):
+    push_secrets(files, confirm)
 
 
-def push_secrets(files: List[IO]):
+def push_secrets(files: List[IO], confirm: bool):
     """Uploads files marked in treebeard.yaml as 'secret'"""
     click.echo(f"🌲 Pushing Secrets for project {treebeard_env.project_id}")
     validate_notebook_directory(treebeard_env, treebeard_config)
-    secrets_archive = get_secrets_archive(files)
+    secrets_archive = get_secrets_archive(files, confirm=confirm)
     response = requests.post(
         secrets_endpoint,
         files={"secrets": open(secrets_archive.name, "rb")},

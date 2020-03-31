@@ -9,7 +9,7 @@ import click
 from treebeard.conf import treebeard_config
 
 
-def get_secrets_archive(files: List[IO] = []) -> IO[bytes]:
+def get_secrets_archive(files: List[IO] = [], confirm: bool = True) -> IO[bytes]:
     if treebeard_config:
         files += tuple((open(path, "r") for path in treebeard_config.secret))
 
@@ -33,7 +33,9 @@ def get_secrets_archive(files: List[IO] = []) -> IO[bytes]:
                 click.echo(f"  Including {f.name}")
                 tar.add(f.name)
 
-    if not click.confirm("Confirm secret file set is correct?", default=True):
+    if not (
+        confirm or click.confirm("Confirm secret file set is correct?", default=True)
+    ):
         click.echo("Exiting")
         sys.exit()
     return secrets_archive
