@@ -9,10 +9,7 @@ from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
 from treebeard.conf import treebeard_env
-from treebeard.helper import (
-    CliContext,
-    check_for_updates,
-)
+from treebeard.helper import CliContext, check_for_updates
 from treebeard.notebooks.commands import cancel, run, status
 from treebeard.other.commands import config, configure, setup, version
 from treebeard.secrets.commands import secrets

@@ -1,9 +1,10 @@
 import os
 import os.path
+import sys
 import tarfile
 import tempfile
 from typing import IO, List
-import sys
+
 import click
 
 from treebeard.conf import treebeard_config

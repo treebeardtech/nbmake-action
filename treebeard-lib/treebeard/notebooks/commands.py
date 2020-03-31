@@ -18,7 +18,6 @@ from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
-from treebeard.secrets.commands import push_secrets
 from treebeard.buildtime.run_repo import run_repo
 from treebeard.conf import (
     config_path,
@@ -30,6 +29,7 @@ from treebeard.conf import (
 )
 from treebeard.helper import CliContext
 from treebeard.notebooks.types import Run
+from treebeard.secrets.commands import push_secrets
 from treebeard.secrets.helper import get_secrets_archive
 from treebeard.util import fatal_exit
 
