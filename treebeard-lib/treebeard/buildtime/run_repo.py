@@ -3,6 +3,7 @@ import subprocess
 from glob import glob
 from pathlib import Path
 from typing import Any, Optional
+from traceback import format_exc
 
 import click
 import docker  # type: ignore
@@ -94,17 +95,19 @@ def run_repo(
     """
     subprocess.check_output(["bash", "-c", r2d])
 
-    # if not local:
-    #     try:
-    #         click.echo(f"Image built: Pushing {versioned_image_name}")
-    #         client.images.push(versioned_image_name)
-    #     except Exception:
-    #         click.echo(f"Failed to push image, will try again on success")
+    if not local:
+        try:
+            click.echo(f"Image built: Pushing {versioned_image_name}")
+            client.images.push(versioned_image_name)
+        except Exception:
+            click.echo(
+                f"Failed to push image, will try again on success\n{format_exc()}"
+            )
 
     click.echo(f"Image built successfully, now running.")
+    subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
     run_image(project_id, notebook_id, run_id, image_name)
 
-    subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
     click.echo(f"tagged {versioned_image_name} as {latest_image_name}")
 
 
