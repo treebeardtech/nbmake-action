@@ -1,15 +1,15 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["pull", "gcr.io/treebeard-259315/image-builder"]
+    args: ["pull", "gcr.io/treebeard-259315/treebeard"]
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "build",
         "--cache-from",
-        "gcr.io/treebeard-259315/image-builder",
+        "gcr.io/treebeard-259315/treebeard",
         "-t",
-        "gcr.io/treebeard-259315/image-builder",
+        "gcr.io/treebeard-259315/treebeard",
         ".",
       ]
-images: ["gcr.io/treebeard-259315/image-builder"]
+images: ["gcr.io/treebeard-259315/treebeard"]
 tags: ["builder"]
