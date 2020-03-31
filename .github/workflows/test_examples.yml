@@ -24,7 +24,7 @@ jobs:
       - name: Test
         run: |
           cd examples/reddit_tracker
-          treebeard run --watch
+          treebeard run --watch --confirm
 
   conda:
     timeout-minutes: 20
@@ -47,7 +47,7 @@ jobs:
       - name: Test
         run: |
           cd examples/conda
-          treebeard run --watch
+          treebeard run --watch --confirm
 
   virtualenv:
     timeout-minutes: 20
@@ -70,7 +70,7 @@ jobs:
       - name: Test
         run: |
           cd examples/virtualenv
-          treebeard run --watch
+          treebeard run --watch --confirm
 
   secrets:
     timeout-minutes: 20
@@ -93,7 +93,7 @@ jobs:
       - name: Test
         run: |
           cd examples/secrets
-          treebeard run --watch
+          treebeard run --watch --confirm
 
   dagster:
     timeout-minutes: 20
@@ -116,7 +116,7 @@ jobs:
       - name: Test
         run: |
           cd examples/dagster
-          treebeard run --watch
+          treebeard run --watch --confirm
 
   failing_notebook:
     timeout-minutes: 20

@@ -24,4 +24,4 @@ jobs:
           treebeard_api_key = ${{ secrets.TREEBEARD_API_KEY }}" >> ~/.treebeard
       - name: Test
         run: |
-          treebeard run --watch
+          treebeard run --watch --confirm
