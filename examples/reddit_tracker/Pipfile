@@ -13,7 +13,7 @@ jupyter = "*"
 en_core_web_sm = {file = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz"}
 plotly = "*"
 psutil = "*"
-treebeard = "==0.0.67"
+treebeard = "==0.0.68"
 
 [requires]
 python_version = "3.7"
