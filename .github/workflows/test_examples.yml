@@ -133,9 +133,6 @@ jobs:
         run: |
           cat ~/.treebeard
       - name: Test
-        env:
-          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
-          REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
         run: |
           cd examples/reddit_tracker	
           treebeard run --watch --confirm_no_secrets
