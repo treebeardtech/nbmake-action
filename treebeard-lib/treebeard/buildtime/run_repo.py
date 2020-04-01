@@ -2,8 +2,8 @@ import os
 import subprocess
 from glob import glob
 from pathlib import Path
-from typing import Any, Optional
 from traceback import format_exc
+from typing import Any, Optional
 
 import click
 import docker  # type: ignore

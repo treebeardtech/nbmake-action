@@ -1,5 +1,3 @@
-import treebeard.sentry_setup  # type: ignore isort:skip
-
 import warnings
 from typing import Any
 
@@ -13,6 +11,7 @@ from treebeard.helper import CliContext, check_for_updates
 from treebeard.notebooks.commands import cancel, run, status
 from treebeard.other.commands import config, configure, setup, version
 from treebeard.secrets.commands import secrets
+from treebeard.sentry_setup import setup_sentry
 
 project_id = treebeard_env.project_id
 notebook_id = treebeard_env.notebook_id
@@ -32,6 +31,7 @@ def cli(ctx: Any, debug: bool):
       
       docs: https://treebeard.readthedocs.io/
     """
+    setup_sentry()
     ctx.obj = CliContext(debug=debug)
     pass
 

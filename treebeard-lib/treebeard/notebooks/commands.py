@@ -8,8 +8,9 @@ import tarfile
 import tempfile
 import time
 from datetime import datetime
-from typing import Any, List
 from traceback import format_exc
+from typing import Any, List
+
 import click
 import docker  # type: ignore
 import requests
