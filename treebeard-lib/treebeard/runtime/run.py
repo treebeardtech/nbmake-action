@@ -1,16 +1,13 @@
 import os
-import pprint
 import subprocess
 import sys
 from traceback import format_exc
-from typing import List
+from typing import Dict
 
 import papermill as pm  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.runtime.helper import log, upload_artifact
-
-pp = pprint.PrettyPrinter(indent=2)
 
 bucket_name = "treebeard-notebook-outputs"
 global cancelled
@@ -18,7 +15,7 @@ cancelled = False
 
 
 def save_artifacts():
-    log(f"saving all artifacts")
+    log(f"Uploading outputs...")
 
     if treebeard_config is None:
         raise Exception("No Treebeard Config Present at runtime!")
@@ -35,16 +32,37 @@ def save_artifacts():
                 upload_artifact(full_name, upload_path)
 
 
-def run(project_id: str, notebook_id: str, run_id: str) -> List[str]:
+def run_notebook(notebook_path: str) -> str:
+    try:
+        notebook_dir, notebook_name = os.path.split(notebook_path)
+        log(f"Executing Notebook {notebook_name} in {notebook_dir}")
+        pm.execute_notebook(  # type: ignore
+            notebook_path,
+            notebook_path,
+            progress_bar=False,
+            request_save_on_cell_execute=True,
+            autosave_cell_every=10,
+            kernel_name="python3",
+            log_output=True,
+            cwd=f"{os.getcwd()}/{notebook_dir}",
+        )
+        log(f"✅ Notebook {notebook_path} passed!\n")
+        return "✅"
+    except Exception:
+        tb = format_exc()
+        log(f"❌ Notebook {notebook_path} failed!\n\n{tb}")
+        return "❌"
+
+
+def run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, str]:
     log(f"🌲 treebeard runtime: running repo")
     subprocess.run(
         [
             "bash",
             "-c",
             """
-            echo Running notebook in $(pwd)
-            printenv
-            ls -lah""",
+            echo "working directory is $(pwd)\n\n$(ls -la)\n"
+            """,
         ]
     )
 
@@ -54,34 +72,17 @@ def run(project_id: str, notebook_id: str, run_id: str) -> List[str]:
     for output_dir in treebeard_config.output_dirs:
         os.makedirs(output_dir, exist_ok=True)
 
-    failed_notebooks = []
+    notebooks = treebeard_config.deglobbed_notebooks
+    notebook_statuses = {notebook: "⏳" for notebook in notebooks}
 
-    for i, notebook_path in enumerate(treebeard_config.deglobbed_notebooks):
-        print(
-            f"Running {i}/{len(treebeard_config.deglobbed_notebooks)}: {notebook_path}"
-        )
-        try:
-            notebook_dir, notebook_name = os.path.split(notebook_path)
-            log(f"Executing Notebook {notebook_name} in {notebook_dir}")
-            pm.execute_notebook(  # type: ignore
-                notebook_path,
-                notebook_path,
-                progress_bar=False,
-                request_save_on_cell_execute=True,
-                autosave_cell_every=10,
-                kernel_name="python3",
-                log_output=True,
-                cwd=f"{os.getcwd()}/{notebook_dir}",
-            )
-        except Exception:
-            failed_notebooks.append(notebook_path)
-            tb = format_exc()
-            print(f"Notebook {notebook_path} failed!\n{tb}")
+    for i, notebook_path in enumerate(notebooks):
+        log(f"⏳ Running {i + 1}/{len(notebooks)}: {notebook_path}")
+        notebook_statuses[notebook_path] = run_notebook(notebook_path)
 
     save_artifacts()
-    log("Finished")
+    log("Run Finished\n")
 
-    return failed_notebooks
+    return notebook_statuses
 
 
 if __name__ == "__main__":
@@ -90,10 +91,16 @@ if __name__ == "__main__":
     if not treebeard_env.project_id:
         raise Exception("No project ID at buildtime")
 
-    failed_notebooks = run(
+    notebook_statuses = run(
         treebeard_env.project_id, treebeard_env.notebook_id, treebeard_env.run_id
     )
 
-    if len(failed_notebooks) > 0:
-        print(f"One or more notebooks failed: {pp.pformat(failed_notebooks)}")
+    for notebook in notebook_statuses.keys():
+        print(f"{notebook_statuses[notebook]} {notebook}")
+    print()
+
+    n_failed = len(list(filter(lambda v: v != "✅", notebook_statuses.values())))
+
+    if n_failed > 0:
+        log(f"{n_failed} of {len(notebook_statuses)} notebooks failed.")
         sys.exit(1)
