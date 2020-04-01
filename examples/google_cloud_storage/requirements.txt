@@ -1,2 +1,2 @@
-treebeard==0.0.69
+treebeard==0.0.70
 google-cloud-storage
