@@ -1,2 +1,7 @@
 notebooks:
   - main.ipynb
+ignore:
+  - venv
+  - .vscode
+  - .ipynb_checkpoints
+  - .pytest_cache

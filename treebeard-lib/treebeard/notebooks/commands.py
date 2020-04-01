@@ -9,7 +9,7 @@ import tempfile
 import time
 from datetime import datetime
 from typing import Any, List
-
+from traceback import format_exc
 import click
 import docker  # type: ignore
 import requests
@@ -162,6 +162,8 @@ def run(
                 secrets_url,
                 local=True,
             )
+        except Exception:
+            click.echo(f"Failed to build...\n{format_exc()}")
         finally:
             sys.exit(0)
 
