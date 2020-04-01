@@ -67,3 +67,9 @@ def get_service_status_message(service_status_url: str) -> Optional[str]:
 
 class CliContext(BaseModel):
     debug: bool
+
+
+def sanitise_notebook_id(notebook_id: str) -> str:
+    out = notebook_id.replace("_", "-")
+    out = out.replace(" ", "-")
+    return out.lower()

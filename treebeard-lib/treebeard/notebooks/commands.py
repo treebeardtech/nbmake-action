@@ -27,7 +27,7 @@ from treebeard.conf import (
     treebeard_env,
     validate_notebook_directory,
 )
-from treebeard.helper import CliContext
+from treebeard.helper import CliContext, sanitise_notebook_id
 from treebeard.notebooks.types import Run
 from treebeard.secrets.commands import push_secrets
 from treebeard.secrets.helper import get_secrets_archive
@@ -145,9 +145,7 @@ def run(
         )
     if local:
         build_tag = str(time.mktime(datetime.today().timetuple()))
-        repo_image_name = (
-            f"gcr.io/treebeard-259315/projects/{project_id}/{notebook_id}:{build_tag}"
-        )
+        repo_image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
         click.echo(f"🌲  Building {repo_image_name} Locally\n")
         secrets_archive = get_secrets_archive()
         repo_url = f"file://{src_archive.name}"

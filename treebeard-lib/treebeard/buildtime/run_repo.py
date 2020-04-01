@@ -11,6 +11,7 @@ from docker.errors import ImageNotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
 from treebeard.conf import run_path, treebeard_env
+from treebeard.helper import sanitise_notebook_id
 from treebeard.util import fatal_exit
 
 
@@ -60,7 +61,7 @@ def run_repo(
         subprocess.run(["ls", "-la", abs_notebook_dir])
 
     # Pull down images to use in cache
-    image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{notebook_id}"
+    image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{sanitise_notebook_id(notebook_id)}"
     # our "base" image is just a routine repo2docker build which can be used for caching
     project_base_image = "docker.io/treebeardtech/project-base-image"
 
