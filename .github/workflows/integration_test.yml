@@ -21,6 +21,7 @@ jobs:
       - name: Run Test
         run: |
           cd integration-test/conda
+          cp -R ../../treebeard-lib .
           treebeard run --watch --confirm
 
   virtualenv:
@@ -41,6 +42,7 @@ jobs:
       - name: Run Test
         run: |
           cd integration-test/virtualenv
+          cp -R ../../treebeard-lib .
           treebeard run --watch --confirm
 
   dagster:
@@ -61,6 +63,7 @@ jobs:
       - name: Run Test
         run: |
           cd integration-test/dagster
+          cp -R ../../treebeard-lib .
           treebeard run --watch --confirm
 
   failing_notebook:
@@ -81,6 +84,7 @@ jobs:
       - name: Run Test
         run: |
           cd integration-test/failing_notebook
+          cp -R ../../treebeard-lib .
           python -m run_test
 
   plotly_save:
@@ -101,4 +105,5 @@ jobs:
       - name: Run Example
         run: |
           cd integration-test/plotly_save	
+          cp -R ../../treebeard-lib .
           treebeard run --watch --confirm_no_secrets
