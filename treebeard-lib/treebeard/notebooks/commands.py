@@ -22,9 +22,14 @@ from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 from treebeard.buildtime.run_repo import run_repo
-from treebeard.conf import (config_path, get_time, notebooks_endpoint,
-                            treebeard_config, treebeard_env,
-                            validate_notebook_directory)
+from treebeard.conf import (
+    config_path,
+    get_time,
+    notebooks_endpoint,
+    treebeard_config,
+    treebeard_env,
+    validate_notebook_directory,
+)
 from treebeard.helper import CliContext, sanitise_notebook_id
 from treebeard.notebooks.types import Run
 from treebeard.secrets.commands import push_secrets
@@ -104,7 +109,7 @@ def run(
     temp_dir = tempfile.mkdtemp()
     copy_tree(os.getcwd(), temp_dir)
 
-    subprocess.check_output(["nbstripout"] + glob(".**/*.ipynb"), cwd=temp_dir)
+    subprocess.check_output(["nbstripout"] + glob.glob(".**/*.ipynb"), cwd=temp_dir)
 
     click.echo("🌲  Compressing Repo")
 
@@ -123,9 +128,7 @@ def run(
                 click.echo(f"  Including {info.name}")
                 return info
 
-            tar.add(
-                temp_dir, arcname=os.path.basename(os.path.sep), filter=zip_filter
-            )
+            tar.add(temp_dir, arcname=os.path.basename(os.path.sep), filter=zip_filter)
             tar.add(config_path, arcname=os.path.basename(config_path))
 
     if not (
