@@ -20,7 +20,7 @@ jobs:
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
       - name: Run Test
         run: |
-          cd examples/conda
+          cd integration-test/conda
           treebeard run --watch --confirm
 
   virtualenv:
@@ -40,7 +40,7 @@ jobs:
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
       - name: Run Test
         run: |
-          cd examples/virtualenv
+          cd integration-test/virtualenv
           treebeard run --watch --confirm
 
   dagster:
@@ -60,7 +60,7 @@ jobs:
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
       - name: Run Test
         run: |
-          cd examples/dagster
+          cd integration-test/dagster
           treebeard run --watch --confirm
 
   failing_notebook:
@@ -80,5 +80,5 @@ jobs:
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
       - name: Run Test
         run: |
-          cd examples/failing_notebook
+          cd integration-test/failing_notebook
           python -m run_test
