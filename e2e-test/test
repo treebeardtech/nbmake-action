@@ -1,0 +1,43 @@
+#!/bin/bash
+set -euo pipefail
+set -x
+
+## Install, Configure, Run, Fetch like a new user
+api_key=$1
+
+# ensure we are in the script dir
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+pushd "$DIR"
+
+# Use a new notebook ID each time to run without layer caching
+dir_name="testrepo-$(date +%s)"
+cp -r ../examples/hello_treebeard "$dir_name"
+pushd "$dir_name"
+
+pip install virtualenv
+virtualenv venv
+
+# shellcheck disable=SC1091
+. venv/bin/activate
+
+pip install -r requirements.txt
+
+treebeard configure --email robot@treebeard.io --api_key "$api_key"
+
+treebeard status
+
+# shellcheck disable=SC1091
+. venv/bin/activate
+
+# Run remotely
+treebeard run --ignore venv --watch --confirm
+
+# Run locally
+treebeard run --ignore venv --local --confirm
+
+treebeard status
+
+# Check notebook has been stored
+wget "https://api.treebeard.io/d8a0c5b6c9/${dir_name}/latest/out.html?api_key=${api_key}"
+
+treebeard cancel # won't do anything, but should succeed
