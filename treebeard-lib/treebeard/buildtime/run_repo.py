@@ -54,7 +54,7 @@ def run_repo(
                 abs_notebook_dir, f"/tmp/{notebook_id}_secrets.tgz", secrets_url
             )
 
-        subprocess.check_output(["nbstripout"] + glob("./*.ipynb"))
+        subprocess.check_output(["nbstripout"] + glob(".**/*.ipynb"))
     finally:
         click.echo("Treebeard Bundle Contents:")
         subprocess.run(["pwd"])

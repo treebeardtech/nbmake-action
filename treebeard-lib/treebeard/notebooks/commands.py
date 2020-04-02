@@ -3,11 +3,14 @@ import json
 import os
 import os.path
 import pprint
+import subprocess
 import sys
 import tarfile
 import tempfile
 import time
 from datetime import datetime
+from distutils.dir_util import copy_tree
+from glob import glob
 from traceback import format_exc
 from typing import Any, List
 
@@ -18,16 +21,10 @@ from dateutil import parser
 from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
-
 from treebeard.buildtime.run_repo import run_repo
-from treebeard.conf import (
-    config_path,
-    get_time,
-    notebooks_endpoint,
-    treebeard_config,
-    treebeard_env,
-    validate_notebook_directory,
-)
+from treebeard.conf import (config_path, get_time, notebooks_endpoint,
+                            treebeard_config, treebeard_env,
+                            validate_notebook_directory)
 from treebeard.helper import CliContext, sanitise_notebook_id
 from treebeard.notebooks.types import Run
 from treebeard.secrets.commands import push_secrets
@@ -94,14 +91,22 @@ def run(
         if should_push_secrets:
             push_secrets([], confirm=confirm)
 
-    click.echo("🌲  Compressing Repo")
-
     if treebeard_config:
         ignore += (
             treebeard_config.ignore
             + treebeard_config.secret
             + treebeard_config.output_dirs
         )
+
+    click.echo("🌲  Copying project and stripping notebooks")
+
+    # copying project to temp dir to strip notebooks
+    temp_dir = tempfile.mkdtemp()
+    copy_tree(os.getcwd(), temp_dir)
+
+    subprocess.check_output(["nbstripout"] + glob(".**/*.ipynb"), cwd=temp_dir)
+
+    click.echo("🌲  Compressing Repo")
 
     with tempfile.NamedTemporaryFile(
         "wb", suffix=".tar.gz", delete=False
@@ -119,7 +124,7 @@ def run(
                 return info
 
             tar.add(
-                os.getcwd(), arcname=os.path.basename(os.path.sep), filter=zip_filter
+                temp_dir, arcname=os.path.basename(os.path.sep), filter=zip_filter
             )
             tar.add(config_path, arcname=os.path.basename(config_path))
 
