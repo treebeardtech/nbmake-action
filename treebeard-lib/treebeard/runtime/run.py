@@ -10,8 +10,6 @@ from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.runtime.helper import log, upload_artifact
 
 bucket_name = "treebeard-notebook-outputs"
-global cancelled
-cancelled = False
 
 
 def save_artifacts():

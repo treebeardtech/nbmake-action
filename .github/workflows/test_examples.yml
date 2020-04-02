@@ -113,3 +113,26 @@ jobs:
         run: |
           cd examples/reddit_tracker	
           treebeard run --watch --confirm_no_secrets
+
+  hello_treebeard:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip	
+          pip install treebeard
+      - name: Add credentials
+        run: treebeard configure --email robot@treebeard.io
+      - name: Check credentials
+        run: |
+          cat ~/.treebeard
+      - name: Test
+        run: |
+          cd examples/hello_treebeard	
+          treebeard run --watch --confirm_no_secrets

@@ -41,9 +41,9 @@ output_dirs:
 
 ## treebeard.yaml fields
 
-_**notebook**_ (default: _main.ipynb_)
+_**notebooks**_ (default: _main.ipynb_)
 <br/>
-must point to an ipynb file existing somewhere in the project
+lists patterns of `ipynb` files to be run
 
 _**ignore**_ (default: _[]_)
 <br/>
