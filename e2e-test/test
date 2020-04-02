@@ -33,11 +33,11 @@ treebeard status
 treebeard run --ignore venv --watch --confirm
 
 # Run locally
-treebeard run --ignore venv --local --confirm
+treebeard run --ignore venv --local --watch --confirm
 
 treebeard status
 
 # Check notebook has been stored
-wget "https://api.treebeard.io/d8a0c5b6c9/${dir_name}/latest/out.html?api_key=${api_key}"
+wget "https://api.treebeard.io/d8a0c5b6c9/${dir_name}/latest/main.html?api_key=${api_key}"
 
 treebeard cancel # won't do anything, but should succeed

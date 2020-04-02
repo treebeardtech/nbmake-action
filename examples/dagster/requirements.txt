@@ -1,3 +1,0 @@
-treebeard==0.0.72
-dagster
-dagit
