@@ -7,10 +7,12 @@ import webbrowser
 import click
 from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
+from pathlib import Path
 from timeago import format as timeago_format  # type: ignore
 
 from treebeard.conf import signup_endpoint, treebeard_env, treebeard_web_url
-from treebeard.helper import set_credentials
+from treebeard.helper import create_example_yaml, set_credentials
+from treebeard.util import fatal_exit
 from treebeard.version import get_version
 
 pp = pprint.PrettyPrinter(indent=2)
@@ -41,26 +43,12 @@ def configure(email: str, api_key: str):
 
 
 @click.command()
-@click.option(
-    "--notebooks",
-    prompt="Notebook files/patterns e.g.: *.ipynb, subdir/run.ipynb:",
-    default=["main.ipynb"],
-)
-@click.option(
-    "--ignore", prompt="Files & folders to ignore e.g: env, .git", default=[""],
-)
-@click.option("--secret", prompt="Secrets files", default=[""])
-@click.option(
-    "--output_dirs", prompt="Output directories (e.g: output, plots)", default=[""],
-)
 def setup():
-    """Fetches example treebeard.yaml configuration file"""
-    url = "https://github.com/treebeardtech/treebeard/blob/master/examples/example_treebeard.yaml"
-    f = requests.get(url)
-    open("example_treebeard.yaml", "wb").write(f.content)
-    click.echo(
-        "📁 fetched example_treebeard.yaml - please edit and save as treebeard.yaml"
-    )
+    """Creates examples treebeard.yaml configuration file"""
+    if Path("treebeard.yaml").is_file():
+        fatal_exit("📁 found existing treebeard.yaml file here")
+    create_example_yaml()
+    click.echo("📁 created example treebeard.yaml, please update it for your project")
 
 
 @click.command()

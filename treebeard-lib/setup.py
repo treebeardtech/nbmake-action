@@ -41,7 +41,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
-    package_data={"treebeard": ["version.txt"]},
+    package_data={"treebeard": ["version.txt", "example_treebeard.yaml"]},
     entry_points={
         "console_scripts": [
             "treebeard = treebeard:cli",
