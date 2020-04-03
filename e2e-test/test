@@ -9,6 +9,9 @@ api_key=$1
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 pushd "$DIR"
 
+pip install --upgrade pip pipenv
+../examples/set_local_dependencies # Necessary as the next command uses hello_treebeard
+
 # Use a new notebook ID each time to run without layer caching
 dir_name="testrepo-$(date +%s)"
 cp -r ../examples/hello_treebeard "$dir_name"
