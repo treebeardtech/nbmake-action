@@ -47,6 +47,7 @@ jobs:
         run: |
           cd examples/reddit_tracker	
           treebeard run --watch --confirm_no_secrets
+          wget https://api.treebeard.io/d8a0c5b6c9/reddit_tracker/11689ce2-5aac-4855-9c5f-47f5728e42b0/output/nfl.html?api_key=
 
   hello_treebeard:
     timeout-minutes: 20
