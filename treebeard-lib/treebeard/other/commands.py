@@ -1,4 +1,5 @@
 import pprint
+import requests
 import uuid
 import warnings
 import webbrowser
@@ -54,23 +55,14 @@ def configure(email: str, api_key: str):
 @click.option(
     "--output_dirs", prompt="Output directories (e.g: output, plots)", default=[""],
 )
-def setup(
-    notebooks: List[str], ignore: List[str], secret: List[str], output_dirs: List[str]
-):
-    """Creates treebeard.yaml configuration file for the project"""
-    treebeard_yaml = dict(notebooks=notebooks)
-    if all(ignore):
-        ignore = [x.strip() for x in str(ignore).split(",")]
-        treebeard_yaml.update(ignore=ignore)
-    if all(output_dirs):
-        output_dirs = [x.strip() for x in str(output_dirs).split(",")]
-        treebeard_yaml.update(output_dirs=output_dirs)
-    if all(secret):
-        secret = [x.strip() for x in str(secret).split(",")]
-        treebeard_yaml.update(secret=secret)
-    with open(r"treebeard.yaml", "w") as f:
-        yaml.dump(treebeard_yaml, f, default_flow_style=False)
-    click.echo("📁 treebeard.yaml file created.")
+def setup():
+    """Fetches example treebeard.yaml configuration file"""
+    url = "https://github.com/treebeardtech/treebeard/blob/master/examples/example_treebeard.yaml"
+    f = requests.get(url)
+    open("example_treebeard.yaml", "wb").write(f.content)
+    click.echo(
+        "📁 fetched example_treebeard.yaml - please edit and save as treebeard.yaml"
+    )
 
 
 @click.command()
