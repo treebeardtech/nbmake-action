@@ -10,7 +10,7 @@ example_dir=$1
 api_key=$2
 
 python -m pip install --upgrade pip	
-./set-local-dependencies
+./set_local_dependencies
 
 pushd "$example_dir"
 pip install ./treebeard-lib
