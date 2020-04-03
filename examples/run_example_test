@@ -9,7 +9,7 @@ pushd "$DIR"
 api_key=$1
 example_dir=$2
 
-python -m pip install --upgrade pip	
+python -m pip install --upgrade pip	pipenv
 ./set_local_dependencies
 
 pushd "$example_dir"
