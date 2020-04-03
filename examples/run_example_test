@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+set -x
+
+# ensure we are in the script dir
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+pushd "$DIR"
+
+example_dir=$1
+api_key=$2
+
+python -m pip install --upgrade pip	
+./set-local-dependencies
+
+pushd "$example_dir"
+pip install ./treebeard-lib
+treebeard configure --email robot@treebeard.io --api_key "$api_key"
+treebeard run --watch --confirm_no_secrets
