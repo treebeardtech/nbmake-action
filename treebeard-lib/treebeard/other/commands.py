@@ -1,5 +1,4 @@
 import pprint
-import requests
 import uuid
 import warnings
 import webbrowser

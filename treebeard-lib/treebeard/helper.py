@@ -78,7 +78,7 @@ def sanitise_notebook_id(notebook_id: str) -> str:
 
 
 def create_example_yaml():
-    dirname, filename = os.path.split(os.path.abspath(__file__))
+    dirname = os.path.split(os.path.abspath(__file__))[0]
     with open(Path(f"{dirname}/example_treebeard.yaml"), "rb") as f:
         open("treebeard.yaml", "wb").write(f.read())
     return
