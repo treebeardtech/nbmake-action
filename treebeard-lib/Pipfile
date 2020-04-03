@@ -8,6 +8,7 @@ pylint = "*"
 autopep8 = "*"
 pipenv = "*"
 pytest = "*"
+python-magic-bin = "*"
 
 [packages]
 treebeard = {editable = true,path = "."}
