@@ -13,9 +13,10 @@ update_requirements_txt() {
     echo Updated requirements
     cat "$1"/requirements.txt
 }
+
 update_pipfile() {
     sed "s/\"==$version\"/{editable = true,path = \".\"}/g" "$1"/Pipfile | tee "$1"/Pipfile
-    cat Updated Pipfile
+    echo Updated Pipfile
     cat "$1"/Pipfile
 }
 
