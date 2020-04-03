@@ -107,8 +107,10 @@ def run(
     # copying project to temp dir to strip notebooks
     with TemporaryDirectory() as temp_dir:
         copy_tree(os.getcwd(), str(temp_dir))
-        subprocess.check_output(["nbstripout"] + glob.glob("**/*.ipynb"), cwd=temp_dir)
-
+        subprocess.check_output(
+            ["nbstripout"] + treebeard_config.deglobbed_notebooks, cwd=temp_dir
+        )
+        click.echo(treebeard_config.deglobbed_notebooks)
         click.echo("🌲  Compressing Repo")
 
         with NamedTemporaryFile("wb", suffix=".tar.gz", delete=False) as src_archive:
