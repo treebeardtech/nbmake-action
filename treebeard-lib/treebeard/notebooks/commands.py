@@ -103,14 +103,16 @@ def run(
             + treebeard_config.output_dirs
         )
 
-    click.echo("🌲  Copying project and stripping notebooks")
+    click.echo("🌲  Copying project to tempdir and stripping notebooks")
 
-    # copying project to temp dir to strip notebooks
     temp_dir = tempfile.mkdtemp()
     copy_tree(os.getcwd(), str(temp_dir))
-    subprocess.check_output(
-        ["nbstripout"] + treebeard_config.deglobbed_notebooks, cwd=temp_dir
-    )
+    try:
+        subprocess.check_output(
+            ["nbstripout"] + treebeard_config.deglobbed_notebooks, cwd=temp_dir
+        )
+    except:
+        fatal_exit(f"Failed to nbstripout a notebook! Do you have an invalid .ipynb?")
     click.echo(treebeard_config.deglobbed_notebooks)
     click.echo("🌲  Compressing Repo")
 

@@ -53,7 +53,14 @@ def run_repo(
                 abs_notebook_dir, f"/tmp/{notebook_id}_secrets.tgz", secrets_url
             )
 
-        subprocess.check_output(["nbstripout"] + treebeard_config.deglobbed_notebooks)
+        try:
+            subprocess.check_output(
+                ["nbstripout"] + treebeard_config.deglobbed_notebooks
+            )
+        except:
+            fatal_exit(
+                f"Failed to nbstripout a notebook! Do you have an invalid .ipynb?"
+            )
     finally:
         click.echo("Treebeard Bundle Contents:")
         subprocess.run(["pwd"])
