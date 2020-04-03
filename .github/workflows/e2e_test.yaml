@@ -14,6 +14,7 @@ jobs:
           python-version: 3.7
       - name: Run
         run: |
+          pip install --upgrade pip pipenv
           ./examples/set_local_dependencies # Necessary as the next command uses hello_treebeard
           ./e2e-test/test ${{ secrets.TREEBEARD_API_KEY }}
 
