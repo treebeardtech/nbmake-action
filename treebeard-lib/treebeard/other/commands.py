@@ -3,10 +3,8 @@ import requests
 import uuid
 import warnings
 import webbrowser
-from typing import List
 
 import click
-import yaml
 from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore

@@ -82,6 +82,11 @@ def validate_notebook_directory(
     if treebeard_env.project_id is None:
         fatal_exit("No account config detected! Please run `treebeard configure`")
 
+    if not Path("treebeard.yaml").is_file():
+        fatal_exit(
+            "treebeard.yaml file not found! `treebeard setup` fetches an example."
+        )
+
     if not treebeard_config.deglobbed_notebooks:
         fatal_exit("No notebooks found in project! Treebeard expects at least one.")
 
