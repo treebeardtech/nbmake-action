@@ -15,14 +15,14 @@ update_pipfile() {
     sed "s/\"==$version\"/{editable = true,path = \".\"}/g" "$1"/Pipfile | tee "$1"/Pipfile
 }
 
-cp ../treebeard-lib google_cloud_storage
+cp -R ../treebeard-lib google_cloud_storage
 update_requirements_txt google_cloud_storage
 
-cp ../treebeard-lib hello_treebeard
+cp -R ../treebeard-lib hello_treebeard
 update_requirements_txt hello_treebeard
 
-cp ../treebeard-lib national_grid
+cp -R ../treebeard-lib national_grid
 update_requirements_txt national_grid
 
-cp ../treebeard-lib reddit_tracker
+cp -R ../treebeard-lib reddit_tracker
 update_pipfile reddit_tracker
