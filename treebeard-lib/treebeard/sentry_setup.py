@@ -1,7 +1,7 @@
 import sentry_sdk  # type: ignore
 from sentry_sdk import configure_scope  # type: ignore
 
-from treebeard.conf import env
+from treebeard.conf import env, treebeard_env
 from treebeard.version import get_version
 
 
@@ -12,3 +12,5 @@ def setup_sentry():
 
     with configure_scope() as scope:  # type: ignore
         scope.set_tag("treebeard_version", get_version())
+        scope.set_tag("treebeard_project_id", str(treebeard_env.project_id))
+        scope.set_tag("treebeard_notebook_id", str(treebeard_env.notebook_id))
