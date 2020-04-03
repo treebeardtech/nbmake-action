@@ -6,8 +6,8 @@ set -x
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 pushd "$DIR"
 
-example_dir=$1
-api_key=$2
+api_key=$1
+example_dir=$2
 
 python -m pip install --upgrade pip	
 ./set_local_dependencies
