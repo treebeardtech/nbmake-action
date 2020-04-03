@@ -1,0 +1,14 @@
+notebooks:
+  - first_notebook.ipynb
+  - second_notebook.ipynb
+  - notebooks/01_hello.ipynb
+  - notebooks/02_charts.ipynb
+secret:
+  - secrets.json
+output_dirs:
+  - output
+  - reports
+ignore:
+  - .ipynb_checkpoints
+  - .git
+  - .vscode
