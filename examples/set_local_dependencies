@@ -15,7 +15,7 @@ update_requirements_txt() {
 }
 
 update_pipfile() {
-    sed "s/\"==$version\"/{editable = true,path = \".\"}/g" "$1"/Pipfile | tee "$1"/Pipfile
+    sed "s/\"==$version\"/{editable = true,path = \".\/treebeard-lib\"}/g" "$1"/Pipfile | tee "$1"/Pipfile
     echo Updated Pipfile
     cat "$1"/Pipfile
 }
