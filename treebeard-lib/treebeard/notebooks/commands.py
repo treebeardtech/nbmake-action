@@ -114,7 +114,9 @@ def run(
     click.echo(treebeard_config.deglobbed_notebooks)
     click.echo("🌲  Compressing Repo")
 
-    with tempfile.NamedTemporaryFile("wb", suffix=".tar.gz", delete=False) as src_archive:
+    with tempfile.NamedTemporaryFile(
+        "wb", suffix=".tar.gz", delete=False
+    ) as src_archive:
         with tarfile.open(fileobj=src_archive, mode="w:gz") as tar:
 
             def zip_filter(info: tarfile.TarInfo):
@@ -128,9 +130,7 @@ def run(
                 return info
 
             tar.add(
-                str(temp_dir),
-                arcname=os.path.basename(os.path.sep),
-                filter=zip_filter,
+                str(temp_dir), arcname=os.path.basename(os.path.sep), filter=zip_filter,
             )
             tar.add(config_path, arcname=os.path.basename(config_path))
 
