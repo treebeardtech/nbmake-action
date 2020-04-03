@@ -1,6 +1,5 @@
 import os
 import subprocess
-from glob import glob
 from pathlib import Path
 from traceback import format_exc
 from typing import Any, Optional
@@ -10,7 +9,7 @@ import docker  # type: ignore
 from docker.errors import ImageNotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
-from treebeard.conf import run_path, treebeard_env
+from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.helper import sanitise_notebook_id
 from treebeard.util import fatal_exit
 
@@ -54,7 +53,7 @@ def run_repo(
                 abs_notebook_dir, f"/tmp/{notebook_id}_secrets.tgz", secrets_url
             )
 
-        subprocess.check_output(["nbstripout"] + glob("./*.ipynb"))
+        subprocess.check_output(["nbstripout"] + treebeard_config.deglobbed_notebooks)
     finally:
         click.echo("Treebeard Bundle Contents:")
         subprocess.run(["pwd"])

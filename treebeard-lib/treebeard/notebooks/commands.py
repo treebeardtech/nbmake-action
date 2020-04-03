@@ -3,11 +3,13 @@ import json
 import os
 import os.path
 import pprint
+import subprocess
 import sys
 import tarfile
-import tempfile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 import time
 from datetime import datetime
+from distutils.dir_util import copy_tree
 from traceback import format_exc
 from typing import Any, List
 
@@ -18,7 +20,6 @@ from dateutil import parser
 from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
-
 from treebeard.buildtime.run_repo import run_repo
 from treebeard.conf import (
     config_path,
@@ -94,8 +95,6 @@ def run(
         if should_push_secrets:
             push_secrets([], confirm=confirm)
 
-    click.echo("🌲  Compressing Repo")
-
     if treebeard_config:
         ignore += (
             treebeard_config.ignore
@@ -103,76 +102,88 @@ def run(
             + treebeard_config.output_dirs
         )
 
-    with tempfile.NamedTemporaryFile(
-        "wb", suffix=".tar.gz", delete=False
-    ) as src_archive:
-        with tarfile.open(fileobj=src_archive, mode="w:gz") as tar:
+    click.echo("🌲  Copying project and stripping notebooks")
 
-            def zip_filter(info: tarfile.TarInfo):
-                for ignored in ignore:
-                    if info.name in glob.glob(ignored, recursive=True):
-                        return None
-
-                # if len(git_files) > 0 and info.name not in git_files:
-                #     return None
-                click.echo(f"  Including {info.name}")
-                return info
-
-            tar.add(
-                os.getcwd(), arcname=os.path.basename(os.path.sep), filter=zip_filter
-            )
-            tar.add(config_path, arcname=os.path.basename(config_path))
-
-    if not (
-        confirm
-        or confirm_no_secrets
-        or click.confirm("Confirm source file set is correct?", default=True)
-    ):
-        click.echo("Exiting")
-        sys.exit()
-
-    size = os.path.getsize(src_archive.name)
-    max_upload_size = "100MB"
-    if size > parse_size(max_upload_size):
-        fatal_exit(
-            click.style(
-                (
-                    f"ERROR: Compressed notebook directory is {format_size(size)},"
-                    f" max upload size is {max_upload_size}. \nPlease ensure you ignore any virtualenv subdirectory"
-                    " using `treebeard run --ignore venv`"
-                ),
-                fg="red",
-            )
+    # copying project to temp dir to strip notebooks
+    with TemporaryDirectory() as temp_dir:
+        copy_tree(os.getcwd(), str(temp_dir))
+        subprocess.check_output(
+            ["nbstripout"] + treebeard_config.deglobbed_notebooks, cwd=temp_dir
         )
-    if local:
-        build_tag = str(time.mktime(datetime.today().timetuple()))
-        repo_image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
-        click.echo(f"🌲  Building {repo_image_name} Locally\n")
-        secrets_archive = get_secrets_archive()
-        repo_url = f"file://{src_archive.name}"
-        secrets_url = f"file://{secrets_archive.name}"
-        try:
-            run_repo(
-                str(project_id),
-                str(notebook_id),
-                treebeard_env.run_id,
-                build_tag,
-                repo_url,
-                secrets_url,
-                local=True,
-            )
-        except Exception:
-            click.echo(f"Failed to build...\n{format_exc()}")
-        finally:
-            sys.exit(0)
+        click.echo(treebeard_config.deglobbed_notebooks)
+        click.echo("🌲  Compressing Repo")
 
-    click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
-    response = requests.post(
-        notebooks_endpoint,
-        files={"repo": open(src_archive.name, "rb")},
-        params=params,
-        headers=treebeard_env.dict(),
-    )
+        with NamedTemporaryFile("wb", suffix=".tar.gz", delete=False) as src_archive:
+            with tarfile.open(fileobj=src_archive, mode="w:gz") as tar:
+
+                def zip_filter(info: tarfile.TarInfo):
+                    for ignored in ignore:
+                        if info.name in glob.glob(ignored, recursive=True):
+                            return None
+
+                    # if len(git_files) > 0 and info.name not in git_files:
+                    #     return None
+                    click.echo(f"  Including {info.name}")
+                    return info
+
+                tar.add(
+                    str(temp_dir),
+                    arcname=os.path.basename(os.path.sep),
+                    filter=zip_filter,
+                )
+                tar.add(config_path, arcname=os.path.basename(config_path))
+
+        if not (
+            confirm
+            or confirm_no_secrets
+            or click.confirm("Confirm source file set is correct?", default=True)
+        ):
+            click.echo("Exiting")
+            sys.exit()
+
+        size = os.path.getsize(src_archive.name)
+        max_upload_size = "100MB"
+        if size > parse_size(max_upload_size):
+            fatal_exit(
+                click.style(
+                    (
+                        f"ERROR: Compressed notebook directory is {format_size(size)},"
+                        f" max upload size is {max_upload_size}. \nPlease ensure you ignore any virtualenv subdirectory"
+                        " using `treebeard run --ignore venv`"
+                    ),
+                    fg="red",
+                )
+            )
+        if local:
+            build_tag = str(time.mktime(datetime.today().timetuple()))
+            repo_image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
+            click.echo(f"🌲  Building {repo_image_name} Locally\n")
+            secrets_archive = get_secrets_archive()
+            repo_url = f"file://{src_archive.name}"
+            secrets_url = f"file://{secrets_archive.name}"
+            try:
+                run_repo(
+                    str(project_id),
+                    str(notebook_id),
+                    treebeard_env.run_id,
+                    build_tag,
+                    repo_url,
+                    secrets_url,
+                    local=True,
+                )
+            except Exception:
+                click.echo(f"Failed to build...\n{format_exc()}")
+            finally:
+                sys.exit(0)
+
+        click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
+        response = requests.post(
+            notebooks_endpoint,
+            files={"repo": open(src_archive.name, "rb")},
+            params=params,
+            headers=treebeard_env.dict(),
+        )
+    # temp_dir cleaned up
 
     if response.status_code != 200:
         raise click.ClickException(f"Request failed: {response.text}")
