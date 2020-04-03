@@ -6,14 +6,14 @@ A `GET` request to an output endpoint will download the output file.
 
 ```bash
 curl -o output_2.txt \
-https://scheduler-cvee2224cq-ew.a.run.app/63db2b28e1/example/6ef52a33-ff79-431c-8d9b-50d66902eaad/another_output/output_2.txt\?api_key\=xxxxxxxxxx
+https://api.treebeard.io/63db2b28e1/example/6ef52a33-ff79-431c-8d9b-50d66902eaad/another_output/output_2.txt\?api_key\=xxxxxxxxxx
 ```
 
 If you would like a persistent link to the latest such output, you can replace your Run ID in the URL with `latest` like so:
 
 ```bash
 curl -o output_2.txt \
-https://scheduler-cvee2224cq-ew.a.run.app/63db2b28e1/example/latest/another_output/output_2.txt\?api_key\=xxxxxxxxxx
+https://api.treebeard.io/63db2b28e1/example/latest/another_output/output_2.txt\?api_key\=xxxxxxxxxx
 ```
 
 This URL will provide the `output_2.txt` file from the last successful run of the `example` project.

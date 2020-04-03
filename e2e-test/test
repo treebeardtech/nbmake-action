@@ -38,6 +38,6 @@ treebeard run --ignore venv --local --watch --confirm
 treebeard status
 
 # Check notebook has been stored
-wget "https://scheduler-cvee2224cq-ew.a.run.app/d8a0c5b6c9/${dir_name}/latest/main.ipynb?api_key=${api_key}&nbconvert=true"
+wget "https://api.treebeard.io/d8a0c5b6c9/${dir_name}/latest/main.ipynb?api_key=${api_key}&nbconvert=true"
 
 treebeard cancel # won't do anything, but should succeed

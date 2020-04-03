@@ -57,7 +57,7 @@ if env == "development":
     url = "http://localhost:8080"
     treebeard_web_url = "https://localhost:8000"
 else:
-    url = "https://scheduler-cvee2224cq-ew.a.run.app"
+    url = "https://api.treebeard.io"
     treebeard_web_url = "https://treebeard.io"
 
 
