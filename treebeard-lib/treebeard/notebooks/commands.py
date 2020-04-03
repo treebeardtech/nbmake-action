@@ -107,7 +107,7 @@ def run(
     # copying project to temp dir to strip notebooks
     with TemporaryDirectory() as temp_dir:
         copy_tree(os.getcwd(), str(temp_dir))
-        subprocess.check_output(["nbstripout"] + glob.glob(".**/*.ipynb"), cwd=temp_dir)
+        subprocess.check_output(["nbstripout"] + glob.glob("**/*.ipynb"), cwd=temp_dir)
 
         click.echo("🌲  Compressing Repo")
 
