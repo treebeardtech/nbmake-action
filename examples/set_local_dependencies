@@ -31,4 +31,4 @@ update_requirements_txt national_grid
 
 cp -R ../treebeard-lib reddit_tracker
 update_pipfile reddit_tracker
-cd reddit_tracker && pipenv lock
+cd reddit_tracker && pipenv lock --pre
