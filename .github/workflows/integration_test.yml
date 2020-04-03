@@ -87,5 +87,4 @@ jobs:
       - name: Run Test
         run: |
           cd integration-test/failing_notebook
-          cp -R ../../treebeard-lib .
           python -m run_test

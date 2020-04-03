@@ -3,9 +3,14 @@ import sys
 from traceback import format_exc
 
 if __name__ == "__main__":
-    try:
-        subprocess.check_output(["treebeard", "run", "--watch"])
-        sys.exit(1)
-    except Exception as ex:
-        print(format_exc())
-        sys.exit(0)
+    process = subprocess.Popen(
+        ["treebeard", "run", "--watch", "--local", "--confirm"], stdout=subprocess.PIPE
+    )
+    while True:
+        output = process.stdout.readline()
+        if process.poll() is not None:
+            break
+        if output:
+            print(output.strip().decode())  # type: ignore
+    retval = process.poll()
+    assert retval == 1
