@@ -10,9 +10,13 @@ version=$(cat ../treebeard-lib/treebeard/version.txt)
 
 update_requirements_txt() {
     sed s/"treebeard==$version/\-e \.\/treebeard-lib"/g "$1"/requirements.txt | tee "$1"/requirements.txt
+    echo Updated requirements
+    cat "$1"/requirements.txt
 }
 update_pipfile() {
     sed "s/\"==$version\"/{editable = true,path = \".\"}/g" "$1"/Pipfile | tee "$1"/Pipfile
+    cat Updated Pipfile
+    cat "$1"/Pipfile
 }
 
 cp -R ../treebeard-lib google_cloud_storage
@@ -26,3 +30,4 @@ update_requirements_txt national_grid
 
 cp -R ../treebeard-lib reddit_tracker
 update_pipfile reddit_tracker
+cd reddit_tracker && pipenv lock
