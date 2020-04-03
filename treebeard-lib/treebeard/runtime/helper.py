@@ -7,7 +7,7 @@ from requests import Response
 
 mime: Any = magic.Magic(mime=True)
 
-file_access_url = "https://file-access-cvee2224cq-ew.a.run.app"
+file_access_url = "https://scheduler-cvee2224cq-ew.a.run.app"
 
 
 def log(message: str):
