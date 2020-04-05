@@ -25,7 +25,7 @@ jobs:
         with:
           python-version: 3.7
       - name: Run
-        run: ./e2e-test/local_install
+        run: ./e2e-test/local_test
 
   hello_treebeard:
     timeout-minutes: 20
@@ -52,16 +52,3 @@ jobs:
       - name: Run Example
         run: |
           ./examples/run_example_test ${{ secrets.TREEBEARD_API_KEY }} google_cloud_storage
-
-  national_grid:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
-      - name: Run Example
-        run: |
-          ./examples/run_example_test ${{ secrets.TREEBEARD_API_KEY }} national_grid

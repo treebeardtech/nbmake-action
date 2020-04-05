@@ -29,8 +29,13 @@ if [[ -f "Pipfile" ]]; then
     . "$(pipenv --venv)/bin/activate"
 fi
 
-
-
 treebeard configure --email robot@treebeard.io --api_key "$api_key"
-treebeard run --watch --confirm --no-push-secrets --local 
-treebeard run --watch --confirm --no-push-secrets
+
+if [[ $* == *--local* ]]
+then
+    echo running locally
+    treebeard run --watch --confirm --no-push-secrets --local
+else
+    echo running remotely
+    treebeard run --watch --confirm --no-push-secrets
+fi
