@@ -32,7 +32,7 @@ from treebeard.conf import (
 )
 from treebeard.helper import CliContext, sanitise_notebook_id
 from treebeard.notebooks.types import Run
-from treebeard.secrets.commands import push_secrets
+from treebeard.secrets.commands import push_secrets as push_secrets_to_store
 from treebeard.secrets.helper import get_secrets_archive
 from treebeard.util import fatal_exit
 
@@ -65,7 +65,7 @@ project_id = treebeard_env.project_id
     "--confirm/--no-confirm", default=False, help="Confirm all prompt options"
 )
 @click.option(
-    "--confirm_no_secrets/--no-confirm_no_secrets",
+    "--push-secrets/--no-push-secrets",
     default=False,
     help="Confirm all prompt options except pushing secrets",
 )
@@ -77,24 +77,27 @@ def run(
     ignore: List[str],
     local: bool,
     confirm: bool,
-    confirm_no_secrets: bool,
+    push_secrets: bool,
 ):
     """
     Run a notebook and optionally schedule it to run periodically
     """
-
     validate_notebook_directory(treebeard_env, treebeard_config)
 
     params = {}
     if t:
         params["schedule"] = t
 
-    if not local and not treebeard_config.secret == () and not confirm_no_secrets:
-        should_push_secrets = confirm or click.confirm(
-            "Push secrets first?", default=True
-        )
-        if should_push_secrets:
-            push_secrets([], confirm=confirm)
+    if (
+        not local
+        and len(treebeard_config.secret) > 0
+        and not confirm
+        and not push_secrets
+    ):
+        push_secrets = click.confirm("Push secrets first?", default=True)
+
+    if push_secrets:
+        push_secrets_to_store([], confirm=confirm)
 
     if treebeard_config:
         ignore += (
@@ -136,10 +139,8 @@ def run(
             )
             tar.add(config_path, arcname=os.path.basename(config_path))
 
-    if not (
-        confirm
-        or confirm_no_secrets
-        or click.confirm("Confirm source file set is correct?", default=True)
+    if not confirm and not click.confirm(
+        "Confirm source file set is correct?", default=True
     ):
         click.echo("Exiting")
         sys.exit()
@@ -174,10 +175,10 @@ def run(
                 secrets_url,
                 local=True,
             )
+            sys.exit(0)
         except Exception:
             click.echo(f"Failed to build...\n{format_exc()}")
-        finally:
-            sys.exit(0)
+            sys.exit(1)
 
     click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
     response = requests.post(

@@ -52,11 +52,11 @@ and load your key from the credentials file like so...
 ```python
 from google.cloud import storage
 from google.oauth2 import service_account
+import os
 
-credentials = service_account.Credentials.from_service_account_file(
-    './service-account.json',
-)
-client = storage.Client(credentials=credentials)
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./service-account.json"
+
+client = storage.Client()
 
 [b.name for b in client.list_buckets()] # Should print your storage buckets
 

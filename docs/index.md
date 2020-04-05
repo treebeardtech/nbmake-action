@@ -63,7 +63,7 @@ pip 20.0.2 from /Users/.../python3.7/site-packages/pip (python 3.7)
 ```
 
 ```bash
-➜ pip install treebeard
+➜ pip install -e ./treebeard-lib
 ```
 
 ## Get started
@@ -107,7 +107,7 @@ treebeard_project_id = xxxxxx
 treebeard_api_key = xxxxxxxxx
 
 ➜ curl -o my_data.json \
-https://scheduler-cvee2224cq-ew.a.run.app/b44c784b10/treebeard_example_2/latest/output/my_data.json?api_key=xxxxxxxxxx
+https://api.treebeard.io/b44c784b10/treebeard_example_2/latest/output/my_data.json?api_key=xxxxxxxxxx
 {"mydata": "goes_here"}
 ```
 

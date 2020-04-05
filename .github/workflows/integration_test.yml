@@ -14,8 +14,8 @@ jobs:
           python-version: 3.7
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install treebeard
+          python -m pip install --upgrade pip pipenv
+          pip install -e ./treebeard-lib
       - name: Add credentials
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
       - name: Run Test
@@ -35,8 +35,8 @@ jobs:
           python-version: 3.7
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install treebeard
+          python -m pip install --upgrade pip pipenv
+          pip install -e ./treebeard-lib
       - name: Add credentials
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
       - name: Run Test
@@ -44,9 +44,9 @@ jobs:
           cd integration-test/virtualenv
           cp -R ../../treebeard-lib .
           treebeard run --watch --confirm
-          wget https://scheduler-cvee2224cq-ew.a.run.app/d8a0c5b6c9/virtualenv/latest/main.ipynb?api_key=
-          wget https://scheduler-cvee2224cq-ew.a.run.app/d8a0c5b6c9/virtualenv/latest/another.ipynb?api_key=&nbconvert=true
-          wget https://scheduler-cvee2224cq-ew.a.run.app/d8a0c5b6c9/virtualenv/latest/subdir/another.ipynb?api_key=
+          wget https://api.treebeard.io/d8a0c5b6c9/virtualenv/latest/main.ipynb?api_key=
+          wget https://api.treebeard.io/d8a0c5b6c9/virtualenv/latest/another.ipynb?api_key=&nbconvert=true
+          wget https://api.treebeard.io/d8a0c5b6c9/virtualenv/latest/subdir/another.ipynb?api_key=
 
   dagster:
     timeout-minutes: 20
@@ -59,8 +59,8 @@ jobs:
           python-version: 3.7
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install treebeard
+          python -m pip install --upgrade pip pipenv
+          pip install -e ./treebeard-lib
       - name: Add credentials
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
       - name: Run Test
@@ -80,12 +80,11 @@ jobs:
           python-version: 3.7
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install treebeard
+          python -m pip install --upgrade pip pipenv
+          pip install -e ./treebeard-lib
       - name: Add credentials
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
       - name: Run Test
         run: |
           cd integration-test/failing_notebook
-          cp -R ../../treebeard-lib .
           python -m run_test

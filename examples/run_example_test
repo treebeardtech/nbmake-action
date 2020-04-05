@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+set -x
+
+# ensure we are in the script dir
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+pushd "$DIR"
+
+api_key=$1
+example_dir=$2
+
+echo Running example "${example_dir}"
+
+# Install necessary packages for running tests
+python -m pip install --upgrade pip	pipenv virtualenv
+
+./set_local_dependencies "$example_dir"
+pushd "$example_dir"
+if [[ -f "requirements.txt" ]]; then
+    virtualenv venv
+    # shellcheck disable=SC1091
+    . venv/bin/activate
+    pip install -r requirements.txt
+fi
+
+if [[ -f "Pipfile" ]]; then
+    pipenv install --pre
+    # shellcheck disable=SC1090
+    . "$(pipenv --venv)/bin/activate"
+fi
+
+treebeard configure --email robot@treebeard.io --api_key "$api_key"
+
+if [[ $* == *--local* ]]
+then
+    echo running locally
+    treebeard run --watch --confirm --no-push-secrets --local
+else
+    echo running remotely
+    treebeard run --watch --confirm --no-push-secrets
+fi
