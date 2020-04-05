@@ -1,34 +1,50 @@
-#!/usr/bin/env bash
-set -euo pipefail
-set -x
+#!/usr/bin/env python
+import sys
+import shutil
 
-# ensure we are in the script dir
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-pushd "$DIR"
 
-version=$(cat ../treebeard-lib/treebeard/version.txt)
+def add_local_lib(directory: str):
+    shutil.rmtree(f"{directory}/treebeard-lib", ignore_errors=True)
+    shutil.copytree(
+        f"{directory}/../../treebeard-lib", f"{directory}/treebeard-lib",
+    )
 
-update_requirements_txt() {
-    sed s/"treebeard==$version/\-e \.\/treebeard-lib"/g "$1"/requirements.txt | tee "$1"/requirements.txt
-    echo Updated requirements
-    cat "$1"/requirements.txt
-}
 
-update_pipfile() {
-    sed "s/\"==$version\"/{editable = true,path = \".\/treebeard-lib\"}/g" "$1"/Pipfile | tee "$1"/Pipfile
-    echo Updated Pipfile
-    cat "$1"/Pipfile
-}
+def update_requirements_txt(directory: str):
+    updated_reqs = []
+    with open(f"{directory}/requirements.txt", "r") as f:
+        for line in f.readlines():
+            if line.startswith("treebeard"):
+                updated_reqs.append("-e ./treebeard-lib\n")
+            else:
+                updated_reqs.append(line)
 
-cp -R ../treebeard-lib google_cloud_storage
-update_requirements_txt google_cloud_storage
+    print(updated_reqs)
+    with open(f"{directory}/requirements.txt", "w") as f:
+        f.writelines(updated_reqs)
 
-cp -R ../treebeard-lib hello_treebeard
-update_requirements_txt hello_treebeard
 
-cp -R ../treebeard-lib national_grid
-update_requirements_txt national_grid
+def update_pipfile(directory: str):
+    updated_reqs = []
+    with open(f"{directory}/Pipfile", "r") as f:
+        for line in f.readlines():
+            if line.startswith("treebeard"):
+                updated_reqs.append(
+                    'treebeard = { editable = true, path = "./treebeard-lib" }\n'
+                )
+            else:
+                updated_reqs.append(line)
 
-cp -R ../treebeard-lib reddit_tracker
-update_pipfile reddit_tracker
-cd reddit_tracker && pipenv lock --pre
+    print(updated_reqs)
+    with open(f"{directory}/Pipfile", "w") as f:
+        f.writelines(updated_reqs)
+
+
+if __name__ == "__main__":
+    directory: str = sys.argv[1]
+    add_local_lib(directory)
+
+    if directory.endswith("reddit_tracker"):
+        update_pipfile(directory)
+    else:
+        update_requirements_txt(directory)
