@@ -2,16 +2,16 @@ import pprint
 import uuid
 import warnings
 import webbrowser
-from typing import List
 
 import click
-import yaml
 from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
+from pathlib import Path
 from timeago import format as timeago_format  # type: ignore
 
 from treebeard.conf import signup_endpoint, treebeard_env, treebeard_web_url
-from treebeard.helper import set_credentials
+from treebeard.helper import create_example_yaml, set_credentials
+from treebeard.util import fatal_exit
 from treebeard.version import get_version
 
 pp = pprint.PrettyPrinter(indent=2)
@@ -42,35 +42,12 @@ def configure(email: str, api_key: str):
 
 
 @click.command()
-@click.option(
-    "--notebooks",
-    prompt="Notebook files/patterns e.g.: *.ipynb, subdir/run.ipynb:",
-    default=["main.ipynb"],
-)
-@click.option(
-    "--ignore", prompt="Files & folders to ignore e.g: env, .git", default=[""],
-)
-@click.option("--secret", prompt="Secrets files", default=[""])
-@click.option(
-    "--output_dirs", prompt="Output directories (e.g: output, plots)", default=[""],
-)
-def setup(
-    notebooks: List[str], ignore: List[str], secret: List[str], output_dirs: List[str]
-):
-    """Creates treebeard.yaml configuration file for the project"""
-    treebeard_yaml = dict(notebooks=notebooks)
-    if all(ignore):
-        ignore = [x.strip() for x in str(ignore).split(",")]
-        treebeard_yaml.update(ignore=ignore)
-    if all(output_dirs):
-        output_dirs = [x.strip() for x in str(output_dirs).split(",")]
-        treebeard_yaml.update(output_dirs=output_dirs)
-    if all(secret):
-        secret = [x.strip() for x in str(secret).split(",")]
-        treebeard_yaml.update(secret=secret)
-    with open(r"treebeard.yaml", "w") as f:
-        yaml.dump(treebeard_yaml, f, default_flow_style=False)
-    click.echo("📁 treebeard.yaml file created.")
+def setup():
+    """Creates examples treebeard.yaml configuration file"""
+    if Path("treebeard.yaml").is_file():
+        fatal_exit("📁 found existing treebeard.yaml file here")
+    create_example_yaml()
+    click.echo("📁 created example treebeard.yaml, please update it for your project")
 
 
 @click.command()

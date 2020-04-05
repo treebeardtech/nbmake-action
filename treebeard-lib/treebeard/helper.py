@@ -4,7 +4,9 @@ import sys
 from typing import Optional
 
 import click
+import os
 import requests
+from pathlib import Path
 from pydantic import BaseModel
 
 from treebeard.conf import config_path
@@ -73,3 +75,10 @@ def sanitise_notebook_id(notebook_id: str) -> str:
     out = notebook_id.replace("_", "-")
     out = out.replace(" ", "-")
     return out.lower()
+
+
+def create_example_yaml():
+    dirname = os.path.split(os.path.abspath(__file__))[0]
+    with open(Path(f"{dirname}/example_treebeard.yaml"), "rb") as f:
+        open("treebeard.yaml", "wb").write(f.read())
+    return

@@ -80,12 +80,15 @@ def validate_notebook_directory(
     treebeard_env: TreebeardEnv, treebeard_config: TreebeardConfig
 ):
     if treebeard_env.project_id is None:
-        click.echo(
-            click.style(
-                "No account config detected! Please run treebeard configure", fg="red",
-            ),
-            err=True,
+        fatal_exit("No account config detected! Please run `treebeard configure`")
+
+    if not Path("treebeard.yaml").is_file():
+        fatal_exit(
+            "treebeard.yaml file not found! `treebeard setup` fetches an example."
         )
+
+    if not treebeard_config.deglobbed_notebooks:
+        fatal_exit("No notebooks found in project! Treebeard expects at least one.")
 
     for notebook in treebeard_config.deglobbed_notebooks:
         if not os.path.exists(notebook):
