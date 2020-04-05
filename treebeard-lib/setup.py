@@ -31,7 +31,7 @@ setuptools.setup(
     version=version,
     author="Treebeard Technologies",
     author_email="alex@treebeard.io",
-    description="Tools for notebook hosting",
+    description="Run and schedule jupyter notebook projects in the cloud",
     long_description=long_description,
     long_description_content_type="text/markdown",  # type: ignore
     packages=setuptools.find_namespace_packages(),
