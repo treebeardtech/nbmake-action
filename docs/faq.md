@@ -27,3 +27,7 @@ Treebeard is free to use for open source projects (up to 24h build time per mont
 ## What does Treebeard do with my data?
 
 The Treebeard library relies on our backend services for executing yoru project, serving your outputs, and integrating with your Github and Slack accounts if requested. All data is encrypted, secured using Google Cloud Platform, and handled in accordance with our [privacy policy](https://treebeard.io/privacy/). Email [laurence](mailto:laurence@treebeard.io) with any questions.
+
+## What are Treebeard's machine specs?
+
+Our build machines provide 8 CPUs, 7.2 GB memory, 90GB SSD with the current goal of working with almost all tasks you would be able to achieve on your laptop.
