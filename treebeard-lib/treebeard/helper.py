@@ -1,12 +1,12 @@
 import configparser
 import json
+import os
 import sys
+from pathlib import Path
 from typing import Optional
 
 import click
-import os
 import requests
-from pathlib import Path
 from pydantic import BaseModel
 
 from treebeard.conf import config_path
