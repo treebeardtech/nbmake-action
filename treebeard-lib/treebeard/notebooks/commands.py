@@ -65,7 +65,7 @@ project_id = treebeard_env.project_id
 )
 @click.option(
     "--push-secrets/--no-push-secrets",
-    default=True,
+    default=False,
     help="Confirm all prompt options except pushing secrets",
 )
 @click.pass_obj
@@ -176,10 +176,10 @@ def run(
                     secrets_url,
                     local=True,
                 )
+                sys.exit(0)
             except Exception:
                 click.echo(f"Failed to build...\n{format_exc()}")
-            finally:
-                sys.exit(0)
+                sys.exit(1)
 
         click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
         response = requests.post(
