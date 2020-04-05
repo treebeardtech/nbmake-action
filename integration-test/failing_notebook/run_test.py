@@ -3,7 +3,7 @@ import sys
 from traceback import format_exc
 
 if __name__ == "__main__":
-    # Test local failure fails
+    print("Test local failure fails")
     process = subprocess.Popen(
         "treebeard run --watch --local --confirm", shell=True, stdout=subprocess.PIPE
     )
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     print(f"Process exited with status {retval}")
     assert retval == 1
 
-    # Test remote failure fails
+    print("Test remote failure fails")
     process = subprocess.Popen(
         "treebeard run --watch --confirm", shell=True, stdout=subprocess.PIPE
     )
