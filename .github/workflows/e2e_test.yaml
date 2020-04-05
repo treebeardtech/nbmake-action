@@ -27,21 +27,6 @@ jobs:
       - name: Run
         run: ./e2e-test/local_install
 
-  reddit_tracker:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
-      - name: Run Example
-        run: ./examples/run_example_test ${{ secrets.TREEBEARD_API_KEY }} reddit_tracker
-      - name: Check Output
-        run: |
-          wget https://api.treebeard.io/d8a0c5b6c9/reddit_tracker/11689ce2-5aac-4855-9c5f-47f5728e42b0/output/nfl.html?api_key=
-
   hello_treebeard:
     timeout-minutes: 20
     runs-on: ubuntu-latest

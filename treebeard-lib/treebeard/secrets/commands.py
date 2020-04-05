@@ -27,8 +27,10 @@ def push(files: List[IO], confirm: bool):
 
 def push_secrets(files: List[IO], confirm: bool):
     """Uploads files marked in treebeard.yaml as 'secret'"""
-    click.echo(f"🌲 Pushing Secrets for project {treebeard_env.project_id}")
     validate_notebook_directory(treebeard_env, treebeard_config)
+    click.echo(
+        f"🌲 Pushing secrets for {treebeard_env.project_id}/{treebeard_env.notebook_id}"
+    )
     secrets_archive = get_secrets_archive(files, confirm=confirm)
     response = requests.post(
         secrets_endpoint,

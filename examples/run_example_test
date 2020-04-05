@@ -32,5 +32,5 @@ fi
 
 
 treebeard configure --email robot@treebeard.io --api_key "$api_key"
+treebeard run --watch --confirm --no-push-secrets --local 
 treebeard run --watch --confirm --no-push-secrets
-treebeard run --ignore venv --local --watch --confirm --no-push-secrets

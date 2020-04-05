@@ -33,11 +33,6 @@ ipywidgets==7.5.1
 jedi==0.16.0
 Jinja2==2.11.0
 jsonschema==3.2.0
-jupyter==1.0.0
-jupyter-client==5.3.4
-jupyter-console==6.1.0
-jupyter-core==4.6.1
-jupyter-repo2docker==0.11.0
 kiwisolver==1.1.0
 log-symbols==0.0.14
 MarkupSafe==1.1.1
