@@ -1,5 +1,12 @@
 import setuptools  # type: ignore
 
+"""
+Treebeard - CLI and Github app for running notebooks
+====================================================
+
+Check out [GitHub](https://github.com/treebeardtech/treebeard) to find out more.
+"""
+
 install_requires = [
     "click",
     "halo",
@@ -32,14 +39,15 @@ setuptools.setup(
     author="Treebeard Technologies",
     author_email="alex@treebeard.io",
     description="Run and schedule jupyter notebook projects in the cloud",
-    long_description=long_description,
+    long_description=__doc__,
     long_description_content_type="text/markdown",  # type: ignore
     packages=setuptools.find_namespace_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: Apache-2.0 License",
         "Operating System :: OS Independent",
     ],
+    license="Apache-2.0",
     python_requires=">=3.6",
     package_data={"treebeard": ["version.txt", "example_treebeard.yaml"]},
     entry_points={
@@ -49,4 +57,5 @@ setuptools.setup(
         ]
     },
     install_requires=install_requires,
+    url="https://github.com/treebeardtech/treebeard",
 )
