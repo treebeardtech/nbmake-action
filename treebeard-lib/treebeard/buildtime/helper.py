@@ -4,7 +4,7 @@ import click
 import docker  # type: ignore
 
 
-def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str):
+def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str) -> int:
     client: Any = docker.from_env()  # type: ignore
 
     container = client.containers.run(
@@ -21,5 +21,4 @@ def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str):
     [click.echo(line, nl=False) for line in container.logs(stream=True)]
 
     result = container.wait()
-    if result["StatusCode"] != 0:
-        raise Exception(f"Failed! {result}")
+    return result["StatusCode"]

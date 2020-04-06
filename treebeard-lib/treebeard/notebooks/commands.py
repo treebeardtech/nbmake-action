@@ -11,7 +11,6 @@ import tempfile
 import time
 from datetime import datetime
 from distutils.dir_util import copy_tree
-from traceback import format_exc
 from typing import Any, List
 
 import click
@@ -23,7 +22,6 @@ from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
 from treebeard.buildtime.run_repo import run_repo
-from treebeard.runtime.run import start
 from treebeard.conf import (
     config_path,
     get_time,
@@ -34,6 +32,7 @@ from treebeard.conf import (
 )
 from treebeard.helper import CliContext, sanitise_notebook_id
 from treebeard.notebooks.types import Run
+from treebeard.runtime.run import start
 from treebeard.secrets.commands import push_secrets as push_secrets_to_store
 from treebeard.secrets.helper import get_secrets_archive
 from treebeard.util import fatal_exit
@@ -186,20 +185,17 @@ def run(
         secrets_archive = get_secrets_archive()
         repo_url = f"file://{src_archive.name}"
         secrets_url = f"file://{secrets_archive.name}"
-        try:
-            run_repo(
-                str(project_id),
-                str(notebook_id),
-                treebeard_env.run_id,
-                build_tag,
-                repo_url,
-                secrets_url,
-                local=True,
-            )
-            sys.exit(0)
-        except Exception:
-            click.echo(f"Failed to build...\n{format_exc()}")
-            sys.exit(1)
+        status = run_repo(
+            str(project_id),
+            str(notebook_id),
+            treebeard_env.run_id,
+            build_tag,
+            repo_url,
+            secrets_url,
+            local=True,
+        )
+        click.echo(f"Local build exited with status code {status}")
+        sys.exit(status)
 
     click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
     response = requests.post(

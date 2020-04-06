@@ -90,7 +90,11 @@ jobs:
           pip install -e ./treebeard-lib
       - name: Add credentials
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
-      - name: Run Test
+      - name: Run Runtime Failure Test
         run: |
           cd integration-test/failing_notebook
+          python -m run_test
+      - name: Run Buildtime Failure Test
+        run: |
+          cd integration-test/failing_build
           python -m run_test

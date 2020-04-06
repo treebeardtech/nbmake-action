@@ -1,11 +1,13 @@
 import os
 import subprocess
+import sys
 from pathlib import Path
 from traceback import format_exc
 from typing import Any, Optional
 
 import click
 import docker  # type: ignore
+import requests
 from docker.errors import ImageNotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
@@ -33,7 +35,7 @@ def run_repo(
     repo_url: str,
     secrets_url: Optional[str],
     local: bool = False,
-):
+) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
     click.echo(f"Run path: {run_path}")
 
@@ -74,6 +76,8 @@ def run_repo(
     try:
         click.echo(f"Pulling {image_name}")
         client.images.pull(image_name)
+    except requests.exceptions.ConnectionError:
+        fatal_exit("Could not connect to Docker registry!")
     except ImageNotFound:
         try:
             click.echo(
@@ -100,7 +104,12 @@ def run_repo(
         --target-repo-dir {abs_notebook_dir} \
         {abs_notebook_dir}
     """
-    subprocess.check_output(["bash", "-c", r2d])
+
+    try:
+        subprocess.check_output(["bash", "-c", r2d])
+    except:
+        click.echo(f"\n\n❗ Failed to build container from the source repo")
+        return 1
 
     if not local:
         try:
@@ -112,10 +121,14 @@ def run_repo(
             )
 
     click.echo(f"Image built successfully, now running.")
-    subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
-    run_image(project_id, notebook_id, run_id, image_name)
+    status = run_image(project_id, notebook_id, run_id, image_name)
+    if status != 0:
+        click.echo("Image run failed, not updated :latest")
+        return status
 
+    subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
     click.echo(f"tagged {versioned_image_name} as {latest_image_name}")
+    return 0
 
 
 if __name__ == "__main__":
@@ -139,7 +152,7 @@ if __name__ == "__main__":
     if not treebeard_env.project_id:
         raise Exception("No project ID at buildtime")
 
-    run_repo(
+    status = run_repo(
         treebeard_env.project_id,
         treebeard_env.notebook_id,
         treebeard_env.run_id,
@@ -147,3 +160,5 @@ if __name__ == "__main__":
         repo_url,
         secrets_url,
     )
+
+    sys.exit(status)
