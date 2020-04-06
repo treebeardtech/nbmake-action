@@ -3,7 +3,6 @@ import subprocess
 import sys
 from traceback import format_exc
 from typing import Dict
-import click
 
 import papermill as pm  # type: ignore
 
