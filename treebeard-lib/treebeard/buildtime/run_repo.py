@@ -121,7 +121,7 @@ def run_repo(
             )
 
     click.echo(f"Image built successfully, now running.")
-    status = run_image(project_id, notebook_id, run_id, image_name)
+    status = run_image(project_id, notebook_id, run_id, versioned_image_name)
     if status != 0:
         click.echo("Image run failed, not updated :latest")
         return status
