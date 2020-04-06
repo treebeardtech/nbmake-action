@@ -32,7 +32,6 @@ from treebeard.conf import (
 )
 from treebeard.helper import CliContext, sanitise_notebook_id
 from treebeard.notebooks.types import Run
-from treebeard.runtime.run import start
 from treebeard.secrets.commands import push_secrets as push_secrets_to_store
 from treebeard.secrets.helper import get_secrets_archive
 from treebeard.util import fatal_exit
@@ -101,7 +100,8 @@ def run(
         ):
             sys.exit(0)
 
-        start()
+        # Note: import runtime.run causes win/darwin devices missing magic to fail at start
+        subprocess.check_output("python -m runtime.run", shell=True)
         sys.exit(0)
 
     params = {}
