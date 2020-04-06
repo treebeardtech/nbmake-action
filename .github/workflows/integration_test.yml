@@ -70,8 +70,10 @@ jobs:
           treebeard run --watch --confirm --local
       - name: Run Dockerless
         run: |
+          cd integration-test/dagster
+          cp -R ../../treebeard-lib .
           pip install -r requirements.txt
-          treebeard run dockerless
+          treebeard run --dockerless --confirm
 
   failing_notebook:
     timeout-minutes: 20

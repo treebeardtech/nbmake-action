@@ -96,6 +96,12 @@ def run(
         click.echo(
             f"🌲  Running locally without docker using your current python environment"
         )
+        if not confirm and not click.confirm(
+            f"Warning: This will clear the outputs of your notebooks, continue?",
+            default=True,
+        ):
+            sys.exit(0)
+
         start()
         sys.exit(0)
 
