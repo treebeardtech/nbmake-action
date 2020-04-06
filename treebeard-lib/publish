@@ -22,4 +22,8 @@ twine upload dist/*
 clean_artifacts
 pipenv install --pre # necessary after version changes
 
+echo "Wait a couple of minutes before pushing for Pypi to serve the new version..."
+sleep 120
+echo "Done."
 popd
+
