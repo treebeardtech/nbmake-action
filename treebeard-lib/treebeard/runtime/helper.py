@@ -1,11 +1,9 @@
+import mimetypes
 from datetime import datetime
-from typing import Any
 
-import magic  # type: ignore
+import filetype  # type: ignore
 import requests
 from requests import Response
-
-mime: Any = magic.Magic(mime=True)
 
 file_access_url = "https://api.treebeard.io"
 
@@ -16,7 +14,10 @@ def log(message: str):
 
 def upload_artifact(filename: str, upload_path: str):
     log(f"Saving {filename} to {upload_path}")
-    content_type: str = mime.from_file(filename)
+    content_type: str = filetype.guess(filename)  # type: ignore
+    if content_type == None:
+        content_type = mimetypes.guess_type(filename)[0] or ""
+
     with open(filename, "rb") as data:
         resp: Response = requests.get(
             f"{file_access_url}/get_upload_url/{upload_path}",
