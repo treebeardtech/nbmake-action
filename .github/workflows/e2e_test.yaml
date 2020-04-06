@@ -52,3 +52,19 @@ jobs:
       - name: Run Example
         run: |
           ./examples/run_example_test ${{ secrets.TREEBEARD_API_KEY }} google_cloud_storage
+
+  multi_os_install:
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install treebeard
+        run: |
+          pip install -e ./treebeard-lib
