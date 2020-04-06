@@ -23,6 +23,7 @@ from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
 from treebeard.buildtime.run_repo import run_repo
+from treebeard.runtime.run import start
 from treebeard.conf import (
     config_path,
     get_time,
@@ -70,6 +71,11 @@ project_id = treebeard_env.project_id
     default=False,
     help="Confirm all prompt options except pushing secrets",
 )
+@click.option(
+    "--dockerless/--no-dockerless",
+    default=False,
+    help="Run locally without docker container",
+)
 @click.pass_obj
 def run(
     cli_context: CliContext,
@@ -79,11 +85,19 @@ def run(
     local: bool,
     confirm: bool,
     push_secrets: bool,
+    dockerless: bool,
 ):
     """
     Run a notebook and optionally schedule it to run periodically
     """
     validate_notebook_directory(treebeard_env, treebeard_config)
+
+    if dockerless:
+        click.echo(
+            f"🌲  Running locally without docker using your current python environment"
+        )
+        start()
+        sys.exit(0)
 
     params = {}
     if t:

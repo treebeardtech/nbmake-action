@@ -22,7 +22,7 @@ jobs:
         run: |
           cd integration-test/conda
           cp -R ../../treebeard-lib .
-          treebeard run --watch --confirm
+          treebeard run --watch --confirm --local
 
   virtualenv:
     timeout-minutes: 20
@@ -63,11 +63,15 @@ jobs:
           pip install -e ./treebeard-lib
       - name: Add credentials
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
-      - name: Run Test
+      - name: Run Local
         run: |
           cd integration-test/dagster
           cp -R ../../treebeard-lib .
-          treebeard run --watch --confirm
+          treebeard run --watch --confirm --local
+      - name: Run Dockerless
+        run: |
+          pip install -r requirements.txt
+          treebeard run dockerless
 
   failing_notebook:
     timeout-minutes: 20

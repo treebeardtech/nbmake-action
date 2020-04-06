@@ -3,6 +3,7 @@ import subprocess
 import sys
 from traceback import format_exc
 from typing import Dict
+import click
 
 import papermill as pm  # type: ignore
 
@@ -83,7 +84,7 @@ def run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, str]:
     return notebook_statuses
 
 
-if __name__ == "__main__":
+def start():
     if not treebeard_env.notebook_id:
         raise Exception("No notebook ID at runtime")
     if not treebeard_env.project_id:
@@ -102,3 +103,7 @@ if __name__ == "__main__":
     if n_failed > 0:
         log(f"{n_failed} of {len(notebook_statuses)} notebooks failed.")
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    start()
