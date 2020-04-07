@@ -24,6 +24,8 @@
 
 Treebeard is free to use for open source projects (up to 24h build time per month) and most of our code is open source (we're working on opening up the rest). View the code at [https://github.com/treebeardtech/treebeard](https://github.com/treebeardtech/treebeard)
 
+For closed-source private projects wanting to use our hosted service, see options [here](https://treebeard.io/pricing/) and please [get in touch](mailto:laurence@treebeard.io).
+
 ## What does Treebeard do with my data?
 
 The Treebeard library relies on our backend services for executing yoru project, serving your outputs, and integrating with your Github and Slack accounts if requested. All data is encrypted, secured using Google Cloud Platform, and handled in accordance with our [privacy policy](https://treebeard.io/privacy/). Email [laurence](mailto:laurence@treebeard.io) with any questions.
@@ -31,3 +33,5 @@ The Treebeard library relies on our backend services for executing yoru project,
 ## What are Treebeard's machine specs?
 
 Our build machines provide 8 CPUs, 7.2 GB memory, 90GB SSD with the current goal of working with almost all tasks you would be able to achieve on your laptop.
+
+If more capacity is needed, please [get in touch](mailto:laurence@treebeard.io).

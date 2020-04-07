@@ -2,11 +2,13 @@
 
 Ensure you have setup your account first using `treebeard configure`
 
+We recommend you follow the quickstart and deploy a project with `treebeard run`, then add these integrations through the admin page settings for the easiest experience.
+
 ## Github
 
 You can install our [Github App](https://github.com/marketplace/treebeard-build) to automatically build your project when you push to Github.
 
-Treebeard will set your commit status depenending on the output of your build, and you can use this to prevent merging to master from a broken branch.
+Treebeard will set your commit status depending on the output of your build, and you can use this to prevent merging to master from a broken branch.
 
 ![](https://storage.googleapis.com/treebeard_image_dump_public/github_check.png)
 

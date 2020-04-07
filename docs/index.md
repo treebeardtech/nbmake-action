@@ -113,9 +113,8 @@ https://api.treebeard.io/b44c784b10/treebeard_example_2/latest/output/my_data.js
 
 The entry example shows the basic capabilities of the cloud build service.  
 The notebook uses some cloud credentials to call an API, saves an image to an output directory, and calls a separate python script.
-`cd examples/hello_treebeard`
 
-We recommend working in a python virtual environment. Ensure your python (3.6 or higher) environment has jupyter and treebeard installed, and then start jupyter in the project directory.
+We recommend working in a python virtual environment. Ensure your python (3.6 or higher) environment has jupyter and treebeard installed, and then start jupyter in the project directory:
 `jupyter notebook`
 
 Open `main.ipynb` and check out the examples. When you're ready, return to the command line and instruct treebeard to build the project on the cloud with:
@@ -130,3 +129,8 @@ The `reddit_tracker` example shows a notebook that calls the Reddit API using sa
 ## Join the community
 
 Stay in touch with us via [Github](https://github.com/treebeardtech/treebeard) and our [email newsletter](https://treebeard.io/contact)
+
+### 3 Minute Overview
+
+<div style="width: 100%; height: 0px; position: relative; padding-bottom: 62.500%;"><iframe src="https://streamable.com/s/37o5e/lsjslt" frameborder="0" width="100%" height="100%" allowfullscreen style="width: 100%; height: 100%; position: absolute;"></iframe>
+<br></br></div>

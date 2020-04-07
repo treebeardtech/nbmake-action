@@ -275,8 +275,13 @@ def status():
 
         mechanism: str = run.trigger["mechanism"]
         ran_via = "" if len(mechanism) == 0 else f"via {mechanism}"
+        try:
+            branch = f"🔀{run.trigger['branch']}"
+        except:
+            branch = ""
+
         click.echo(
-            f"  {status_emoji[run.status]}  {time_string} {ran_via} -- {run.url}"
+            f"  {status_emoji[run.status]}  {time_string} {ran_via} {branch} -- {run.url}"
         )
 
     if "schedule" in json_data:
