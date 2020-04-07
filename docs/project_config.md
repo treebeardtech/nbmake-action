@@ -65,6 +65,16 @@ notebooks:
   - run.ipynb
 ```
 
-## Advanced: Repo2Docker Configuration
+## Advanced Configuration
+
+### Repo2Docker Configuration
 
 Treebeard is built on top of repo2docker, a great open source project which determines how to install your dependencies. If you need custom packages (usually installed via `apt-get install ...` ) then you can supply the config files such as _apt.txt_ which they accept and are listed in their [docs](https://repo2docker.readthedocs.io/en/latest/config_files.html).
+
+### Speeding up builds with postbuild scripts
+
+If you make changes to dependencies, this will cause a full rebuild of the container. To prevent that and obtain faster build times, repo2docker allows [postbuild scripts](https://repo2docker.readthedocs.io/en/latest/config_files.html#postbuild-run-code-after-installing-the-environment). For example by installing a local package in a postbuild script with `pip install -e .`, changes that package on commit would not cause a container rebuild.
+
+### Package managers and build times
+
+We have found for the fastests builds from fastest to slowest: pip (fastest) > pipenv > conda
