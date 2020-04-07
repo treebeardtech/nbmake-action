@@ -23,6 +23,9 @@ clean_artifacts
 pipenv install --pre # necessary after version changes
 
 echo "Wait a couple of minutes before pushing for Pypi to serve the new version..."
+echo
+echo "While waiting, consider if you need to update the treebeard build image with \`gcloud builds submit\`"
+
 sleep 120
 echo "Done."
 popd
