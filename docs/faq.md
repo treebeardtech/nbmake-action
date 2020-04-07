@@ -24,7 +24,7 @@
 
 Treebeard is free to use for open source projects (up to 24h build time per month) and most of our code is open source (we're working on opening up the rest). View the code at [https://github.com/treebeardtech/treebeard](https://github.com/treebeardtech/treebeard)
 
-For commercial projects wanting to use our hosted service, see options [here](https://treebeard.io/pricing/) and please [get in touch](mailto:laurence@treebeard.io).
+For closed-source private projects wanting to use our hosted service, see options [here](https://treebeard.io/pricing/) and please [get in touch](mailto:laurence@treebeard.io).
 
 ## What does Treebeard do with my data?
 
