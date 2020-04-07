@@ -221,7 +221,10 @@ def run(
             time.sleep(5)
             response = requests.get(notebooks_endpoint, headers=treebeard_env.dict())
             json_data = json.loads(response.text)
-            status = json_data["runs"][-1]["status"]
+            try:
+                status = json_data["runs"][-1]["status"]
+            except:
+                status = "FAILURE"
             click.echo(f"{get_time()} Build status: {status}")
             if status == "SUCCESS":
                 build_result = status
