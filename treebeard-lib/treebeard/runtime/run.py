@@ -11,6 +11,8 @@ from treebeard.runtime.helper import log, upload_artifact
 
 bucket_name = "treebeard-notebook-outputs"
 
+notebook_files = treebeard_config.get_deglobbed_notebooks()
+
 
 def save_artifacts():
     log(f"Uploading outputs...")
@@ -18,7 +20,9 @@ def save_artifacts():
     if treebeard_config is None:
         raise Exception("No Treebeard Config Present at runtime!")
 
-    for notebook_path in treebeard_config.deglobbed_notebooks:
+    notebooks_files = treebeard_config.get_deglobbed_notebooks()
+
+    for notebook_path in notebooks_files:
         notebook_upload_path = f"{run_path}/{notebook_path}"
         upload_artifact(notebook_path, notebook_upload_path)
 
@@ -70,11 +74,10 @@ def run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, str]:
     for output_dir in treebeard_config.output_dirs:
         os.makedirs(output_dir, exist_ok=True)
 
-    notebooks = treebeard_config.deglobbed_notebooks
-    notebook_statuses = {notebook: "⏳" for notebook in notebooks}
+    notebook_statuses = {notebook: "⏳" for notebook in notebook_files}
 
-    for i, notebook_path in enumerate(notebooks):
-        log(f"⏳ Running {i + 1}/{len(notebooks)}: {notebook_path}")
+    for i, notebook_path in enumerate(notebook_files):
+        log(f"⏳ Running {i + 1}/{len(notebook_files)}: {notebook_path}")
         notebook_statuses[notebook_path] = run_notebook(notebook_path)
 
     save_artifacts()

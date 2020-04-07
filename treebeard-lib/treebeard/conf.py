@@ -39,8 +39,8 @@ class TreebeardConfig(BaseModel):
     ignore: Tuple[str, ...] = ()
     secret: Tuple[str, ...] = ()
 
-    @property
-    def deglobbed_notebooks(self):
+    def get_deglobbed_notebooks(self):
+        # warning: sensitive to current directory
         deglobbed_notebooks = []
         for pattern in self.notebooks:
             deglobbed_notebooks.extend(glob(pattern, recursive=True))
@@ -87,10 +87,11 @@ def validate_notebook_directory(
             "treebeard.yaml file not found! `treebeard setup` fetches an example."
         )
 
-    if not treebeard_config.deglobbed_notebooks:
+    notebook_files = treebeard_config.get_deglobbed_notebooks()
+    if not notebook_files:
         fatal_exit("No notebooks found in project! Treebeard expects at least one.")
 
-    for notebook in treebeard_config.deglobbed_notebooks:
+    for notebook in notebook_files:
         if not os.path.exists(notebook):
             fatal_exit(
                 f"Cannot run non-existent notebook '{notebook}', you should be in a project directory with a treebeard.yaml file"

@@ -12,4 +12,4 @@ steps:
         ".",
       ]
 images: ["gcr.io/treebeard-259315/treebeard"]
-tags: ["builder"]
+tags: ["treebeard"]

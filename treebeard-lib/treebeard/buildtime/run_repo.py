@@ -55,13 +55,12 @@ def run_repo(
                 abs_notebook_dir, f"/tmp/{notebook_id}_secrets.tgz", secrets_url
             )
 
+        notebook_files = treebeard_config.get_deglobbed_notebooks()
         try:
-            subprocess.check_output(
-                ["nbstripout"] + treebeard_config.deglobbed_notebooks
-            )
+            subprocess.check_output(["nbstripout"] + notebook_files)
         except:
-            fatal_exit(
-                f"Failed to nbstripout a notebook! Do you have an invalid .ipynb?"
+            print(
+                f"Failed to nbstripout a notebook! Do you have an invalid .ipynb?\nNotebooks: {notebook_files}"
             )
     finally:
         click.echo("Treebeard Bundle Contents:")
