@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/treebeard.svg)](https://badge.fury.io/py/treebeard)
 [![Docs](https://readthedocs.org/projects/treebeard/badge/?version=latest)](https://treebeard.readthedocs.io/)
-![Treebeard build](https://img.shields.io/endpoint?url=https://api.treebeard.io/63db2b28e1/treebeard/master/buildbadge)
+[![Treebeard build](https://img.shields.io/endpoint?url=https://api.treebeard.io/63db2b28e1/treebeard/master/buildbadge)](https://treebeard.io/admin/63db2b28e1/treebeard/latest "Latest notebook run")
 ![E2E Test](https://github.com/treebeardtech/treebeard/workflows/E2E%20Test/badge.svg)
 ![Integration Test](https://github.com/treebeardtech/treebeard/workflows/Integration%20Test/badge.svg)
 
