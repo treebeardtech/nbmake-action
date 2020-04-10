@@ -221,7 +221,10 @@ def run(
             time.sleep(5)
             response = requests.get(runner_endpoint, headers=treebeard_env.dict())
             json_data = json.loads(response.text)
-            status = json_data["runs"][-1]["status"]
+            if len(json_data["runs"]) == 0:
+                status = "FAILURE"
+            else:
+                status = json_data["runs"][-1]["status"]
             click.echo(f"{get_time()} Build status: {status}")
             if status == "SUCCESS":
                 build_result = status
