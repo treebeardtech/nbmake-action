@@ -40,7 +40,7 @@ Slack users can choose to be notified upon completion.
 - Our [website](https://treebeard.io)
 
 ## License
-
+ 
 Treebeard is free and open source and licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) license.
 
 Note that by default Treebeard has some integrations with backend services and a webpage which we are working on open sourcing.
