@@ -25,7 +25,7 @@ from treebeard.buildtime.run_repo import run_repo
 from treebeard.conf import (
     config_path,
     get_time,
-    notebooks_endpoint,
+    runner_endpoint,
     treebeard_config,
     treebeard_env,
     validate_notebook_directory,
@@ -198,10 +198,10 @@ def run(
 
     click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
     response = requests.post(
-        notebooks_endpoint,
+        runner_endpoint,
         files={"repo": open(src_archive.name, "rb")},
         params=params,
-        headers=treebeard_env.dict(),
+        headers={"api_key": treebeard_env.api_key, "email": treebeard_env.email},
     )
     shutil.rmtree(temp_dir)
 
@@ -219,7 +219,7 @@ def run(
         build_result = None
         while not build_result:
             time.sleep(5)
-            response = requests.get(notebooks_endpoint, headers=treebeard_env.dict())
+            response = requests.get(runner_endpoint, headers=treebeard_env.dict())
             json_data = json.loads(response.text)
             if len(json_data["runs"]) == 0:
                 status = "FAILURE"
@@ -240,7 +240,7 @@ def cancel():
     notif = f"🌲  Cancelling {notebook_id}"
     spinner: Any = Halo(text=notif, spinner="dots")
     spinner.start()
-    requests.delete(notebooks_endpoint, headers=treebeard_env.dict())
+    requests.delete(runner_endpoint, headers=treebeard_env.dict())
     spinner.stop()
     click.echo(f"{notif}...🛑 cancellation confirmed!")
 
@@ -249,7 +249,7 @@ def cancel():
 def status():
     """Show the status of the current notebook"""
     validate_notebook_directory(treebeard_env, treebeard_config)
-    response = requests.get(notebooks_endpoint, headers=treebeard_env.dict())
+    response = requests.get(runner_endpoint, headers=treebeard_env.dict())
     if response.status_code != 200:
         raise click.ClickException(f"Request failed: {response.text}")
 

@@ -148,7 +148,9 @@ config_path = get_config_path()
 treebeard_config = get_treebeard_config()
 treebeard_env = get_treebeard_env()
 run_path = get_run_path(treebeard_env)
-secrets_endpoint = f"{url}/projects/{treebeard_env.project_id}/notebooks/{treebeard_env.notebook_id}/secrets"
-notebooks_endpoint = f"{url}/notebooks/{treebeard_env.notebook_id}"
+secrets_endpoint = (
+    f"{url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/secrets"
+)
+runner_endpoint = f"{url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/runs"
 signup_endpoint = f"{url}/cli_signup"
 service_status_endpoint = f"{url}/service_status"
