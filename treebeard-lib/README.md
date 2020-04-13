@@ -27,3 +27,5 @@ git clone https://github.com/python/typeshed.git
 ```
 pyright && python3.7 -m black --check .
 ```
+
+.
