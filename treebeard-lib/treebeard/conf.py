@@ -43,7 +43,7 @@ class TreebeardConfig(BaseModel):
         # warning: sensitive to current directory
         deglobbed_notebooks = []
         for pattern in self.notebooks:
-            deglobbed_notebooks.extend(glob(pattern, recursive=True))
+            deglobbed_notebooks.extend(sorted(glob(pattern, recursive=True)))
         return deglobbed_notebooks
 
 
