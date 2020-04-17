@@ -66,13 +66,12 @@ jobs:
       - name: Run Local
         run: |
           cd integration-test/dagster
-          cp -R ../../treebeard-lib .
           treebeard run --watch --confirm --local
       - name: Run Dockerless
         run: |
           cd integration-test/dagster
-          cp -R ../../treebeard-lib .
           pip install -r requirements.txt
+          pip install treebeard
           treebeard run --dockerless --confirm
 
   failing_build:
@@ -111,5 +110,7 @@ jobs:
         run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }}
       - name: Run Runtime Failure Test
         run: |
+
           cd integration-test/failing_notebook
+          cp -R ../../treebeard-lib .
           python -m run_test

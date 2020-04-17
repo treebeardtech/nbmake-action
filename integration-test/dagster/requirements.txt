@@ -1,3 +1,3 @@
--e ./treebeard-lib
 dagster
 dagit
+# no treebeard, should work fine
