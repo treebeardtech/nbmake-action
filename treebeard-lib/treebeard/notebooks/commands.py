@@ -166,17 +166,18 @@ def run(
 
     size = os.path.getsize(src_archive.name)
     max_upload_size = "100MB"
-    if size > parse_size(max_upload_size):
-        fatal_exit(
-            click.style(
-                (
-                    f"ERROR: Compressed notebook directory is {format_size(size)},"
-                    f" max upload size is {max_upload_size}. \nPlease ensure you ignore any virtualenv subdirectory"
-                    " using `treebeard run --ignore venv`"
-                ),
-                fg="red",
+    if not local:
+        if size > parse_size(max_upload_size):
+            fatal_exit(
+                click.style(
+                    (
+                        f"ERROR: Compressed notebook directory is {format_size(size)},"
+                        f" max upload size is {max_upload_size}. \nPlease ensure you ignore any virtualenv subdirectory"
+                        " using `treebeard run --ignore venv`"
+                    ),
+                    fg="red",
+                )
             )
-        )
     if local:
         build_tag = str(time.mktime(datetime.today().timetuple()))
         repo_image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
