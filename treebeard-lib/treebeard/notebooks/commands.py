@@ -101,8 +101,8 @@ def run(
             sys.exit(0)
 
         # Note: import runtime.run causes win/darwin devices missing magic to fail at start
-        subprocess.call("python -m treebeard.runtime.run", shell=True)
-        sys.exit(0)
+        sc = subprocess.call("python -m treebeard.runtime.run", shell=True)
+        sys.exit(sc)
 
     params = {}
     if t:
