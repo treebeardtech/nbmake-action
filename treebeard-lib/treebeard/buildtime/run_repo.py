@@ -11,7 +11,7 @@ import requests
 from docker.errors import ImageNotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
-from treebeard.conf import run_path, treebeard_config, treebeard_env
+from treebeard.conf import run_path, treebeard_env, get_treebeard_config
 from treebeard.helper import sanitise_notebook_id
 from treebeard.util import fatal_exit
 
@@ -55,7 +55,7 @@ def run_repo(
                 abs_notebook_dir, f"/tmp/{notebook_id}_secrets.tgz", secrets_url
             )
 
-        notebook_files = treebeard_config.get_deglobbed_notebooks()
+        notebook_files = get_treebeard_config().get_deglobbed_notebooks()
         try:
             subprocess.check_output(["nbstripout"] + notebook_files)
         except:
