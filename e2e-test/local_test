@@ -14,7 +14,3 @@ dir_name="testrepo-local$(date +%s)"
 cp -r ../examples/hello_treebeard ../examples/"$dir_name"
 
 ../examples/run_example_test "$api_key" "$dir_name" --local
-
-# Check notebook has been stored
-# note: latest url does not currently work for local runs as it is set by scheduler to firestore
-# wget "https://api.treebeard.io/d8a0c5b6c9/${dir_name}/latest/main.ipynb?api_key=${api_key}&nbconvert=true"
