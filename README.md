@@ -6,12 +6,27 @@
 ![E2E Test](https://github.com/treebeardtech/treebeard/workflows/E2E%20Test/badge.svg)
 ![Integration Test](https://github.com/treebeardtech/treebeard/workflows/Integration%20Test/badge.svg)
 
+## What is Treebeard?
+
+A solution for setting up continuous integration on Python data science projects requiring minimal configuration.
+
+![blah](https://storage.googleapis.com/treebeard_image_dump_public/github.gif)
+
+Functionality:
+
+- Automatically installs dependencies for binder-ready repos (which can use conda, pip, or pipenv)
+- Runs notebooks in the repo (using papermill)
+- Uploads outputs, providing versioned URLs and nbcoverted output notebooks
+- Integrates with repos via a [GitHub App](https://github.com/marketplace/treebeard-build)
+- Slack notifications
+- A secret store for integrating with existing infrastructure
+
+## What is in this repo?
+
+Our Apache-licensed Python SDK which contains a CLI, buildtime orchestration logic, and runtime code for testing notebooks and uploading outputs.
+
 ## More Information
 
-- Our [docs](https://treebeard.readthedocs.io/en/latest/)
-- Our [website](https://treebeard.io)
-
-## License
- 
-Treebeard is free and open source and licensed under the [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) license.
-
+- [GitHub App](https://github.com/marketplace/treebeard-build)
+- [Docs](https://treebeard.readthedocs.io/en/latest/)
+- [Website](https://treebeard.io)
