@@ -10,9 +10,10 @@
 
 A solution for setting up continuous integration on Python data science projects requiring minimal configuration.
 
-![blah](https://storage.googleapis.com/treebeard_image_dump_public/github.gif)
+<span style="display:block;text-align:center">
+<img src="https://storage.googleapis.com/treebeard_image_dump_public/github.gif" width="550px" style="margin:'auto'"/></span>
 
-Functionality:
+### Functionality:
 
 - Automatically installs dependencies for binder-ready repos (which can use conda, pip, or pipenv)
 - Runs notebooks in the repo (using papermill)
