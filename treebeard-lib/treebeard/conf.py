@@ -44,6 +44,8 @@ class TreebeardConfig(BaseModel):
         deglobbed_notebooks = []
         for pattern in self.notebooks:
             deglobbed_notebooks.extend(sorted(glob(pattern, recursive=True)))
+        if len(deglobbed_notebooks) == 0:
+            raise Exception("No notebooks found in project! (**/*.ipynb)")
         return deglobbed_notebooks
 
 
@@ -83,9 +85,11 @@ def validate_notebook_directory(
         fatal_exit("No account config detected! Please run `treebeard configure`")
 
     if not Path("treebeard.yaml").is_file():
-        fatal_exit(
-            "treebeard.yaml file not found! `treebeard setup` fetches an example."
+        click.secho(
+            "Warning: treebeard.yaml file not found! `treebeard setup` fetches an example.",
+            fg="yellow",
         )
+        click.echo("Using defaults: notebooks: - '**/*.ipynb' output_dirs: - 'outputs'")
 
     notebook_files = treebeard_config.get_deglobbed_notebooks()
     if not notebook_files:
