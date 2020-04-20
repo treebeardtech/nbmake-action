@@ -1,7 +1,5 @@
 import pprint
-import uuid
 import warnings
-import webbrowser
 from pathlib import Path
 
 import click
@@ -9,7 +7,7 @@ from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
-from treebeard.conf import signup_endpoint, treebeard_env, treebeard_web_url
+from treebeard.conf import signup_endpoint, treebeard_env
 from treebeard.helper import create_example_yaml, set_credentials
 from treebeard.util import fatal_exit
 from treebeard.version import get_version
