@@ -1,0 +1,6 @@
+notebooks:
+  - main.ipynb
+output_dirs:
+  - output
+ignore:
+  - venv
