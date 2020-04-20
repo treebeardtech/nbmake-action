@@ -34,7 +34,7 @@ class TreebeardEnv(BaseModel):
 
 
 class TreebeardConfig(BaseModel):
-    notebooks: Tuple[str, ...] = tuple()
+    notebooks: Tuple[str, ...] = tuple(["**/*.ipynb"])
     output_dirs: Tuple[str, ...] = tuple(["output"])
     ignore: Tuple[str, ...] = ()
     secret: Tuple[str, ...] = ()
