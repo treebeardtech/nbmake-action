@@ -101,8 +101,8 @@ def run(
             sys.exit(0)
 
         # Note: import runtime.run causes win/darwin devices missing magic to fail at start
-        subprocess.check_output("python -m treebeard.runtime.run", shell=True)
-        sys.exit(0)
+        sc = subprocess.call("python -m treebeard.runtime.run", shell=True)
+        sys.exit(sc)
 
     params = {}
     if t:
@@ -164,19 +164,6 @@ def run(
         click.echo("Exiting")
         sys.exit()
 
-    size = os.path.getsize(src_archive.name)
-    max_upload_size = "100MB"
-    if size > parse_size(max_upload_size):
-        fatal_exit(
-            click.style(
-                (
-                    f"ERROR: Compressed notebook directory is {format_size(size)},"
-                    f" max upload size is {max_upload_size}. \nPlease ensure you ignore any virtualenv subdirectory"
-                    " using `treebeard run --ignore venv`"
-                ),
-                fg="red",
-            )
-        )
     if local:
         build_tag = str(time.mktime(datetime.today().timetuple()))
         repo_image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
@@ -195,6 +182,20 @@ def run(
         )
         click.echo(f"Local build exited with status code {status}")
         sys.exit(status)
+
+    size = os.path.getsize(src_archive.name)
+    max_upload_size = "100MB"
+    if size > parse_size(max_upload_size):
+        fatal_exit(
+            click.style(
+                (
+                    f"ERROR: Compressed notebook directory is {format_size(size)},"
+                    f" max upload size is {max_upload_size}. \nPlease ensure you ignore any virtualenv subdirectory"
+                    " using `treebeard run --ignore venv`"
+                ),
+                fg="red",
+            )
+        )
 
     click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
     response = requests.post(
