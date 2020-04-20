@@ -44,6 +44,8 @@ class TreebeardConfig(BaseModel):
         deglobbed_notebooks = []
         for pattern in self.notebooks:
             deglobbed_notebooks.extend(sorted(glob(pattern, recursive=True)))
+        if len(deglobbed_notebooks) == 0:
+            raise Exception("No notebooks found in project! (**/*.ipynb)")
         return deglobbed_notebooks
 
 
