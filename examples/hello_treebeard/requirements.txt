@@ -1,4 +1,4 @@
-treebeard==0.0.81
+treebeard==0.0.82
 jupyter
 requests
 pandas
