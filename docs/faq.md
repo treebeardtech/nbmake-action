@@ -1,24 +1,24 @@
 # FAQ
 
-## Why run my project in the cloud?
+## Why use continuous integration for my notebooks?
+
+**Reproducibility**:
+
+- So you never have to say 'works on my machine' again
+- Catch breaking changes across your project
+- Get rapid feedback as your project progresses
+
+**Automation**:
+
+- Get notifications via messages and develop asynchronously
+- Peace of mind with automated testing
+- Cloud containers test your project environment
 
 **Collaboration**:
 
 - Share the output of your work with others
 - Consume pipeline outputs in other services
 - Work on multiple parts of a pipeline with confidence
-
-**Reproducibility**:
-
-- So you never have to say 'works on my machine' again
-- Catch breaking changes across your whole pipeline
-- Get rapid feedback as your project progresses
-
-**Automation**:
-
-- The cloud is better than your laptop for long or critical tasks
-- Get notifications via messages and develop asynchronously
-- Peace of mind as breaking changes are caught automatically
 
 ## How much does Treebeard cost?
 

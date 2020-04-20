@@ -11,6 +11,7 @@
    external_integrations
    integrate_your_infra
    cli
+   testing_locally
    on_prem
    faq
 
@@ -29,25 +30,35 @@ Treebeard is a library which reproduces Python data science work in the cloud, n
 
 Treebeard allows you to do the following without bash scripts:
 
-- Schedule notebooks in the cloud, working with all types of dependencies
 - Setup continuous integration for your Github repo, to test notebooks on each push
+- Automatically build a project container image
 - Fetch outputs from each cloud run using versioned URLs
+- See outputs over time in an admin page
 
-The goal is to allow data scientists to set up continuous integration with minimal changes to their project.
+The goal is to allow data scientists to set up **continuous integration** with minimal changes to their project.
 
-Treebeard works by adding the `treebeard` pip package to your `requirements.txt`, `Pipfile`, or `environment.yml`.
+We recommend quickly getting a project hosted on Github running with the [Github App](https://github.com/marketplace/treebeard-build). Once the Github App is watching your repository, it will build any notebooks in the project (or as specified in `treebeard.yaml`) when a commit is made.
 
-Then placing a `treebeard.yaml` file in the same directory like so:
+## Configuration
+
+Treebeard expects project dependencies to be listed in a `requirements.txt`, `Pipfile`, or `environment.yml`. The `treebeard` pip package should also be added, once installed for local testing.
+
+Treebeard then expects a `treebeard.yaml` file in the same directory:
 
 ```yaml
-# treebeard.yaml
+# example treebeard.yaml
 notebooks:
   - run.ipynb
 ignore:
   - venv
+output_dirs:
+  - output
+  - plots
+secrets:
+  - secrets.json
 ```
 
-then running `treebeard run`.
+Runs can be triggered with `treebeard run`.
 
 We host back-end infrastructure for running your notebook in the cloud, and serving output data.
 

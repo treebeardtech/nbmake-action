@@ -2,7 +2,7 @@
 
 Note: Whichever form of dependency management you use, you will need to include `treebeard` as a dependency.
 
-Treebeard requires the directory which it is run in to contain:
+Treebeard expects the directory which it is run in to contain:
 
 1. Some type of dependencies file (requirements.txt, Pipfile, or environment.yml)
 2. A treebeard.yaml file
