@@ -26,19 +26,11 @@ warnings.filterwarnings(
 
 
 @click.command()
-@click.option("--email", prompt="Your email:")
-@click.option("--api_key", default=str(uuid.uuid4()))
+@click.option("--email")
+@click.option("--api_key")
 def configure(email: str, api_key: str):
     """Register with Treebeard services"""
-    project_id = set_credentials(email, api_key, signup_endpoint)
-    web_signup_url = f"{treebeard_web_url}/cli_signup?email={email}&api_key={api_key}&project_id={project_id}"
-    webbrowser.open_new_tab(web_signup_url)
-    click.echo(
-        click.style(
-            f"Please ensure you complete web signup at {web_signup_url} before continuing!",
-            fg="red",
-        )
-    )
+    set_credentials(email, api_key, signup_endpoint)
 
 
 @click.command()
