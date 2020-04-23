@@ -28,7 +28,13 @@ For closed-source private projects wanting to use our hosted service, see option
 
 ## What does Treebeard do with my data?
 
-The Treebeard library relies on our backend services for executing yoru project, serving your outputs, and integrating with your Github and Slack accounts if requested. All data is encrypted, secured using Google Cloud Platform, and handled in accordance with our [privacy policy](https://treebeard.io/privacy/). Email [laurence](mailto:laurence@treebeard.io) with any questions.
+The Treebeard library relies on our backend services for executing your project, serving your outputs, and integrating with your Github and Slack accounts if requested. All data is encrypted, secured using Google Cloud Platform, and handled in accordance with our [privacy policy](https://treebeard.io/privacy/). Email [laurence](mailto:laurence@treebeard.io) with any questions.
+
+## How does Treebeard work with private Github repos?
+
+Projects triggered from a Github repository have the same private/public status as the repository.  
+Projects initially triggered from the Treebeard CLI are public by default.  
+But, if the project has been initialised from Github the public/private status will remain the same as the Github project.
 
 ## What are Treebeard's machine specs?
 
