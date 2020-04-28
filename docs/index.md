@@ -39,6 +39,8 @@ The goal is to allow data scientists to set up **continuous integration** with m
 
 We recommend quickly getting a project hosted on Github running with the [Github App](https://github.com/marketplace/treebeard-build). Once the Github App is watching your repository, it will build any notebooks in the project (or as specified in `treebeard.yaml`) when a commit is made.
 
+The following sections describe setup for working from the CLI.
+
 ## Configuration
 
 Treebeard expects project dependencies to be listed in a `requirements.txt`, `Pipfile`, or `environment.yml`. The `treebeard` pip package should also be added, once installed for local testing.
@@ -79,16 +81,7 @@ pip 20.0.2 from /Users/.../python3.7/site-packages/pip (python 3.7)
 
 ## Get started
 
-Authenticate your CLI with our backend infrastructure using your email address.
-
-```bash
-➜ treebeard configure --email test@example.com
-🔑  Config saved in /Users/project_user/.treebeard
-```
-
-You will then need to verify your email address.
-
-Clone our git repo to try the examples
+Before running against remote services, create an account at https://treebeard.io/signin and follow the instructions for configuring the CLI.
 
 ```bash
 ➜ git clone https://github.com/treebeardtech/treebeard.git
