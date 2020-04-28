@@ -38,6 +38,7 @@ class TreebeardConfig(BaseModel):
     output_dirs: Tuple[str, ...] = tuple(["output"])
     ignore: Tuple[str, ...] = ()
     secret: Tuple[str, ...] = ()
+    kernel_name: str = "python3"
 
     def get_deglobbed_notebooks(self):
         # warning: sensitive to current directory

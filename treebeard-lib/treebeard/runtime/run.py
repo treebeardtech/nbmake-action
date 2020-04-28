@@ -41,10 +41,10 @@ def run_notebook(notebook_path: str) -> str:
         pm.execute_notebook(  # type: ignore
             notebook_path,
             notebook_path,
+            kernel_name=treebeard_config.kernel_name,
             progress_bar=False,
             request_save_on_cell_execute=True,
             autosave_cell_every=10,
-            kernel_name="python3",
             log_output=True,
             cwd=f"{os.getcwd()}/{notebook_dir}",
         )
