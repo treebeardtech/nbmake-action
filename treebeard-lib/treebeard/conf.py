@@ -45,8 +45,15 @@ class TreebeardConfig(BaseModel):
         for pattern in self.notebooks:
             deglobbed_notebooks.extend(sorted(glob(pattern, recursive=True)))
         if len(deglobbed_notebooks) == 0:
-            raise Exception("No notebooks found in project! (**/*.ipynb)")
-        return deglobbed_notebooks
+            raise Exception(
+                f"No notebooks found in project! Searched for {self.notebooks}"
+            )
+
+        ignored_notebooks = []
+        for pattern in self.ignore:
+            ignored_notebooks.extend(sorted(glob(pattern, recursive=True)))
+
+        return [nb for nb in deglobbed_notebooks if nb not in ignored_notebooks]
 
 
 env = "production"

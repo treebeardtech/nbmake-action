@@ -75,6 +75,9 @@ def run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, str]:
         os.makedirs(output_dir, exist_ok=True)
 
     notebook_statuses = {notebook: "⏳" for notebook in notebook_files}
+    print(f"Will run the following:")
+    [print(nb) for nb in notebook_files]
+    print()
 
     for i, notebook_path in enumerate(notebook_files):
         log(f"⏳ Running {i + 1}/{len(notebook_files)}: {notebook_path}")
