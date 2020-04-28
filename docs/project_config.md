@@ -1,27 +1,12 @@
 # Configuring your project
 
-Note: Whichever form of dependency management you use, you will need to include `treebeard` as a dependency.
+## Specify Dependencies
 
-Treebeard expects the directory which it is run in to contain:
+[Binder-ready](https://mybinder.readthedocs.io/en/latest/introduction.html) repos can be run on treebeard without any additional configuration.
 
-1. Some type of dependencies file (requirements.txt, Pipfile, or environment.yml)
-2. A treebeard.yaml file
+## Select Notebooks
 
-An example of a valid project directory is shown below.
-
-Note that it contains a `venv` which we do not want to upload to Treebeard, and a `.env` file containing credentials used by this project.
-
-```
-➜ ls -a repo
-total 32
--rw-r--r--  1 project_user  staff    13B 12 Mar 15:05 .env
-drwxr-xr-x  3 project_user  staff    96B 17 Mar 10:13 .ipynb_checkpoints
-drwxr-xr-x  3 project_user  staff    96B 12 Mar 14:13 .vscode
--rw-r--r--  1 project_user  staff    31B 17 Mar 10:08 requirements.txt
--rw-r--r--  1 project_user  staff   1.2K 17 Mar 10:13 run.ipynb
--rw-r--r--  1 project_user  staff   135B 12 Mar 13:38 treebeard.yaml
-drwxr-xr-x  6 project_user  staff   192B 12 Mar 14:06 venv
-```
+By default all notebooks will be run (matching `'**/*.ipynb'`) although you can provide a `treebeard.yaml` to specify your own config.
 
 ```yaml
 # treebeard.yaml
@@ -78,3 +63,7 @@ If you make changes to dependencies, this will cause a full rebuild of the conta
 ### Package managers and build times
 
 We have found for the fastests builds from fastest to slowest: pip (fastest) > pipenv > conda
+
+### Specify Treebeard Version
+
+The python process at runtime needs the [treebeard pypi package](https://pypi.org/project/treebeard/) available at runtime. By default it will be installed after your project is built, but you can install it in your requirements.txt etc. proactively if you need to resolve conflicts.
