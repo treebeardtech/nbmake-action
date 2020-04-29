@@ -5,6 +5,7 @@
 [![Treebeard build](https://api.treebeard.io/63db2b28e1/treebeard/latest/buildbadge)](https://treebeard.io/admin/63db2b28e1/treebeard/latest "Latest notebook run")
 ![E2E Test](https://github.com/treebeardtech/treebeard/workflows/E2E%20Test/badge.svg)
 ![Integration Test](https://github.com/treebeardtech/treebeard/workflows/Integration%20Test/badge.svg)
+[![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/treebeardtech/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## What is Treebeard?
 
