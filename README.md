@@ -8,7 +8,7 @@
 
 ## What is Treebeard?
 
-A solution for setting up continuous integration on Python data science projects requiring minimal configuration.
+A solution for setting up continuous integration on data science projects requiring minimal configuration.
 
 <span style="display:block;text-align:center">
 <img src="https://storage.googleapis.com/treebeard_image_dump_public/github.gif" width="550px" style="margin:'auto'"/></span>

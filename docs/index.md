@@ -26,7 +26,7 @@
 
 # 🌲 Welcome to Treebeard
 
-Treebeard is a library which reproduces Python data science work in the cloud, natively supporting Jupyter Notebooks.
+Treebeard is a library which automates and tests data science projects, natively supporting Jupyter Notebooks.
 
 Treebeard allows you to do the following without bash scripts:
 

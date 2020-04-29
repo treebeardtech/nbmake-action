@@ -44,6 +44,12 @@ list directories where outputs are saved. Outputs will be served via a versioned
 
 Depending on your use case, you can use a minimal config file e.g.
 
+_**kernel_name**_ (default: _['python3']_)
+<br/>
+The name of the ipykernel which papermill will use for running the notebooks. You can use this setting to run Julia, C++, or any [language listed here](https://github.com/jupyter/jupyter/wiki/Jupyter-kernels).
+
+Note that you will need to install the kernel by including it in a binder-supported dependency file or build script.
+
 ```yaml
 # treebeard.yaml
 notebooks:
