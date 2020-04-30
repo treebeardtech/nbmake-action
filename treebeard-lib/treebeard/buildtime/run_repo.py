@@ -11,7 +11,7 @@ import requests
 from docker.errors import ImageNotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
-from treebeard.conf import run_path, treebeard_env, get_treebeard_config
+from treebeard.conf import get_treebeard_config, run_path, treebeard_env
 from treebeard.helper import sanitise_notebook_id
 from treebeard.util import fatal_exit
 
