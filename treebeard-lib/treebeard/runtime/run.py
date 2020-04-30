@@ -41,10 +41,10 @@ def run_notebook(notebook_path: str) -> str:
         pm.execute_notebook(  # type: ignore
             notebook_path,
             notebook_path,
+            kernel_name=treebeard_config.kernel_name,
             progress_bar=False,
             request_save_on_cell_execute=True,
             autosave_cell_every=10,
-            kernel_name="python3",
             log_output=True,
             cwd=f"{os.getcwd()}/{notebook_dir}",
         )
@@ -75,6 +75,9 @@ def run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, str]:
         os.makedirs(output_dir, exist_ok=True)
 
     notebook_statuses = {notebook: "⏳" for notebook in notebook_files}
+    print(f"Will run the following:")
+    [print(nb) for nb in notebook_files]
+    print()
 
     for i, notebook_path in enumerate(notebook_files):
         log(f"⏳ Running {i + 1}/{len(notebook_files)}: {notebook_path}")
