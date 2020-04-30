@@ -129,7 +129,7 @@ def run(
     click.echo("🌲  Copying project to tempdir and stripping notebooks")
 
     temp_dir = tempfile.mkdtemp()
-    copy_tree(os.getcwd(), str(temp_dir))
+    copy_tree(os.getcwd(), str(temp_dir), preserve_symlinks=1)
     notebooks_files = treebeard_config.get_deglobbed_notebooks()
     try:
         subprocess.check_output(["nbstripout"] + notebooks_files, cwd=temp_dir)
