@@ -27,6 +27,22 @@ def download_archive(unzip_location: str, download_location: str, url: str):
     # rm {download_location}""",
 
 
+def fetch_image_for_cache(client: Any, image_name: str, project_base_image: str):
+    try:
+        click.echo(f"Pulling {image_name}")
+        client.images.pull(image_name)
+    except requests.exceptions.ConnectionError:
+        fatal_exit("Could not connect to Docker registry!")
+    except ImageNotFound:
+        try:
+            click.echo(
+                f"Could not pull {image_name}, instead pulling {project_base_image}"
+            )
+            client.images.pull(project_base_image)
+        except Exception as ex:
+            click.echo(f"Error pulling project base image {ex}, continuing without...")
+
+
 def run_repo(
     project_id: str,
     notebook_id: str,
@@ -76,19 +92,8 @@ def run_repo(
     # our "base" image is just a routine repo2docker build which can be used for caching
     project_base_image = "docker.io/treebeardtech/project-base-image"
 
-    try:
-        click.echo(f"Pulling {image_name}")
-        client.images.pull(image_name)
-    except requests.exceptions.ConnectionError:
-        fatal_exit("Could not connect to Docker registry!")
-    except ImageNotFound:
-        try:
-            click.echo(
-                f"Could not pull {image_name}, instead pulling {project_base_image}"
-            )
-            client.images.pull(project_base_image)
-        except Exception as ex:
-            click.echo(f"Error pulling project base image {ex}, continuing without...")
+    if not local:
+        fetch_image_for_cache(client, image_name, project_base_image)
 
     # Build image but don't run
     versioned_image_name = f"{image_name}:{build_tag}"
@@ -110,6 +115,7 @@ def run_repo(
 
     try:
         subprocess.check_output(["bash", "-c", r2d])
+        click.echo(f"✨  Successfully built {versioned_image_name}")
     except:
         click.echo(f"\n\n❗ Failed to build container from the source repo")
         return 1
