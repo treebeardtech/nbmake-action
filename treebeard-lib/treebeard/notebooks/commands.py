@@ -43,12 +43,6 @@ project_id = treebeard_env.project_id
 
 
 @click.command()
-@click.option("t", "--hourly", flag_value="hourly", help="Run notebook hourly")
-@click.option("t", "--daily", flag_value="daily", help="Run notebook daily")
-@click.option("t", "--weekly", flag_value="weekly", help="Run notebook weekly")
-@click.option(
-    "t", "--quarter-hourly", flag_value="quarter-hourly", help="Run quarter-hourly"
-)
 @click.option(
     "watch", "--watch", is_flag=True, help="Run and check completed build status"
 )
@@ -77,7 +71,6 @@ project_id = treebeard_env.project_id
 @click.pass_obj
 def run(
     cli_context: CliContext,
-    t: str,
     watch: bool,
     ignore: List[str],
     local: bool,
@@ -104,9 +97,7 @@ def run(
         sc = subprocess.call("python -m treebeard.runtime.run", shell=True)
         sys.exit(sc)
 
-    params = {}
-    if t:
-        params["schedule"] = t
+    params = {"schedule": treebeard_config.schedule}
 
     if (
         not local

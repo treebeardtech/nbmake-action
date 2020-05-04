@@ -8,7 +8,7 @@ from typing import Optional, Tuple
 
 import click
 import yaml
-from pydantic import BaseModel, ValidationError  # type: ignore
+from pydantic import BaseModel, ValidationError, validator  # type: ignore
 
 from treebeard.util import fatal_exit
 
@@ -39,6 +39,14 @@ class TreebeardConfig(BaseModel):
     ignore: Tuple[str, ...] = ()
     secret: Tuple[str, ...] = ()
     kernel_name: str = "python3"
+    schedule: Optional[str] = None
+
+    @validator("schedule")
+    def name_must_contain_space(cls, v: Optional[str]):
+        if v not in (None, "hourly", "daily", "weekly"):
+            raise ValueError("must contain a space")
+
+        return v and v.lower()
 
     def get_deglobbed_notebooks(self):
         # warning: sensitive to current directory
