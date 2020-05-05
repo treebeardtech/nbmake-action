@@ -90,16 +90,17 @@ def run_repo(
 
     # Pull down images to use in cache
     image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{sanitise_notebook_id(notebook_id)}"
-    # our "base" image is just a routine repo2docker build which can be used for caching
-    project_base_image = "docker.io/treebeardtech/project-base-image"
-
-    if not local:
-        fetch_image_for_cache(client, image_name, project_base_image)
 
     # Build image but don't run
     versioned_image_name = f"{image_name}:{build_tag}"
     passing_image_name = f"{image_name}:{branch}"
     latest_image_name = f"{image_name}:{branch}-latest"
+
+    # our "base" image is just a routine repo2docker build which can be used for caching
+    project_base_image = "docker.io/treebeardtech/project-base-image"
+
+    if not local:
+        fetch_image_for_cache(client, latest_image_name, project_base_image)
 
     user_name = "project_user"  # All images having the same home dir enables caching
     r2d = f"""

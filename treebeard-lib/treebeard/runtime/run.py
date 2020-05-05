@@ -96,7 +96,7 @@ def start():
         raise Exception("No project ID at buildtime")
 
     notebook_statuses = run(
-        treebeard_env.project_id, treebeard_env.notebook_id, treebeard_env.run_id
+        treebeard_env.project_id, treebeard_env.notebook_id, treebeard_env.run_id  # type: ignore
     )
 
     for notebook in notebook_statuses.keys():

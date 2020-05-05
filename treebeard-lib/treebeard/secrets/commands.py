@@ -1,4 +1,4 @@
-from typing import IO, List
+from typing import IO, List, Any
 
 import click
 import requests
@@ -21,11 +21,11 @@ def secrets():
 @secrets.command()
 @click.argument("files", type=click.File("r"), nargs=-1)
 @click.option("--confirm/--no-confirm", default=False)
-def push(files: List[IO], confirm: bool):
+def push(files: List[IO[Any]], confirm: bool):
     push_secrets(files, confirm)
 
 
-def push_secrets(files: List[IO], confirm: bool):
+def push_secrets(files: List[IO[Any]], confirm: bool):
     """Uploads files marked in treebeard.yaml as 'secret'"""
     validate_notebook_directory(treebeard_env, treebeard_config)
     click.echo(
