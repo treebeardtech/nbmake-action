@@ -44,9 +44,9 @@ jobs:
           cd integration-test/virtualenv
           cp -R ../../treebeard-lib .
           treebeard run --watch --confirm
-          wget https://api.treebeard.io/d8a0c5b6c9/virtualenv/cli-latest/main.ipynb?api_key=
-          wget https://api.treebeard.io/d8a0c5b6c9/virtualenv/cli-latest/another.ipynb?api_key=&nbconvert=true
-          wget https://api.treebeard.io/d8a0c5b6c9/virtualenv/cli-latest/subdir/another.ipynb?api_key=
+          wget https://api.treebeard.io/d8a0c5b6c9/virtualenv/cli/main.ipynb
+          wget https://api.treebeard.io/d8a0c5b6c9/virtualenv/cli/another.ipynb
+          wget https://api.treebeard.io/d8a0c5b6c9/virtualenv/cli/subdir/another.ipynb
 
   dagster:
     timeout-minutes: 20

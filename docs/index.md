@@ -111,7 +111,7 @@ treebeard_project_id = xxxxxx
 treebeard_api_key = xxxxxxxxx
 
 ➜ curl -o my_data.json \
-https://api.treebeard.io/b44c784b10/treebeard_example_2/cli-latest/output/my_data.json?api_key=xxxxxxxxxx
+https://api.treebeard.io/b44c784b10/treebeard_example_2/cli/output/my_data.json?api_key=xxxxxxxxxx
 {"mydata": "goes_here"}
 ```
 
