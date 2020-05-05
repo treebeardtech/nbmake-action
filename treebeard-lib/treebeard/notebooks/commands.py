@@ -97,7 +97,12 @@ def run(
         sc = subprocess.call("python -m treebeard.runtime.run", shell=True)
         sys.exit(sc)
 
-    params = {"schedule": treebeard_config.schedule}
+    params = {}
+    if treebeard_config.schedule:
+        if confirm or click.confirm(
+            f"📅 treebeard.yaml contains schedule '{treebeard_config.schedule}'. Enable it?"
+        ):
+            params["schedule"] = treebeard_config.schedule
 
     if (
         not local
@@ -279,6 +284,3 @@ def status():
         click.echo(
             f"  {status_emoji[run.status]}  {time_string} {ran_via} {branch} -- {run.url}"
         )
-
-    if "schedule" in json_data:
-        click.echo(f"\n📅  Schedule: {json_data['schedule']}")
