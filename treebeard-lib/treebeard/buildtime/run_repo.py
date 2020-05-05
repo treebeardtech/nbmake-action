@@ -50,6 +50,7 @@ def run_repo(
     build_tag: str,
     repo_url: str,
     secrets_url: Optional[str],
+    branch: str,
     local: bool = False,
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
@@ -97,7 +98,8 @@ def run_repo(
 
     # Build image but don't run
     versioned_image_name = f"{image_name}:{build_tag}"
-    latest_image_name = f"{image_name}:latest"
+    passing_image_name = f"{image_name}:{branch}"
+    latest_image_name = f"{image_name}:{branch}-latest"
 
     user_name = "project_user"  # All images having the same home dir enables caching
     r2d = f"""
@@ -120,10 +122,14 @@ def run_repo(
         click.echo(f"\n\n❗ Failed to build container from the source repo")
         return 1
 
+    subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
     if not local:
         try:
-            click.echo(f"Image built: Pushing {versioned_image_name}")
+            click.echo(
+                f"Image built: Pushing {versioned_image_name} and {latest_image_name}"
+            )
             client.images.push(versioned_image_name)
+            client.images.push(latest_image_name)  # this tag is necessary for caching
         except Exception:
             click.echo(
                 f"Failed to push image, will try again on success\n{format_exc()}"
@@ -132,11 +138,11 @@ def run_repo(
     click.echo(f"Image built successfully, now running.")
     status = run_image(project_id, notebook_id, run_id, versioned_image_name)
     if status != 0:
-        click.echo("Image run failed, not updated :latest")
+        click.echo(f"Image run failed, not updated {passing_image_name}")
         return status
 
-    subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
-    click.echo(f"tagged {versioned_image_name} as {latest_image_name}")
+    subprocess.check_output(["docker", "tag", versioned_image_name, passing_image_name])
+    click.echo(f"tagged {versioned_image_name} as {passing_image_name}")
     return 0
 
 
@@ -144,12 +150,17 @@ if __name__ == "__main__":
     build_tag_key = "TREEBEARD_BUILD_TAG"
     repo_url_key = "TREEBEARD_REPO_URL"
     secrets_url_key = "TREEBEARD_SECRETS_URL"
+    branch_key = "TREEBEARD_BRANCH"
 
     subprocess.run(["bash", "-c", "echo Building repo"])
 
     build_tag = os.getenv(build_tag_key)
     if not build_tag:
         fatal_exit(f"No build_tag provided inside {build_tag_key}")
+
+    branch = os.getenv(branch_key)
+    if not branch:
+        fatal_exit(f"No branch provided inside {branch_key}")
 
     repo_url = os.getenv(repo_url_key)
     if not repo_url:
@@ -168,6 +179,7 @@ if __name__ == "__main__":
         build_tag,
         repo_url,
         secrets_url,
+        branch,
     )
 
     sys.exit(status)

@@ -169,6 +169,7 @@ def run(
             build_tag,
             repo_url,
             secrets_url,
+            branch="cli",
             local=True,
         )
         click.echo(f"Local build exited with status code {status}")
