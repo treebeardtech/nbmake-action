@@ -3,14 +3,14 @@ import os.path
 import sys
 import tarfile
 import tempfile
-from typing import IO, List
+from typing import IO, List, Any
 
 import click
 
 from treebeard.conf import treebeard_config
 
 
-def get_secrets_archive(files: List[IO] = [], confirm: bool = True) -> IO[bytes]:
+def get_secrets_archive(files: List[IO[Any]] = [], confirm: bool = True) -> IO[bytes]:
     if treebeard_config:
         files += tuple((open(path, "r") for path in treebeard_config.secret))
 
