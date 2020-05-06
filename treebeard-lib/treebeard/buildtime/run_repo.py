@@ -24,7 +24,6 @@ def download_archive(unzip_location: str, download_location: str, url: str):
             f'curl -o {download_location} "{url}" && tar -C {unzip_location} -xvf {download_location}',
         ]
     )
-    # rm {download_location}""",
 
 
 def fetch_image_for_cache(client: Any, image_name: str, project_base_image: str):

@@ -10,7 +10,6 @@ from treebeard.conf import url as api_url
 mime: Any = magic.Magic(mime=True)
 
 
-
 def log(message: str):
     print(f'{datetime.now().strftime("%H:%M:%S")}: {message}')
 
@@ -25,8 +24,6 @@ def upload_artifact(filename: str, upload_path: str, status: Optional[str]):
         get_url_params["status"] = status
         put_object_headers["x-goog-meta-status"] = status
 
-    print(f"get {get_url_params}")
-    print(f"put {put_object_headers}")
     with open(filename, "rb") as data:
         resp: Response = requests.get(
             f"{api_url}/get_upload_url/{upload_path}", params=get_url_params,
