@@ -8,7 +8,7 @@ from typing import Any, Optional
 import click
 import docker  # type: ignore
 import requests
-from docker.errors import NotFound, ImageNotFound  # type: ignore
+from docker.errors import ImageNotFound, NotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
 from treebeard.conf import get_treebeard_config, run_path, treebeard_env

@@ -3,7 +3,7 @@ import os.path
 import sys
 import tarfile
 import tempfile
-from typing import IO, List, Any
+from typing import IO, Any, List
 
 import click
 

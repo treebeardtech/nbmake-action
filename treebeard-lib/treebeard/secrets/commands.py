@@ -1,4 +1,4 @@
-from typing import IO, List, Any
+from typing import IO, Any, List
 
 import click
 import requests

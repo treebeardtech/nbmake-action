@@ -5,6 +5,7 @@ from traceback import format_exc
 from typing import Dict
 
 import papermill as pm  # type: ignore
+from sentry_sdk import capture_exception  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.runtime.helper import log, upload_artifact
@@ -13,8 +14,14 @@ bucket_name = "treebeard-notebook-outputs"
 
 notebook_files = treebeard_config.get_deglobbed_notebooks()
 
+notebook_status_descriptions = {
+    "✅": "SUCCESS",
+    "⏳": "WORKING",
+    "❌": "FAILURE",
+}
 
-def save_artifacts():
+
+def save_artifacts(notebook_statuses: Dict[str, str]):
     log(f"Uploading outputs...")
 
     if treebeard_config is None:
@@ -24,14 +31,21 @@ def save_artifacts():
 
     for notebook_path in notebooks_files:
         notebook_upload_path = f"{run_path}/{notebook_path}"
-        upload_artifact(notebook_path, notebook_upload_path)
+        try:
+            upload_artifact(
+                notebook_path,
+                notebook_upload_path,
+                notebook_status_descriptions[notebook_statuses[notebook_path]],
+            )
+        except Exception as ex:
+            capture_exception(ex)
 
     for output_dir in treebeard_config.output_dirs:
         for root, _, files in os.walk(output_dir, topdown=False):
             for name in files:
                 full_name = os.path.join(root, name)
                 upload_path = f"{run_path}/{full_name}"
-                upload_artifact(full_name, upload_path)
+                upload_artifact(full_name, upload_path, None)
 
 
 def run_notebook(notebook_path: str) -> str:
@@ -83,7 +97,7 @@ def run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, str]:
         log(f"⏳ Running {i + 1}/{len(notebook_files)}: {notebook_path}")
         notebook_statuses[notebook_path] = run_notebook(notebook_path)
 
-    save_artifacts()
+    save_artifacts(notebook_statuses)
     log("Run Finished\n")
 
     return notebook_statuses
