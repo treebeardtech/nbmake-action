@@ -28,7 +28,7 @@ def save_artifacts(notebook_statuses: Dict[str, str]):
         raise Exception("No Treebeard Config Present at runtime!")
 
     notebooks_files = treebeard_config.get_deglobbed_notebooks()
-
+    first = True
     for notebook_path in notebooks_files:
         notebook_upload_path = f"{run_path}/{notebook_path}"
         try:
@@ -36,7 +36,9 @@ def save_artifacts(notebook_statuses: Dict[str, str]):
                 notebook_path,
                 notebook_upload_path,
                 notebook_status_descriptions[notebook_statuses[notebook_path]],
+                set_as_thumbnail=first,
             )
+            first = False
         except Exception as ex:
             capture_exception(ex)
 

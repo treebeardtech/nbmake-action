@@ -14,7 +14,12 @@ def log(message: str):
     print(f'{datetime.now().strftime("%H:%M:%S")}: {message}')
 
 
-def upload_artifact(filename: str, upload_path: str, status: Optional[str]):
+def upload_artifact(
+    filename: str,
+    upload_path: str,
+    status: Optional[str],
+    set_as_thumbnail: bool = False,
+):
     log(f"Saving {filename} to {upload_path}")
     content_type: str = mime.from_file(filename)
 
@@ -42,3 +47,7 @@ def upload_artifact(filename: str, upload_path: str, status: Optional[str]):
                     f"Put object failed for {filename}, {put_resp.status_code}\n{put_resp.text}"
                 )
             )
+
+        if upload_path.endswith("ipynb") and set_as_thumbnail:
+            qs = "set_as_thumbnail=true" if set_as_thumbnail else ""
+            requests.post(f"{api_url}/{upload_path}/create_extras?{qs}")
