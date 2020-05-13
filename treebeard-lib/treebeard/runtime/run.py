@@ -34,12 +34,11 @@ def save_artifacts(notebook_statuses: Dict[str, str]):
         for notebook_path in notebooks_files:
             notebook_upload_path = f"{run_path}/{notebook_path}"
             executor.submit(
-                lambda: upload_artifact(
-                    notebook_path,
-                    notebook_upload_path,
-                    notebook_status_descriptions[notebook_statuses[notebook_path]],
-                    set_as_thumbnail=first,
-                ),
+                upload_artifact,
+                notebook_path,
+                notebook_upload_path,
+                notebook_status_descriptions[notebook_statuses[notebook_path]],
+                set_as_thumbnail=first,
             )
             first = False
 
@@ -48,9 +47,7 @@ def save_artifacts(notebook_statuses: Dict[str, str]):
                 for name in files:
                     full_name = os.path.join(root, name)
                     upload_path = f"{run_path}/{full_name}"
-                    executor.submit(
-                        lambda: upload_artifact(full_name, upload_path, None)
-                    )
+                    executor.submit(upload_artifact, full_name, upload_path, None)
 
 
 def run_notebook(notebook_path: str) -> str:
