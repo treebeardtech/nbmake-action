@@ -48,6 +48,5 @@ def upload_artifact(
                 )
             )
 
-        if upload_path.endswith("ipynb") and set_as_thumbnail:
-            qs = "set_as_thumbnail=true" if set_as_thumbnail else ""
-            requests.post(f"{api_url}/{upload_path}/create_extras?{qs}")
+        qs = "set_as_thumbnail=true" if set_as_thumbnail else ""
+        requests.post(f"{api_url}/{upload_path}/create_extras?{qs}")

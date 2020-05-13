@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from traceback import format_exc
 from typing import Dict
 
@@ -22,38 +23,42 @@ notebook_status_descriptions = {
 
 
 def save_artifacts(notebook_statuses: Dict[str, str]):
-    log(f"Uploading outputs...")
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        log(f"Uploading outputs...")
 
-    if treebeard_config is None:
-        raise Exception("No Treebeard Config Present at runtime!")
+        if treebeard_config is None:
+            raise Exception("No Treebeard Config Present at runtime!")
 
-    notebooks_files = treebeard_config.get_deglobbed_notebooks()
-    first = True
-    for notebook_path in notebooks_files:
-        notebook_upload_path = f"{run_path}/{notebook_path}"
-        try:
-            upload_artifact(
-                notebook_path,
-                notebook_upload_path,
-                notebook_status_descriptions[notebook_statuses[notebook_path]],
-                set_as_thumbnail=first,
+        notebooks_files = treebeard_config.get_deglobbed_notebooks()
+        first = True
+        for notebook_path in notebooks_files:
+            notebook_upload_path = f"{run_path}/{notebook_path}"
+            executor.submit(
+                lambda: upload_artifact(
+                    notebook_path,
+                    notebook_upload_path,
+                    notebook_status_descriptions[notebook_statuses[notebook_path]],
+                    set_as_thumbnail=first,
+                ),
             )
             first = False
-        except Exception as ex:
-            capture_exception(ex)
 
-    for output_dir in treebeard_config.output_dirs:
-        for root, _, files in os.walk(output_dir, topdown=False):
-            for name in files:
-                full_name = os.path.join(root, name)
-                upload_path = f"{run_path}/{full_name}"
-                upload_artifact(full_name, upload_path, None)
+        for output_dir in treebeard_config.output_dirs:
+            for root, _, files in os.walk(output_dir, topdown=False):
+                for name in files:
+                    full_name = os.path.join(root, name)
+                    upload_path = f"{run_path}/{full_name}"
+                    executor.submit(
+                        lambda: upload_artifact(full_name, upload_path, None)
+                    )
 
 
 def run_notebook(notebook_path: str) -> str:
     try:
         notebook_dir, notebook_name = os.path.split(notebook_path)
-        log(f"Executing Notebook {notebook_name} in {notebook_dir}")
+        log(
+            f"Executing Notebook {notebook_name} in {'.' if len(notebook_dir) == 0 else notebook_dir}"
+        )
         pm.execute_notebook(  # type: ignore
             notebook_path,
             notebook_path,
