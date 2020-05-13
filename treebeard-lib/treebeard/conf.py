@@ -72,10 +72,10 @@ if os.getenv("TREEBEARD_ENVIRONMENT"):
 
 if env == "development":
     click.echo("WARNING: RUNNING IN LOCAL MODE", err=True)
-    url = "http://localhost:8080"
+    api_url = "http://localhost:8080"
     treebeard_web_url = "https://localhost:8000"
 else:
-    url = "https://api.treebeard.io"
+    api_url = "https://api.treebeard.io"
     treebeard_web_url = "https://treebeard.io"
 
 
@@ -169,8 +169,10 @@ treebeard_config = get_treebeard_config()
 treebeard_env = get_treebeard_env()
 run_path = get_run_path(treebeard_env)
 secrets_endpoint = (
-    f"{url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/secrets"
+    f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/secrets"
 )
-runner_endpoint = f"{url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/runs"
-signup_endpoint = f"{url}/cli_signup"
-service_status_endpoint = f"{url}/service_status"
+runner_endpoint = (
+    f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/runs"
+)
+signup_endpoint = f"{api_url}/cli_signup"
+service_status_endpoint = f"{api_url}/service_status"

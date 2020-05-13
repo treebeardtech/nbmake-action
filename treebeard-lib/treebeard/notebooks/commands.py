@@ -1,3 +1,4 @@
+import datetime
 import glob
 import json
 import os
@@ -9,7 +10,6 @@ import sys
 import tarfile
 import tempfile
 import time
-from datetime import datetime
 from distutils.dir_util import copy_tree
 from typing import Any, List
 
@@ -23,6 +23,7 @@ from timeago import format as timeago_format  # type: ignore
 
 from treebeard.buildtime.run_repo import run_repo
 from treebeard.conf import (
+    api_url,
     config_path,
     get_time,
     runner_endpoint,
@@ -161,7 +162,7 @@ def run(
         sys.exit()
 
     if local:
-        build_tag = str(time.mktime(datetime.today().timetuple()))
+        build_tag = str(time.mktime(datetime.datetime.today().timetuple()))
         repo_image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
         click.echo(f"🌲  Building {repo_image_name} Locally\n")
         secrets_archive = get_secrets_archive()
@@ -194,10 +195,24 @@ def run(
             )
         )
 
+    time_seconds = int(time.mktime(datetime.datetime.today().timetuple()))
+    build_tag = str(time_seconds)
+
+    upload_api = f"{api_url}/source_upload_url/{project_id}/{notebook_id}/{build_tag}"
+    resp = requests.get(upload_api)
+
+    signed_url: str = resp.text
+    put_resp = requests.put(
+        signed_url,
+        open(src_archive.name, "rb"),
+        headers={"Content-Type": "application/x-tar"},
+    )
+    assert put_resp.status_code == 200
+
     click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
+    submit_endpoint = f"{api_url}/runs/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{build_tag}"
     response = requests.post(
-        runner_endpoint,
-        files={"repo": open(src_archive.name, "rb")},
+        submit_endpoint,
         params=params,
         headers={"api_key": treebeard_env.api_key, "email": treebeard_env.email},
     )
@@ -270,7 +285,7 @@ def status():
 
     runs: List[Run] = [Run.parse_obj(run) for run in json_data["runs"][-max_results:]]  # type: ignore
     for run in runs:
-        now = parser.isoparse(datetime.utcnow().isoformat() + "Z")
+        now = parser.isoparse(datetime.datetime.utcnow().isoformat() + "Z")
         start_time = parser.isoparse(run.start_time)
         time_string: str = timeago_format(start_time, now=now)
 

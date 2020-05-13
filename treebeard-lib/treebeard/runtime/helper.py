@@ -5,7 +5,7 @@ import magic  # type: ignore
 import requests
 from requests import Response
 
-from treebeard.conf import url as api_url
+from treebeard.conf import api_url
 
 mime: Any = magic.Magic(mime=True)
 
