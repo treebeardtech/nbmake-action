@@ -57,11 +57,14 @@ def check_imports():
 
     missing_modules = imported_modules.difference(installed_modules)
 
-    joined = "\n  - ".join(sorted(missing_modules))
-    click.echo(
-        f"\n❗ You *may* be missing project requirements, the following modules are imported from your notebooks but can't be imported from your project root directory\n"
-        f"{joined}"
-    )
+    if len(missing_modules) > 0:
+        joined = "\n  - ".join(sorted(missing_modules))
+        click.echo(
+            f"\n❗ You *may* be missing project requirements, the following modules are imported from your notebooks but can't be imported from your project root directory\n"
+            f"{joined}"
+        )
+    else:
+        click.echo("✨ No missing imports identified in project notebooks.")
 
 
 if __name__ == "__main__":

@@ -125,7 +125,7 @@ def start():
     n_failed = len(list(filter(lambda v: v != "✅", notebook_statuses.values())))
 
     if n_failed > 0:
-        log(f"{n_failed} of {len(notebook_statuses)} notebooks failed.")
+        log(f"{n_failed} of {len(notebook_statuses)} notebooks failed.\n")
 
         try:
             check_imports()
