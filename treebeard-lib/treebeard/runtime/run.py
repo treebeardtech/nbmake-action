@@ -9,6 +9,7 @@ import papermill as pm  # type: ignore
 from sentry_sdk import capture_exception  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
+from treebeard.importchecker.imports import check_imports
 from treebeard.runtime.helper import log, upload_artifact
 
 bucket_name = "treebeard-notebook-outputs"
@@ -125,6 +126,11 @@ def start():
 
     if n_failed > 0:
         log(f"{n_failed} of {len(notebook_statuses)} notebooks failed.")
+
+        try:
+            check_imports()
+        except Exception as ex:
+            capture_exception(ex)
         sys.exit(1)
 
 
