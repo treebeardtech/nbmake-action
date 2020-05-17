@@ -1,6 +1,6 @@
 jupyter
 jupyter-client==6.1.2
-treebeard==0.0.95
+treebeard==0.0.96
 requests
 pandas
 numpy

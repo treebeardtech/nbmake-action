@@ -1,5 +1,6 @@
 import glob
 import re
+import sys
 from pydoc import ModuleScanner
 from typing import Any, Optional, Set
 
@@ -12,6 +13,9 @@ import_regexp = re.compile(r"^import (\w+)")
 
 def get_imported_modules(glob_path: str) -> Set[str]:
     nb_paths = glob.glob(glob_path, recursive=True)
+    if len(nb_paths) == 0:
+        raise Exception(f"No notebooks found with glob {glob_path}")
+
     se: Any = ScriptExporter()
 
     all_imported_modules = set()
@@ -50,22 +54,23 @@ def get_installed_modules() -> Set[str]:
     return modules
 
 
-def check_imports():
+def check_imports(glob_path: str = "**/*ipynb"):
     click.echo(f"🌲 Checking for potentially missing imports...\n")
-    imported_modules = get_imported_modules("**/*ipynb")
+    imported_modules = get_imported_modules(glob_path)
     installed_modules = get_installed_modules()
 
     missing_modules = imported_modules.difference(installed_modules)
 
     if len(missing_modules) > 0:
-        joined = "\n  - ".join(sorted(missing_modules))
         click.echo(
-            f"\n❗ You *may* be missing project requirements, the following modules are imported from your notebooks but can't be imported from your project root directory\n"
-            f"{joined}"
+            f"\n❗📦 You *may* be missing project requirements, the following modules are imported from your notebooks but can't be imported from your project root directory\n"
         )
+        for module in sorted(missing_modules):
+            click.echo(f"  - {module}")
     else:
         click.echo("✨ No missing imports identified in project notebooks.")
 
 
 if __name__ == "__main__":
-    check_imports()
+    glob_path = sys.argv[1] if len(sys.argv) > 1 else "**/*ipynb"
+    check_imports(glob_path)
