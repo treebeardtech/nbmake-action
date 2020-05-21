@@ -175,5 +175,4 @@ secrets_endpoint = (
 runner_endpoint = (
     f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/runs"
 )
-signup_endpoint = f"{api_url}/cli_signup"
 service_status_endpoint = f"{api_url}/service_status"

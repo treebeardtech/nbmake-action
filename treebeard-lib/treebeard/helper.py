@@ -1,7 +1,6 @@
 import configparser
 import json
 import os
-import sys
 from pathlib import Path
 from typing import Optional
 
@@ -15,27 +14,11 @@ from treebeard.version import get_version
 version = get_version()
 
 
-def set_credentials(email: str, key: str, signup_endpoint: str):
+def set_credentials(email: str, key: str, project_id: str):
     """Create user credentials"""
     config = configparser.RawConfigParser()
     config.add_section("credentials")
     config.set("credentials", "TREEBEARD_EMAIL", email)
-
-    response = requests.post(signup_endpoint, headers={"api_key": key, "email": email},)
-
-    if response.status_code != 200:
-        raise click.ClickException(f"Request failed: {response.text}")
-
-    try:
-        json_data = json.loads(response.text)
-        project_id = json_data["project_id"]
-    except:
-        click.echo("❗  Request to configure failed")
-        click.echo(sys.exc_info())
-        if response:
-            click.echo(response.text)
-        return
-
     config.set("credentials", "TREEBEARD_PROJECT_ID", project_id)
     config.set("credentials", "TREEBEARD_API_KEY", key)
     with open(config_path, "w") as configfile:

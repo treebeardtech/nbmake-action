@@ -7,7 +7,7 @@ from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
-from treebeard.conf import signup_endpoint, treebeard_env
+from treebeard.conf import treebeard_env
 from treebeard.helper import create_example_yaml, set_credentials
 from treebeard.util import fatal_exit
 from treebeard.version import get_version
@@ -15,7 +15,6 @@ from treebeard.version import get_version
 pp = pprint.PrettyPrinter(indent=2)
 
 
-project_id = treebeard_env.project_id
 notebook_id = treebeard_env.notebook_id
 
 warnings.filterwarnings(
@@ -26,9 +25,10 @@ warnings.filterwarnings(
 @click.command()
 @click.option("--email")
 @click.option("--api_key")
-def configure(email: str, api_key: str):
+@click.option("--project_id")
+def configure(email: str, api_key: str, project_id: str):
     """Register with Treebeard services"""
-    set_credentials(email, api_key, signup_endpoint)
+    set_credentials(email, api_key, project_id)
 
 
 @click.command()
