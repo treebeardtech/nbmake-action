@@ -39,6 +39,7 @@ class TreebeardConfig(BaseModel):
     ignore: Tuple[str, ...] = ()
     secret: Tuple[str, ...] = ()
     kernel_name: str = "python3"
+    cell_execution_timeout_seconds: int = 300
     schedule: Optional[str] = None
 
     @validator("schedule")
