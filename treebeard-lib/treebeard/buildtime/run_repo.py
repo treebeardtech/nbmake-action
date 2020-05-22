@@ -79,7 +79,7 @@ def run_repo(
         try:
             subprocess.check_output(["nbstripout"] + notebook_files)
         except:
-            print(
+            fatal_exit(
                 f"Failed to nbstripout a notebook! Do you have an invalid .ipynb?\nNotebooks: {notebook_files}"
             )
     finally:
