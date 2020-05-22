@@ -132,10 +132,7 @@ def run(
         try:
             subprocess.check_output(["nbstripout"] + notebooks_file, cwd=temp_dir)
         except:
-            print(
-                f"Failed to nbstripout {notebooks_file}! Is it valid? Adding to ignore list."
-            )
-            ignore += notebooks_file
+            print(f"Failed to nbstripout {notebooks_file}! Is it valid?")
     click.echo(notebooks_files)
     click.echo("🌲  Compressing Repo")
 
