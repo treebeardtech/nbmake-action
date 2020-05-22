@@ -128,10 +128,14 @@ def run(
     temp_dir = tempfile.mkdtemp()
     copy_tree(os.getcwd(), str(temp_dir), preserve_symlinks=1)
     notebooks_files = treebeard_config.get_deglobbed_notebooks()
-    try:
-        subprocess.check_output(["nbstripout"] + notebooks_files, cwd=temp_dir)
-    except:
-        fatal_exit(f"Failed to nbstripout a notebook! Do you have an invalid .ipynb?")
+    for notebooks_file in notebooks_files:
+        try:
+            subprocess.check_output(["nbstripout"] + notebooks_file, cwd=temp_dir)
+        except:
+            print(
+                f"Failed to nbstripout {notebooks_file}! Is it valid? Adding to ignore list."
+            )
+            ignore += notebooks_file
     click.echo(notebooks_files)
     click.echo("🌲  Compressing Repo")
 
