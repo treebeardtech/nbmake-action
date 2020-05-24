@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from traceback import format_exc
 from typing import Dict
 
+import click
 import papermill as pm  # type: ignore
 from sentry_sdk import capture_exception  # type: ignore
 
@@ -129,7 +130,19 @@ def start():
         log(f"{n_failed} of {len(notebook_statuses)} notebooks failed.\n")
 
         try:
-            check_imports()
+            if treebeard_config.kernel_name == "python3":
+                result = check_imports()
+
+                if treebeard_config.strict_mode:
+                    click.echo(
+                        f"\nℹ️ If you would like to ignore notebook run failures and only fail on missing dependencies, add `strict_mode: False` to a `treebeard.yaml` file"
+                    )
+                else:
+                    if result:
+                        click.echo(
+                            f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅"
+                        )
+                        sys.exit(0)
         except Exception as ex:
             capture_exception(ex)
         sys.exit(1)

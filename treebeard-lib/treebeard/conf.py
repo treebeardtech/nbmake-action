@@ -39,6 +39,7 @@ class TreebeardConfig(BaseModel):
     ignore: Tuple[str, ...] = ()
     secret: Tuple[str, ...] = ()
     kernel_name: str = "python3"
+    strict_mode: bool = True
     cell_execution_timeout_seconds: int = 300
     schedule: Optional[str] = None
 
@@ -127,7 +128,7 @@ def get_treebeard_config() -> TreebeardConfig:
     with open(notebook_config) as f:
         conf = yaml.load(f, Loader=yaml.FullLoader)
         if not conf:
-            fatal_exit("treebeard.yaml config file exists but is empty")
+            return TreebeardConfig()
         try:
             return TreebeardConfig(**conf)
         except ValidationError as e:  # type: ignore

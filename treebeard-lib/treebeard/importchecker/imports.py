@@ -67,8 +67,12 @@ def check_imports(glob_path: str = "**/*ipynb"):
         )
         for module in sorted(missing_modules):
             click.echo(f"  - {module}")
+        return False
     else:
-        click.echo("✨ No missing imports identified in project notebooks.")
+        click.echo(
+            "\n✨ All notebook imports are backed by a reproducible dependecy file!"
+        )
+        return True
 
 
 if __name__ == "__main__":
