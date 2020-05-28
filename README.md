@@ -1,4 +1,5 @@
-<p align="center"><h1>Welcome to Treebeard 🌲</h1></p>
+<p align="center"><a href="https://modin.readthedocs.io"><img width=77% alt="Treebeard - continuous integration for data science" src="https://github.com/treebeardtech/treebeard/blob/master/docs/img/treebeard.jpg?raw=true"></a></p>
+<h2 align="center">Continuous integration for data science - test your Jupyter notebooks🌲</h2>
 
 <p align="center">
 <a href="https://badge.fury.io/py/treebeard"><img src="https://badge.fury.io/py/treebeard.svg" alt="PyPI version"></a>
