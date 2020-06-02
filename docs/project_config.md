@@ -42,8 +42,6 @@ _**output_dirs**_ (default: _['output']_)
 <br/>
 list directories where outputs are saved. Outputs will be served via a versioned API by Treebeard
 
-Depending on your use case, you can use a minimal config file e.g.
-
 _**kernel_name**_ (default: _['python3']_)
 <br/>
 The name of the ipykernel which papermill will use for running the notebooks. You can use this setting to run Julia, C++, or any [language listed here](https://github.com/jupyter/jupyter/wiki/Jupyter-kernels).

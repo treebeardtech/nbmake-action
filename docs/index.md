@@ -132,7 +132,7 @@ The `reddit_tracker` example shows a notebook that calls the Reddit API using sa
 
 ## Join the community
 
-Stay in touch with us via [Github](https://github.com/treebeardtech/treebeard) and our [email newsletter](https://treebeard.io/contact)
+Ask us questions or just say hi on [Gitter](https://gitter.im/treebeardtech/community), follow development on [Github](https://github.com/treebeardtech/treebeard) and get updates with our [email newsletter](https://treebeard.io/contact)
 
 ### 3 Minute Overview
 
