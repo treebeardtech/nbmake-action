@@ -70,7 +70,7 @@ def check_imports(glob_path: str = "**/*ipynb"):
         return False
     else:
         click.echo(
-            "\n✨ All notebook imports are backed by a reproducible dependecy file!"
+            "\n✨ All notebook imports are backed by a reproducible dependency file!"
         )
         return True
 
