@@ -12,6 +12,7 @@ from sentry_sdk import capture_exception  # type: ignore
 from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.importchecker.imports import check_imports
 from treebeard.runtime.helper import log, upload_artifact
+from treebeard.logs.helpers import clean_log_file
 
 bucket_name = "treebeard-notebook-outputs"
 
@@ -50,6 +51,11 @@ def save_artifacts(notebook_statuses: Dict[str, str]):
                     full_name = os.path.join(root, name)
                     upload_path = f"{run_path}/{full_name}"
                     executor.submit(upload_artifact, full_name, upload_path, None)
+
+        if os.path.exists("treebeard.log"):
+            executor.submit(
+                upload_artifact, "treebeard.log", f"{run_path}/treebeard.log", None
+            )
 
 
 def run_notebook(notebook_path: str) -> str:
@@ -115,6 +121,8 @@ def start():
         raise Exception("No notebook ID at runtime")
     if not treebeard_env.project_id:
         raise Exception("No project ID at buildtime")
+
+    clean_log_file()
 
     notebook_statuses = run(
         treebeard_env.project_id, treebeard_env.notebook_id, treebeard_env.run_id
