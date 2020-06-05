@@ -16,6 +16,7 @@ from typing import Any, List
 import click
 import docker  # type: ignore
 import requests
+import yaml
 from dateutil import parser
 from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
@@ -50,6 +51,7 @@ project_id = treebeard_env.project_id
 @click.option(
     "local", "--local", is_flag=True, help="Build image with local docker installation",
 )
+@click.option("-n", "--notebooks", help="Notebooks to be run", multiple=True)
 @click.option(
     "-i",
     "--ignore",
@@ -69,10 +71,11 @@ project_id = treebeard_env.project_id
     default=False,
     help="Run locally without docker container",
 )
-@click.pass_obj
+@click.pass_obj  # type: ignore
 def run(
     cli_context: CliContext,
     watch: bool,
+    notebooks: List[str],
     ignore: List[str],
     local: bool,
     confirm: bool,
@@ -82,7 +85,18 @@ def run(
     """
     Run a notebook and optionally schedule it to run periodically
     """
+    notebooks = list(notebooks)
+    ignore = list(ignore)
+
     validate_notebook_directory(treebeard_env, treebeard_config)
+
+    # Apply cli config overrides
+    treebeard_yaml_path: str = tempfile.mktemp()  # type: ignore
+    with open(treebeard_yaml_path, "w") as yaml_file:
+        if notebooks:
+            treebeard_config.notebooks = notebooks
+
+        yaml.dump(treebeard_config.dict(), yaml_file)
 
     if dockerless:
         click.echo(
@@ -95,8 +109,9 @@ def run(
             sys.exit(0)
 
         # Note: import runtime.run causes win/darwin devices missing magic to fail at start
-        sc = subprocess.call("python -m treebeard.runtime.run", shell=True)
-        sys.exit(sc)
+        import treebeard.runtime.run
+
+        treebeard.runtime.run.start()  # will sys.exit
 
     params = {}
     if treebeard_config.schedule:
@@ -142,6 +157,9 @@ def run(
         with tarfile.open(fileobj=src_archive, mode="w:gz") as tar:
 
             def zip_filter(info: tarfile.TarInfo):
+                if info.name.endswith("treebeard.yaml"):
+                    return None
+
                 for ignored in ignore:
                     if info.name in glob.glob(ignored, recursive=True):
                         return None
@@ -155,6 +173,7 @@ def run(
                 str(temp_dir), arcname=os.path.basename(os.path.sep), filter=zip_filter,
             )
             tar.add(config_path, arcname=os.path.basename(config_path))
+            tar.add(treebeard_yaml_path, arcname="treebeard.yaml")
 
     if not confirm and not click.confirm(
         "Confirm source file set is correct?", default=True

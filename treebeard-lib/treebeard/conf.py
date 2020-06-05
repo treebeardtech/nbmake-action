@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 from glob import glob
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import List, Optional
 
 import click
 import yaml
@@ -34,19 +34,20 @@ class TreebeardEnv(BaseModel):
 
 
 class TreebeardConfig(BaseModel):
-    notebooks: Tuple[str, ...] = tuple(["**/*.ipynb"])
-    output_dirs: Tuple[str, ...] = tuple(["output"])
-    ignore: Tuple[str, ...] = ()
-    secret: Tuple[str, ...] = ()
+    notebooks: List[str] = ["**/*.ipynb"]
+    output_dirs: List[str] = ["output"]
+    ignore: List[str] = []
+    secret: List[str] = []
     kernel_name: str = "python3"
     strict_mode: bool = True
     cell_execution_timeout_seconds: int = 300
     schedule: Optional[str] = None
 
     @validator("schedule")
-    def name_must_contain_space(cls, v: Optional[str]):
-        if v not in (None, "hourly", "daily", "weekly"):
-            raise ValueError("must contain a space")
+    def schedule_valdiator(cls, v: Optional[str]):
+        schedules = (None, "hourly", "daily", "weekly")
+        if v not in schedules:
+            raise ValueError(f"schedule must be one of {schedules}")
 
         return v and v.lower()
 

@@ -6,6 +6,7 @@ from typing import Any, Optional, Set
 
 import click
 from nbconvert import ScriptExporter  # type: ignore
+from sentry_sdk import capture_exception  # type: ignore
 
 from_regexp = re.compile(r"^from (\w+)")
 import_regexp = re.compile(r"^import (\w+)")
@@ -20,7 +21,13 @@ def get_imported_modules(glob_path: str) -> Set[str]:
 
     all_imported_modules = set()
     for path in nb_paths:
-        [script, _] = se.from_filename(path)
+        try:
+            click.echo(f"Import check inspecting {path}")
+            [script, _] = se.from_filename(path)
+        except Exception as ex:
+            capture_exception(ex)
+            click.echo(f"Import checker cannot read {path}")
+            continue
         lines = script.split("\n")
 
         for line in lines:
