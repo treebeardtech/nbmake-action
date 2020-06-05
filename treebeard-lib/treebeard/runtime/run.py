@@ -152,8 +152,10 @@ def start():
                         )
                         sys.exit(0)
         except Exception as ex:
+            click.echo(f"Import checker encountered and error...")
             capture_exception(ex)
         sys.exit(1)
+    sys.exit(0)
 
 
 if __name__ == "__main__":

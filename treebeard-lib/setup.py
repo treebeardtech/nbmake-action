@@ -24,6 +24,7 @@ install_requires = [
     "python-magic",
     "nbstripout",
     "docker",
+    "requests",
     "jupyter-client>=6.1.0",  # fix Step #0: ERROR: nbclient 0.2.0 has requirement jupyter-client>=6.1.0, but you'll have jupyter-client 5.3.4 which is incompatible.
     "jupyter-contrib-nbextensions",  # for nbconvert scriptexporter
 ]

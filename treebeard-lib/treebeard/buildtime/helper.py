@@ -21,4 +21,4 @@ def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str) -
     [click.echo(line, nl=False) for line in container.logs(stream=True)]
 
     result = container.wait()
-    return result["StatusCode"]
+    return int(result["StatusCode"])
