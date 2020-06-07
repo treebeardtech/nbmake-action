@@ -11,8 +11,8 @@ from sentry_sdk import capture_exception  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.importchecker.imports import check_imports
-from treebeard.runtime.helper import log, upload_artifact
 from treebeard.logs.helpers import clean_log_file
+from treebeard.runtime.helper import log, upload_artifact
 
 bucket_name = "treebeard-notebook-outputs"
 

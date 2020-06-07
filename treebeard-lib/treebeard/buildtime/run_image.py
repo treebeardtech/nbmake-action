@@ -1,6 +1,7 @@
 import os
-from typing import Any
 import sys
+from typing import Any
+
 import docker  # type: ignore
 
 from treebeard.buildtime.helper import run_image
