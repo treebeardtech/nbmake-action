@@ -229,6 +229,11 @@ def run(
     )
     assert put_resp.status_code == 200
 
+    if os.getenv("GITHUB_ACTIONS"):
+        params["event"] = os.getenv("GITHUB_EVENT_NAME")
+        params["sha"] = os.getenv("GITHUB_SHA")
+        params["branch"] = os.getenv("GITHUB_REF").split("/")[-1]
+
     click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
     submit_endpoint = f"{api_url}/runs/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{build_tag}"
     response = requests.post(  # type: ignore
