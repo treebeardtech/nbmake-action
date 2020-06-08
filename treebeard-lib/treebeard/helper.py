@@ -28,7 +28,7 @@ def set_credentials(email: str, key: str, project_id: str):
 
 
 def check_for_updates():
-    pypi_data = requests.get("https://pypi.org/pypi/treebeard/json")
+    pypi_data = requests.get("https://pypi.org/pypi/treebeard/json")  # type: ignore
     latest_version = json.loads(pypi_data.text)["info"]["version"]
 
     if latest_version != version:
@@ -43,7 +43,7 @@ def check_for_updates():
 
 def get_service_status_message(service_status_url: str) -> Optional[str]:
     try:
-        data = json.loads(requests.get(service_status_url).text)
+        data = json.loads(requests.get(service_status_url).text)  # type: ignore
         if "message" in data:
             return data["message"]
     except:  # Non-200 status/timeout, etc.

@@ -51,12 +51,12 @@ def config():
     """Shows Treebeard internal configuration"""
 
 
-@config.command()
+@config.command()  # type: ignore
 def list():
     click.echo(pp.pformat(treebeard_env.dict()))
 
 
-@config.command()
+@config.command()  # type: ignore
 @click.argument("key", type=click.STRING)
 def get(key: str):
     if key in treebeard_env.dict():

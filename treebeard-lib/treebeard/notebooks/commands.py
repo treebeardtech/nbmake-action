@@ -96,7 +96,7 @@ def run(
         if notebooks:
             treebeard_config.notebooks = notebooks
 
-        yaml.dump(treebeard_config.dict(), yaml_file)
+        yaml.dump(treebeard_config.dict(), yaml_file)  # type: ignore
 
     if dockerless:
         click.echo(
@@ -219,10 +219,10 @@ def run(
     build_tag = str(time_seconds)
 
     upload_api = f"{api_url}/source_upload_url/{project_id}/{notebook_id}/{build_tag}"
-    resp = requests.get(upload_api)
+    resp = requests.get(upload_api)  # type: ignore
 
     signed_url: str = resp.text
-    put_resp = requests.put(
+    put_resp = requests.put(  # type: ignore
         signed_url,
         open(src_archive.name, "rb"),
         headers={"Content-Type": "application/x-tar"},
@@ -231,7 +231,7 @@ def run(
 
     click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
     submit_endpoint = f"{api_url}/runs/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{build_tag}"
-    response = requests.post(
+    response = requests.post(  # type: ignore
         submit_endpoint,
         params=params,
         headers={"api_key": treebeard_env.api_key, "email": treebeard_env.email},
@@ -252,7 +252,7 @@ def run(
         build_result = None
         while not build_result:
             time.sleep(5)
-            response = requests.get(runner_endpoint, headers=treebeard_env.dict())
+            response = requests.get(runner_endpoint, headers=treebeard_env.dict())  # type: ignore
             json_data = json.loads(response.text)
             if len(json_data["runs"]) == 0:
                 status = "FAILURE"
@@ -273,7 +273,7 @@ def cancel():
     notif = f"🌲  Cancelling {notebook_id}"
     spinner: Any = Halo(text=notif, spinner="dots")
     spinner.start()
-    requests.delete(runner_endpoint, headers=treebeard_env.dict())
+    requests.delete(runner_endpoint, headers=treebeard_env.dict())  # type: ignore
     spinner.stop()
     click.echo(f"{notif}...🛑 cancellation confirmed!")
 
@@ -282,7 +282,7 @@ def cancel():
 def status():
     """Show the status of the current notebook"""
     validate_notebook_directory(treebeard_env, treebeard_config)
-    response = requests.get(runner_endpoint, headers=treebeard_env.dict())
+    response = requests.get(runner_endpoint, headers=treebeard_env.dict())  # type: ignore
     if response.status_code != 200:
         raise click.ClickException(f"Request failed: {response.text}")
 

@@ -18,7 +18,7 @@ def secrets():
     pass
 
 
-@secrets.command()
+@secrets.command()  # type: ignore
 @click.argument("files", type=click.File("r"), nargs=-1)
 @click.option("--confirm/--no-confirm", default=False)
 def push(files: List[IO[Any]], confirm: bool):
@@ -32,7 +32,7 @@ def push_secrets(files: List[IO[Any]], confirm: bool):
         f"🌲 Pushing secrets for {treebeard_env.project_id}/{treebeard_env.notebook_id}"
     )
     secrets_archive = get_secrets_archive(files, confirm=confirm)
-    response = requests.post(
+    response = requests.post(  # type: ignore
         secrets_endpoint,
         files={"secrets": open(secrets_archive.name, "rb")},
         headers=treebeard_env.dict(),

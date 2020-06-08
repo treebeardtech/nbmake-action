@@ -104,7 +104,7 @@ def validate_notebook_directory(
         fatal_exit("No account config detected! Please run `treebeard configure`")
 
     if not Path("treebeard.yaml").is_file():
-        click.secho(
+        click.secho(  # type: ignore
             "Warning: treebeard.yaml file not found! `treebeard setup` fetches an example.",
             fg="yellow",
         )
@@ -127,13 +127,13 @@ def get_treebeard_config() -> TreebeardConfig:
         return TreebeardConfig()
 
     with open(notebook_config) as f:
-        conf = yaml.load(f, Loader=yaml.FullLoader)
+        conf = yaml.load(f, Loader=yaml.FullLoader)  # type: ignore
         if not conf:
             return TreebeardConfig()
         try:
             return TreebeardConfig(**conf)
         except ValidationError as e:  # type: ignore
-            fatal_exit(f"Error parsing treebeard.yaml\n{e.json()}")
+            fatal_exit(f"Error parsing treebeard.yaml\n{e.json()}")  # type: ignore
 
 
 def get_treebeard_env():

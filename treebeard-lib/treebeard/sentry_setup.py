@@ -11,6 +11,6 @@ def setup_sentry():
     )
 
     with configure_scope() as scope:  # type: ignore
-        scope.set_tag("treebeard_version", get_version())
-        scope.set_tag("treebeard_project_id", str(treebeard_env.project_id))
-        scope.set_tag("treebeard_notebook_id", str(treebeard_env.notebook_id))
+        scope.set_tag("treebeard_version", get_version())  # type: ignore
+        scope.set_tag("treebeard_project_id", str(treebeard_env.project_id))  # type: ignore
+        scope.set_tag("treebeard_notebook_id", str(treebeard_env.notebook_id))  # type: ignore

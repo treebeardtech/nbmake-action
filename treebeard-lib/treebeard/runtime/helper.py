@@ -7,7 +7,7 @@ from requests import Response
 
 from treebeard.conf import api_url
 
-mime: Any = magic.Magic(mime=True)
+mime: Any = magic.Magic(mime=True)  # type: ignore
 
 
 def log(message: str):
@@ -30,7 +30,7 @@ def upload_artifact(
         put_object_headers["x-goog-meta-status"] = status
 
     with open(filename, "rb") as data:
-        resp: Response = requests.get(
+        resp: Response = requests.get(  # type: ignore
             f"{api_url}/get_upload_url/{upload_path}", params=get_url_params,
         )
         if resp.status_code != 200:
@@ -40,7 +40,7 @@ def upload_artifact(
                 )
             )
         signed_url: str = resp.text
-        put_resp = requests.put(signed_url, data, headers=put_object_headers,)
+        put_resp = requests.put(signed_url, data, headers=put_object_headers,)  # type: ignore
         if put_resp.status_code != 200:
             raise (
                 Exception(
@@ -49,4 +49,4 @@ def upload_artifact(
             )
 
         qs = "set_as_thumbnail=true" if set_as_thumbnail else ""
-        requests.post(f"{api_url}/{upload_path}/create_extras?{qs}")
+        requests.post(f"{api_url}/{upload_path}/create_extras?{qs}")  # type: ignore

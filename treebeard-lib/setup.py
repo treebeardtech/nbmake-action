@@ -35,7 +35,7 @@ with open("README.md", "r") as fh:
 with open("treebeard/version.txt", "r") as fh:
     version = fh.read()
 
-setuptools.setup(
+setuptools.setup(  # type: ignore
     name="treebeard",
     version=version,
     author="Treebeard Technologies",
@@ -43,7 +43,7 @@ setuptools.setup(
     description="Run and schedule jupyter notebook projects in the cloud",
     long_description=long_description,
     long_description_content_type="text/markdown",  # type: ignore
-    packages=setuptools.find_namespace_packages(),
+    packages=setuptools.find_namespace_packages(),  # type: ignore
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",

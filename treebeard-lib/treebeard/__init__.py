@@ -23,7 +23,7 @@ warnings.filterwarnings(
 
 @click.group()
 @click.option("--debug/--no-debug", default=False)
-@click.pass_context
+@click.pass_context  # type: ignore
 def cli(ctx: Any, debug: bool):
     """🌲 
       
@@ -41,11 +41,11 @@ def process_result(*args: Any, **kwargs: Any):
     check_for_updates()
 
 
-cli.add_command(configure)
-cli.add_command(status)
-cli.add_command(run)
-cli.add_command(cancel)
-cli.add_command(secrets)
-cli.add_command(setup)
-cli.add_command(config)
-cli.add_command(version)
+cli.add_command(configure)  # type: ignore
+cli.add_command(status)  # type: ignore
+cli.add_command(run)  # type: ignore
+cli.add_command(cancel)  # type: ignore
+cli.add_command(secrets)  # type: ignore
+cli.add_command(setup)  # type: ignore
+cli.add_command(config)  # type: ignore
+cli.add_command(version)  # type: ignore
