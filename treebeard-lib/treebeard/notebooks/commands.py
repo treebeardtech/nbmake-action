@@ -233,6 +233,7 @@ def run(
         params["event"] = os.getenv("GITHUB_EVENT_NAME")
         params["sha"] = os.getenv("GITHUB_SHA")
         params["branch"] = os.getenv("GITHUB_REF").split("/")[-1]
+        params["workflow"] = os.getenv("GITHUB_WORKFLOW")
 
     click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
     submit_endpoint = f"{api_url}/runs/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{build_tag}"
