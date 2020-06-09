@@ -57,6 +57,7 @@ class CliContext(BaseModel):
 def sanitise_notebook_id(notebook_id: str) -> str:
     out = notebook_id.replace("_", "-")
     out = out.replace(" ", "-")
+    out = out.replace(".", "-")
     return out.lower()
 
 

@@ -85,7 +85,7 @@ def run_repo(
         subprocess.run(["ls", "-la", abs_notebook_dir])
 
     # Pull down images to use in cache
-    image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{sanitise_notebook_id(notebook_id)}"
+    image_name = f"gcr.io/treebeard-259315/projects/{sanitise_notebook_id(project_id)}/{sanitise_notebook_id(notebook_id)}"
 
     # Build image but don't run
     versioned_image_name = f"{image_name}:{build_tag}"
