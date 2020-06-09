@@ -25,18 +25,12 @@ def download_archive(unzip_location: str, download_location: str, url: str):
     )
 
 
-def fetch_image_for_cache(client: Any, image_name: str, project_base_image: str):
+def fetch_image_for_cache(client: Any, image_name: str):
     try:
         click.echo(f"Pulling {image_name}")
         client.images.pull(image_name)
     except:
-        try:
-            click.echo(
-                f"Could not pull {image_name}, instead pulling {project_base_image}"
-            )
-            client.images.pull(project_base_image)
-        except Exception as ex:
-            click.echo(f"Error pulling project base image {ex}, continuing without...")
+        click.echo(f"Could not pull image for cache, continuing without.")
 
 
 def run_repo(
@@ -92,11 +86,8 @@ def run_repo(
     passing_image_name = f"{image_name}:{branch}"
     latest_image_name = f"{image_name}:{branch}-latest"
 
-    # our "base" image is just a routine repo2docker build which can be used for caching
-    project_base_image = "docker.io/treebeardtech/project-base-image"
-
     if not local:
-        fetch_image_for_cache(client, latest_image_name, project_base_image)
+        fetch_image_for_cache(client, latest_image_name)
 
     user_name = "project_user"  # All images having the same home dir enables caching
     r2d = f"""
@@ -107,7 +98,6 @@ def run_repo(
         --user-id 1000 \
         --image-name {versioned_image_name} \
         --cache-from {latest_image_name} \
-        --cache-from {project_base_image} \
         --target-repo-dir {abs_notebook_dir} \
         {abs_notebook_dir}
     """
