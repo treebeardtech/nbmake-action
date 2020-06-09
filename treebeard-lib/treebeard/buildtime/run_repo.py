@@ -7,7 +7,6 @@ from typing import Any, Optional
 
 import click
 import docker  # type: ignore
-import requests
 from docker.errors import ImageNotFound, NotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
@@ -30,9 +29,7 @@ def fetch_image_for_cache(client: Any, image_name: str, project_base_image: str)
     try:
         click.echo(f"Pulling {image_name}")
         client.images.pull(image_name)
-    except requests.exceptions.ConnectionError:
-        fatal_exit("Could not connect to Docker registry!")
-    except (NotFound, ImageNotFound):
+    except:
         try:
             click.echo(
                 f"Could not pull {image_name}, instead pulling {project_base_image}"
