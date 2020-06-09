@@ -61,12 +61,25 @@ def get_installed_modules() -> Set[str]:
     return modules
 
 
+def is_local_module(module_name: str):
+    # is there a <name>.py or <name> directory
+    dirs = glob.glob(f"**/{module_name}", recursive=True)
+    scripts = glob.glob(f"**/{module_name}.py", recursive=True)
+
+    return dirs or scripts
+
+
 def check_imports(glob_path: str = "**/*ipynb"):
     click.echo(f"🌲 Checking for potentially missing imports...\n")
     imported_modules = get_imported_modules(glob_path)
     installed_modules = get_installed_modules()
 
-    missing_modules = imported_modules.difference(installed_modules)
+    missing_modules = list(
+        filter(
+            lambda m: not is_local_module(m),
+            imported_modules.difference(installed_modules),
+        )
+    )
 
     if len(missing_modules) > 0:
         click.echo(
@@ -77,7 +90,7 @@ def check_imports(glob_path: str = "**/*ipynb"):
         return False
     else:
         click.echo(
-            "\n✨ All notebook imports are backed by a reproducible dependency file!"
+            "\n✨ All notebook imports appear to be backed by a reproducible dependency file!"
         )
         return True
 

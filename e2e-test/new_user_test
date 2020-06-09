@@ -16,4 +16,5 @@ cp -r ../examples/hello_treebeard ../examples/"$dir_name"
 ../examples/run_example_test "$api_key" "$dir_name"
 
 # Check notebook has been stored
-wget "https://api.treebeard.io/d8a0c5b6c9/${dir_name}/cli/main.ipynb?api_key=${api_key}&nbconvert=true"
+branch=$(git rev-parse --abbrev-ref HEAD)
+wget "https://api.treebeard.io/d8a0c5b6c9/${dir_name}/${branch}/main.ipynb?api_key=${api_key}&nbconvert=true"
