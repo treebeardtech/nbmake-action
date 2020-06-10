@@ -22,7 +22,7 @@ notebook_files = treebeard_config.get_deglobbed_notebooks()
 notebook_status_descriptions = {
     "✅": "SUCCESS",
     "⏳": "WORKING",
-    "❌": "FAILURE",
+    "💥": "FAILURE",
     "⏰": "TIMEOUT",
 }
 
@@ -93,7 +93,7 @@ def run_notebook(notebook_path: str) -> NotebookResult:
 
         num_passing_cells: Optional[int] = 0
         err_line = None
-        status = "❌"
+        status = "💥"
         try:
             for cell in nb_dict["cells"]:
                 if "outputs" in cell:
@@ -112,12 +112,13 @@ def run_notebook(notebook_path: str) -> NotebookResult:
                         and "duration" in cell["metadata"]["papermill"]
                         and cell["metadata"]["papermill"]["duration"] == None
                     ):
+                        num_passing_cells -= 1
                         print("timeout")
-                        err_line = "timed out. You can set `cell_execution_timeout_seconds` in treebeard.yaml."
+                        err_line = f"Cell timed out after {treebeard_config.cell_execution_timeout_seconds}s. You can set `cell_execution_timeout_seconds` in treebeard.yaml."
                         status = "⏰"
                         break
-                    else:
-                        num_passing_cells += 1
+
+                    num_passing_cells += 1
 
         except Exception as ex:
             print(ex)
@@ -177,12 +178,14 @@ def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookRe
     return notebook_results
 
 
-def get_health_bar(passing: int, total: int):
+def get_health_bar(passing: int, total: int, status: str):
     assert passing <= total
     bar_length = 10
     n_green = int(bar_length * float(passing) / float(total))
     n_red = bar_length - n_green
-    return "🟩" * n_green + "🟥" * n_red
+    if n_green == bar_length:
+        return "🟩" * (bar_length - 1) + "✅"
+    return ("🟩" * n_green) + status + ("⬜" * (n_red - 1))
 
 
 def start(upload_outputs: bool = True):
@@ -204,18 +207,31 @@ def start(upload_outputs: bool = True):
 
     for notebook in notebook_results.keys():
         result = notebook_results[notebook]
-        health_bar = get_health_bar(result.num_passing_cells, result.num_cells)
+        health_bar = get_health_bar(
+            result.num_passing_cells, result.num_cells, result.status
+        )
         print(f"{health_bar} {notebook}")
+        print(f"  ran {result.num_passing_cells} of {result.num_cells} cells")
+
         if result.status != "✅":
-            print(
-                f"  {result.num_passing_cells}/{result.num_cells} cells ran\n  💥{result.err_line}"
-            )
+            print(f"  {result.status} {result.err_line}")
+
         print()
 
-    n_failed = len(list(filter(lambda v: v.status != "✅", notebook_results.values())))
+    n_passed = len(list(filter(lambda v: v.status == "✅", notebook_results.values())))
 
-    if n_failed > 0:
-        log(f"{n_failed} of {len(notebook_results)} notebooks failed.\n")
+    total_nbs = len(notebook_results)
+    if n_passed < len(notebook_results):
+        nb_percent = int(float(n_passed) / float(total_nbs) * 100)
+        print()
+        print(f"Notebooks: {n_passed} of {total_nbs} passed ({nb_percent}%)")
+        total_cells = sum(map(lambda res: res.num_cells, notebook_results.values()))
+        total_cells_passed = sum(
+            map(lambda res: res.num_passing_cells, notebook_results.values())
+        )
+        percent = int(100.0 * float(total_cells_passed) / float(total_cells))
+        print(f"Cells: {total_cells_passed} of {total_cells} passed ({percent}%)")
+        print()
 
         try:
             if treebeard_config.kernel_name == "python3":
