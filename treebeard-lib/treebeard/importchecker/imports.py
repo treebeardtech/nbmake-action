@@ -22,7 +22,7 @@ def get_imported_modules(glob_path: str) -> Set[str]:
     all_imported_modules = set()
     for path in nb_paths:
         try:
-            click.echo(f"Import check inspecting {path}")
+            # click.echo(f"Import checker inspecting {path}")
             [script, _] = se.from_filename(path)
         except Exception as ex:
             capture_exception(ex)

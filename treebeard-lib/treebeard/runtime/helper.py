@@ -3,11 +3,19 @@ from typing import Any, Optional
 
 import magic  # type: ignore
 import requests
+from pydantic import BaseModel  # type: ignore
 from requests import Response
 
 from treebeard.conf import api_url
 
 mime: Any = magic.Magic(mime=True)  # type: ignore
+
+
+class NotebookResult(BaseModel):
+    status: str
+    num_cells: Optional[int]
+    num_passing_cells: Optional[int]
+    err_line: Optional[str]
 
 
 def log(message: str):

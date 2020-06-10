@@ -1,18 +1,19 @@
+import json
 import os
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from traceback import format_exc
-from typing import Dict
+from typing import Dict, Optional
 
 import click
 import papermill as pm  # type: ignore
-from sentry_sdk import capture_exception  # type: ignore
+from sentry_sdk import capture_exception, capture_message  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.importchecker.imports import check_imports
 from treebeard.logs.helpers import clean_log_file
-from treebeard.runtime.helper import log, upload_artifact
+from treebeard.runtime.helper import NotebookResult, log, upload_artifact
 
 bucket_name = "treebeard-notebook-outputs"
 
@@ -22,10 +23,11 @@ notebook_status_descriptions = {
     "✅": "SUCCESS",
     "⏳": "WORKING",
     "❌": "FAILURE",
+    "⏰": "TIMEOUT",
 }
 
 
-def save_artifacts(notebook_statuses: Dict[str, str]):
+def save_artifacts(notebook_results: Dict[str, NotebookResult]):
     with ThreadPoolExecutor(max_workers=4) as executor:
         log(f"Uploading outputs...")
 
@@ -40,7 +42,7 @@ def save_artifacts(notebook_statuses: Dict[str, str]):
                 upload_artifact,
                 notebook_path,
                 notebook_upload_path,
-                notebook_status_descriptions[notebook_statuses[notebook_path]],
+                notebook_status_descriptions[notebook_results[notebook_path].status],
                 set_as_thumbnail=first,
             )
             first = False
@@ -58,7 +60,14 @@ def save_artifacts(notebook_statuses: Dict[str, str]):
             )
 
 
-def run_notebook(notebook_path: str) -> str:
+def run_notebook(notebook_path: str) -> NotebookResult:
+    def get_nb_dict():
+        with open(notebook_path) as json_file:
+            return json.load(json_file)
+
+    nb_dict = get_nb_dict()
+    num_cells = len(nb_dict["cells"])
+
     try:
         notebook_dir, notebook_name = os.path.split(notebook_path)
         log(
@@ -76,14 +85,67 @@ def run_notebook(notebook_path: str) -> str:
             cwd=f"{os.getcwd()}/{notebook_dir}",
         )
         log(f"✅ Notebook {notebook_path} passed!\n")
-        return "✅"
+        return NotebookResult(
+            status="✅", num_cells=num_cells, num_passing_cells=num_cells
+        )
     except Exception:
         tb = format_exc()
-        log(f"❌ Notebook {notebook_path} failed!\n\n{tb}")
-        return "❌"
+
+        num_passing_cells: Optional[int] = 0
+        err_line = None
+        status = "❌"
+        try:
+            for cell in nb_dict["cells"]:
+                if "outputs" in cell:
+                    errors = [
+                        output
+                        for output in cell["outputs"]
+                        if output["output_type"] == "error" or "ename" in output
+                    ]
+                    if errors:
+                        err_line = errors[0]["traceback"][-1]
+                        break
+
+                    if (
+                        "metadata" in cell
+                        and "papermill" in cell["metadata"]
+                        and "duration" in cell["metadata"]["papermill"]
+                        and cell["metadata"]["papermill"]["duration"] == None
+                    ):
+                        print("timeout")
+                        err_line = "timed out. You can set `cell_execution_timeout_seconds` in treebeard.yaml."
+                        status = "⏰"
+                        break
+                    else:
+                        num_passing_cells += 1
+
+        except Exception as ex:
+            print(ex)
+            num_passing_cells = None
+            err_line = None
+            capture_exception(ex)  # type: ignore
+
+        if err_line and num_passing_cells:
+            log(
+                f"""{status} Notebook {notebook_path} failed!
+  {num_passing_cells}/{num_cells} cells ran.
+  {err_line}
+  
+{tb}"""
+            )
+        else:
+            log(f"""{status} Notebook {notebook_path} failed!\n\n{tb}""")
+            capture_message(f"Didn't find error for {notebook_path}")
+
+        return NotebookResult(
+            status=status,
+            num_cells=num_cells,
+            num_passing_cells=num_passing_cells,
+            err_line=err_line,
+        )
 
 
-def run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, str]:
+def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookResult]:
     log(f"🌲 treebeard runtime: running repo")
     subprocess.run(
         [
@@ -101,22 +163,29 @@ def run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, str]:
     for output_dir in treebeard_config.output_dirs:
         os.makedirs(output_dir, exist_ok=True)
 
-    notebook_statuses = {notebook: "⏳" for notebook in notebook_files}
+    notebook_results = {
+        notebook: NotebookResult(status="⏳") for notebook in notebook_files
+    }
     print(f"Will run the following:")
     [print(nb) for nb in notebook_files]
     print()
 
     for i, notebook_path in enumerate(notebook_files):
         log(f"⏳ Running {i + 1}/{len(notebook_files)}: {notebook_path}")
-        notebook_statuses[notebook_path] = run_notebook(notebook_path)
+        notebook_results[notebook_path] = run_notebook(notebook_path)
 
-    save_artifacts(notebook_statuses)
-    log("Run Finished\n")
-
-    return notebook_statuses
+    return notebook_results
 
 
-def start():
+def get_health_bar(passing: int, total: int):
+    assert passing <= total
+    bar_length = 10
+    n_green = int(bar_length * float(passing) / float(total))
+    n_red = bar_length - n_green
+    return "🟩" * n_green + "🟥" * n_red
+
+
+def start(upload_outputs: bool = True):
     if not treebeard_env.notebook_id:
         raise Exception("No notebook ID at runtime")
     if not treebeard_env.project_id:
@@ -124,18 +193,29 @@ def start():
 
     clean_log_file()
 
-    notebook_statuses = run(
+    notebook_results = _run(
         treebeard_env.project_id, treebeard_env.notebook_id, treebeard_env.run_id
     )
 
-    for notebook in notebook_statuses.keys():
-        print(f"{notebook_statuses[notebook]} {notebook}")
-    print()
+    if upload_outputs:
+        save_artifacts(notebook_results)
 
-    n_failed = len(list(filter(lambda v: v != "✅", notebook_statuses.values())))
+    log("🌲 Run Finished. Results:\n")
+
+    for notebook in notebook_results.keys():
+        result = notebook_results[notebook]
+        health_bar = get_health_bar(result.num_passing_cells, result.num_cells)
+        print(f"{health_bar} {notebook}")
+        if result.status != "✅":
+            print(
+                f"  {result.num_passing_cells}/{result.num_cells} cells ran\n  💥{result.err_line}"
+            )
+        print()
+
+    n_failed = len(list(filter(lambda v: v.status != "✅", notebook_results.values())))
 
     if n_failed > 0:
-        log(f"{n_failed} of {len(notebook_statuses)} notebooks failed.\n")
+        log(f"{n_failed} of {len(notebook_results)} notebooks failed.\n")
 
         try:
             if treebeard_config.kernel_name == "python3":
