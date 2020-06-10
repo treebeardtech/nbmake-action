@@ -1,0 +1,17 @@
+# action.yml
+name: "Treebeard"
+description: "Automatically containerise and run notebooks"
+inputs:
+  api-key:
+    description: "treebeard api key"
+    required: true
+  notebooks:
+    description: "notebooks to run"
+    required: false
+    default: "**/*ipynb"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.api-key }}
+    - ${{ inputs.notebooks }}
