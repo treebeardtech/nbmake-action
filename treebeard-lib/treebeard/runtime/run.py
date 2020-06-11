@@ -4,7 +4,7 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from traceback import format_exc
-from typing import Dict, Optional
+from typing import Dict
 
 import click
 import papermill as pm  # type: ignore
@@ -13,7 +13,13 @@ from sentry_sdk import capture_exception, capture_message  # type: ignore
 from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.importchecker.imports import check_imports
 from treebeard.logs.helpers import clean_log_file
-from treebeard.runtime.helper import NotebookResult, log, upload_artifact
+from treebeard.runtime.helper import (
+    NotebookResult,
+    get_failed_nb_details,
+    get_health_bar,
+    log,
+    upload_artifact,
+)
 
 bucket_name = "treebeard-notebook-outputs"
 
@@ -86,57 +92,16 @@ def run_notebook(notebook_path: str) -> NotebookResult:
         )
         log(f"✅ Notebook {notebook_path} passed!\n")
         return NotebookResult(
-            status="✅", num_cells=num_cells, num_passing_cells=num_cells
+            status="✅", num_cells=num_cells, num_passing_cells=num_cells, err_line=""
         )
     except Exception:
         tb = format_exc()
 
-        num_passing_cells: Optional[int] = 0
-        err_line = None
-        status = "💥"
-        try:
-            for cell in nb_dict["cells"]:
-                if "outputs" in cell:
-                    errors = [
-                        output
-                        for output in cell["outputs"]
-                        if output["output_type"] == "error" or "ename" in output
-                    ]
-                    if errors:
-                        err_line = errors[0]["traceback"][-1]
-                        break
+        err_line, num_passing_cells, status = get_failed_nb_details(nb_dict)
 
-                    if (
-                        "metadata" in cell
-                        and "papermill" in cell["metadata"]
-                        and "duration" in cell["metadata"]["papermill"]
-                        and cell["metadata"]["papermill"]["duration"] == None
-                    ):
-                        num_passing_cells -= 1
-                        print("timeout")
-                        err_line = f"Cell timed out after {treebeard_config.cell_execution_timeout_seconds}s. You can set `cell_execution_timeout_seconds` in treebeard.yaml."
-                        status = "⏰"
-                        break
-
-                    num_passing_cells += 1
-
-        except Exception as ex:
-            print(ex)
-            num_passing_cells = None
-            err_line = None
-            capture_exception(ex)  # type: ignore
-
-        if err_line and num_passing_cells:
-            log(
-                f"""{status} Notebook {notebook_path} failed!
-  {num_passing_cells}/{num_cells} cells ran.
-  {err_line}
-  
-{tb}"""
-            )
-        else:
-            log(f"""{status} Notebook {notebook_path} failed!\n\n{tb}""")
-            capture_message(f"Didn't find error for {notebook_path}")
+        log(
+            f"""{status} Notebook {notebook_path} failed!\n  {num_passing_cells}/{num_cells} cells ran.\n\n{tb}"""
+        )
 
         return NotebookResult(
             status=status,
@@ -165,7 +130,10 @@ def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookRe
         os.makedirs(output_dir, exist_ok=True)
 
     notebook_results = {
-        notebook: NotebookResult(status="⏳") for notebook in notebook_files
+        notebook: NotebookResult(
+            status="⏳", num_cells=1, num_passing_cells=1, err_line=""
+        )
+        for notebook in notebook_files
     }
     print(f"Will run the following:")
     [print(nb) for nb in notebook_files]
@@ -176,16 +144,6 @@ def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookRe
         notebook_results[notebook_path] = run_notebook(notebook_path)
 
     return notebook_results
-
-
-def get_health_bar(passing: int, total: int, status: str):
-    assert passing <= total
-    bar_length = 10
-    n_green = int(bar_length * float(passing) / float(total))
-    n_red = bar_length - n_green
-    if n_green == bar_length:
-        return "🟩" * (bar_length - 1) + "✅"
-    return ("🟩" * n_green) + status + ("⬜" * (n_red - 1))
 
 
 def start(upload_outputs: bool = True):
