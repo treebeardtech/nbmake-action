@@ -62,11 +62,6 @@ def save_artifacts(notebook_results: Dict[str, NotebookResult]):
                     upload_path = f"{run_path}/{full_name}"
                     executor.submit(upload_artifact, full_name, upload_path, None)
 
-        if os.path.exists("treebeard.log"):
-            executor.submit(
-                upload_artifact, "treebeard.log", f"{run_path}/treebeard.log", None
-            )
-
 
 def run_notebook(notebook_path: str) -> NotebookResult:
     def get_nb_dict():
@@ -148,6 +143,12 @@ def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookRe
     return notebook_results
 
 
+def finish(status: int = 0):
+    if os.path.exists("treebeard.log"):
+        upload_artifact("treebeard.log", f"{run_path}/treebeard.log", None)
+    sys.exit(status)
+
+
 def start(upload_outputs: bool = True):
     if not treebeard_env.notebook_id:
         raise Exception("No notebook ID at runtime")
@@ -203,17 +204,18 @@ def start(upload_outputs: bool = True):
                         click.echo(
                             f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅"
                         )
-                        sys.exit(0)
+                        finish(0)
                     else:
                         click.echo(
-                            f"\nℹ️ Strict mode is disabled! This means notebooks are allowed to fail as you ad any missing dependencies to your project requirements."
+                            f"\nℹ️ Strict mode is disabled! Fix missing dependencies to get a passing run."
                         )
                 click.echo()
         except Exception as ex:
             click.echo(f"Import checker encountered and error...")
             capture_exception(ex)
-        sys.exit(1)
-    sys.exit(0)
+        finish(1)
+    else:
+        finish(0)
 
 
 if __name__ == "__main__":
