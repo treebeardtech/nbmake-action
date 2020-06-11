@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Dict
 
 import magic  # type: ignore
 import requests
@@ -108,3 +108,19 @@ def get_health_bar(passing: int, total: int, status: str):
     if n_green == bar_length:
         return "🟩" * (bar_length - 1) + "✅"
     return ("🟩" * n_green) + status + ("⬜" * (n_red - 1))
+
+
+def get_summary(
+    notebook_results: Dict[str, NotebookResult], n_passed: int, total_nbs: int
+):
+
+    summary = "\n"
+    nb_percent = int(float(n_passed) / float(total_nbs) * 100)
+    summary += f"Notebooks: {n_passed} of {total_nbs} passed ({nb_percent}%)\n"
+    total_cells = sum(map(lambda res: res.num_cells, notebook_results.values()))
+    total_cells_passed = sum(
+        map(lambda res: res.num_passing_cells, notebook_results.values())
+    )
+    percent = int(100.0 * float(total_cells_passed) / float(total_cells))
+    summary += f"Cells: {total_cells_passed} of {total_cells} passed ({percent}%)\n"
+    return summary

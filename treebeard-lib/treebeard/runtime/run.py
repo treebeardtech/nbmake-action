@@ -13,11 +13,13 @@ from sentry_sdk import capture_exception, capture_message  # type: ignore
 from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.importchecker.imports import check_imports
 from treebeard.logs.helpers import clean_log_file
+from treebeard.logs import log as tb_log
 from treebeard.runtime.helper import (
     NotebookResult,
     get_failed_nb_details,
     get_health_bar,
     log,
+    get_summary,
     upload_artifact,
 )
 
@@ -168,8 +170,6 @@ def start(upload_outputs: bool = True):
         health_bar = get_health_bar(
             result.num_passing_cells, result.num_cells, result.status
         )
-        print(f"{health_bar} {notebook}")
-        print(f"  ran {result.num_passing_cells} of {result.num_cells} cells")
 
         if result.status == "✅":
             print(f"{health_bar} {notebook}")
@@ -186,17 +186,9 @@ def start(upload_outputs: bool = True):
     n_passed = len(list(filter(lambda v: v.status == "✅", notebook_results.values())))
 
     total_nbs = len(notebook_results)
-    if n_passed < len(notebook_results):
-        nb_percent = int(float(n_passed) / float(total_nbs) * 100)
-        print()
-        print(f"Notebooks: {n_passed} of {total_nbs} passed ({nb_percent}%)")
-        total_cells = sum(map(lambda res: res.num_cells, notebook_results.values()))
-        total_cells_passed = sum(
-            map(lambda res: res.num_passing_cells, notebook_results.values())
-        )
-        percent = int(100.0 * float(total_cells_passed) / float(total_cells))
-        print(f"Cells: {total_cells_passed} of {total_cells} passed ({percent}%)")
-        print()
+    if n_passed < total_nbs:
+        summary_block = get_summary(notebook_results, n_passed, total_nbs)
+        tb_log(summary_block)
 
         try:
             if treebeard_config.kernel_name == "python3":
