@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import sys
@@ -7,12 +8,20 @@ from typing import Dict
 
 import click
 import papermill as pm  # type: ignore
-from sentry_sdk import capture_exception  # type: ignore
+from sentry_sdk import capture_exception, capture_message  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.importchecker.imports import check_imports
+from treebeard.logs import log as tb_log
 from treebeard.logs.helpers import clean_log_file
-from treebeard.runtime.helper import log, upload_artifact
+from treebeard.runtime.helper import (
+    NotebookResult,
+    get_failed_nb_details,
+    get_health_bar,
+    get_summary,
+    log,
+    upload_artifact,
+)
 
 bucket_name = "treebeard-notebook-outputs"
 
@@ -21,11 +30,12 @@ notebook_files = treebeard_config.get_deglobbed_notebooks()
 notebook_status_descriptions = {
     "✅": "SUCCESS",
     "⏳": "WORKING",
-    "❌": "FAILURE",
+    "💥": "FAILURE",
+    "⏰": "TIMEOUT",
 }
 
 
-def save_artifacts(notebook_statuses: Dict[str, str]):
+def save_artifacts(notebook_results: Dict[str, NotebookResult]):
     with ThreadPoolExecutor(max_workers=4) as executor:
         log(f"Uploading outputs...")
 
@@ -40,7 +50,7 @@ def save_artifacts(notebook_statuses: Dict[str, str]):
                 upload_artifact,
                 notebook_path,
                 notebook_upload_path,
-                notebook_status_descriptions[notebook_statuses[notebook_path]],
+                notebook_status_descriptions[notebook_results[notebook_path].status],
                 set_as_thumbnail=first,
             )
             first = False
@@ -58,7 +68,11 @@ def save_artifacts(notebook_statuses: Dict[str, str]):
             )
 
 
-def run_notebook(notebook_path: str) -> str:
+def run_notebook(notebook_path: str) -> NotebookResult:
+    def get_nb_dict():
+        with open(notebook_path) as json_file:
+            return json.load(json_file)
+
     try:
         notebook_dir, notebook_name = os.path.split(notebook_path)
         log(
@@ -76,14 +90,30 @@ def run_notebook(notebook_path: str) -> str:
             cwd=f"{os.getcwd()}/{notebook_dir}",
         )
         log(f"✅ Notebook {notebook_path} passed!\n")
-        return "✅"
+        nb_dict = get_nb_dict()
+        num_cells = len(nb_dict["cells"])
+        return NotebookResult(
+            status="✅", num_cells=num_cells, num_passing_cells=num_cells, err_line=""
+        )
     except Exception:
         tb = format_exc()
-        log(f"❌ Notebook {notebook_path} failed!\n\n{tb}")
-        return "❌"
+        nb_dict = get_nb_dict()
+        num_cells = len(nb_dict["cells"])
+        err_line, num_passing_cells, status = get_failed_nb_details(nb_dict)
+
+        log(
+            f"""{status} Notebook {notebook_path} failed!\n  {num_passing_cells}/{num_cells} cells ran.\n\n{tb}"""
+        )
+
+        return NotebookResult(
+            status=status,
+            num_cells=num_cells,
+            num_passing_cells=num_passing_cells,
+            err_line=err_line,
+        )
 
 
-def run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, str]:
+def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookResult]:
     log(f"🌲 treebeard runtime: running repo")
     subprocess.run(
         [
@@ -101,22 +131,24 @@ def run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, str]:
     for output_dir in treebeard_config.output_dirs:
         os.makedirs(output_dir, exist_ok=True)
 
-    notebook_statuses = {notebook: "⏳" for notebook in notebook_files}
+    notebook_results = {
+        notebook: NotebookResult(
+            status="⏳", num_cells=1, num_passing_cells=1, err_line=""
+        )
+        for notebook in notebook_files
+    }
     print(f"Will run the following:")
     [print(nb) for nb in notebook_files]
     print()
 
     for i, notebook_path in enumerate(notebook_files):
         log(f"⏳ Running {i + 1}/{len(notebook_files)}: {notebook_path}")
-        notebook_statuses[notebook_path] = run_notebook(notebook_path)
+        notebook_results[notebook_path] = run_notebook(notebook_path)
 
-    save_artifacts(notebook_statuses)
-    log("Run Finished\n")
-
-    return notebook_statuses
+    return notebook_results
 
 
-def start():
+def start(upload_outputs: bool = True):
     if not treebeard_env.notebook_id:
         raise Exception("No notebook ID at runtime")
     if not treebeard_env.project_id:
@@ -124,18 +156,39 @@ def start():
 
     clean_log_file()
 
-    notebook_statuses = run(
+    notebook_results = _run(
         treebeard_env.project_id, treebeard_env.notebook_id, treebeard_env.run_id
     )
 
-    for notebook in notebook_statuses.keys():
-        print(f"{notebook_statuses[notebook]} {notebook}")
-    print()
+    if upload_outputs:
+        save_artifacts(notebook_results)
 
-    n_failed = len(list(filter(lambda v: v != "✅", notebook_statuses.values())))
+    log("🌲 Run Finished. Results:\n")
 
-    if n_failed > 0:
-        log(f"{n_failed} of {len(notebook_statuses)} notebooks failed.\n")
+    for notebook in notebook_results.keys():
+        result = notebook_results[notebook]
+        health_bar = get_health_bar(
+            result.num_passing_cells, result.num_cells, result.status
+        )
+
+        if result.status == "✅":
+            print(f"{health_bar} {notebook}")
+            print(f"  ran {result.num_passing_cells} of {result.num_cells} cells")
+        elif not result.err_line:  # failed to parse notebook properly
+            print(f"{result.status} {notebook}")
+        else:
+            print(f"{health_bar} {notebook}")
+            print(f"  ran {result.num_passing_cells} of {result.num_cells} cells")
+            print(f"  {result.status} {result.err_line}")
+
+        print()
+
+    n_passed = len(list(filter(lambda v: v.status == "✅", notebook_results.values())))
+
+    total_nbs = len(notebook_results)
+    if n_passed < total_nbs:
+        summary_block = get_summary(notebook_results, n_passed, total_nbs)
+        tb_log(summary_block)
 
         try:
             if treebeard_config.kernel_name == "python3":
@@ -151,6 +204,11 @@ def start():
                             f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅"
                         )
                         sys.exit(0)
+                    else:
+                        click.echo(
+                            f"\nℹ️ Strict mode is disabled! This means notebooks are allowed to fail as you ad any missing dependencies to your project requirements."
+                        )
+                click.echo()
         except Exception as ex:
             click.echo(f"Import checker encountered and error...")
             capture_exception(ex)

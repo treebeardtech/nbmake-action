@@ -111,7 +111,7 @@ def run(
         # Note: import runtime.run causes win/darwin devices missing magic to fail at start
         import treebeard.runtime.run
 
-        treebeard.runtime.run.start()  # will sys.exit
+        treebeard.runtime.run.start(upload_outputs=False)  # will sys.exit
 
     params = {}
     if treebeard_config.schedule:

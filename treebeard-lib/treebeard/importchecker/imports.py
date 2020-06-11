@@ -1,8 +1,8 @@
 import glob
+import importlib
 import re
 import sys
-from pydoc import ModuleScanner
-from typing import Any, Optional, Set
+from typing import Any, Set
 
 import click
 from nbconvert import ScriptExporter  # type: ignore
@@ -22,7 +22,7 @@ def get_imported_modules(glob_path: str) -> Set[str]:
     all_imported_modules = set()
     for path in nb_paths:
         try:
-            click.echo(f"Import check inspecting {path}")
+            # click.echo(f"Import checker inspecting {path}")
             [script, _] = se.from_filename(path)
         except Exception as ex:
             capture_exception(ex)
@@ -44,20 +44,24 @@ def get_imported_modules(glob_path: str) -> Set[str]:
     return all_imported_modules
 
 
-def get_installed_modules() -> Set[str]:
+def get_installed_modules(imported_modules: Set[str]) -> Set[str]:
     modules = set()
+    # Disable stdout/stderr to prevent log spam while importing
+    save_stdout = sys.stdout
+    save_stderr = sys.stderr
+    sys.stderr = open("trash", "w")
+    sys.stdout = open("trash", "w")
 
-    def callback(path: Optional[str], modname: str, desc: str):
-        if modname and modname.endswith(".__init__"):
-            modname = modname.replace(".__init__", " (package)")
-
-        if modname.find(".") == -1:
-            modules.add(modname)
-
-    def onerror(modname: str):
-        pass
-
-    ModuleScanner().run(callback, onerror=onerror)
+    for im in imported_modules:
+        try:
+            importlib.import_module(im)
+            modules.add(im)
+            # print(f"imported {im}", file=save_stdout)
+        except:
+            pass
+            # print(f"failed to import {im}", file=save_stdout)
+    sys.stdout = save_stdout
+    sys.stderr = save_stderr
     return modules
 
 
@@ -72,7 +76,7 @@ def is_local_module(module_name: str):
 def check_imports(glob_path: str = "**/*ipynb"):
     click.echo(f"🌲 Checking for potentially missing imports...\n")
     imported_modules = get_imported_modules(glob_path)
-    installed_modules = get_installed_modules()
+    installed_modules = get_installed_modules(imported_modules)
 
     missing_modules = list(
         filter(

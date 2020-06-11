@@ -7,6 +7,7 @@ def log(content: str):
 
     Params: content, custom string used in a command from a notebook
     """
+    print(content)
     with open("treebeard.log", "a+") as f:
         f.write("\n")
         f.write(content)
