@@ -71,9 +71,6 @@ def run_notebook(notebook_path: str) -> NotebookResult:
         with open(notebook_path) as json_file:
             return json.load(json_file)
 
-    nb_dict = get_nb_dict()
-    num_cells = len(nb_dict["cells"])
-
     try:
         notebook_dir, notebook_name = os.path.split(notebook_path)
         log(
@@ -91,12 +88,15 @@ def run_notebook(notebook_path: str) -> NotebookResult:
             cwd=f"{os.getcwd()}/{notebook_dir}",
         )
         log(f"✅ Notebook {notebook_path} passed!\n")
+        nb_dict = get_nb_dict()
+        num_cells = len(nb_dict["cells"])
         return NotebookResult(
             status="✅", num_cells=num_cells, num_passing_cells=num_cells, err_line=""
         )
     except Exception:
         tb = format_exc()
-
+        nb_dict = get_nb_dict()
+        num_cells = len(nb_dict["cells"])
         err_line, num_passing_cells, status = get_failed_nb_details(nb_dict)
 
         log(
