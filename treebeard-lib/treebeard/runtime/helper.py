@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Optional, Tuple, Dict
+from typing import Any, Dict, Optional, Tuple
 
 import magic  # type: ignore
 import requests

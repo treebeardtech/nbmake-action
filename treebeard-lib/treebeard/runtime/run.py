@@ -12,14 +12,14 @@ from sentry_sdk import capture_exception, capture_message  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
 from treebeard.importchecker.imports import check_imports
-from treebeard.logs.helpers import clean_log_file
 from treebeard.logs import log as tb_log
+from treebeard.logs.helpers import clean_log_file
 from treebeard.runtime.helper import (
     NotebookResult,
     get_failed_nb_details,
     get_health_bar,
-    log,
     get_summary,
+    log,
     upload_artifact,
 )
 
