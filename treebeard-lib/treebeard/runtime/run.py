@@ -171,7 +171,14 @@ def start(upload_outputs: bool = True):
         print(f"{health_bar} {notebook}")
         print(f"  ran {result.num_passing_cells} of {result.num_cells} cells")
 
-        if result.status != "✅":
+        if result.status == "✅":
+            print(f"{health_bar} {notebook}")
+            print(f"  ran {result.num_passing_cells} of {result.num_cells} cells")
+        elif not result.err_line:  # failed to parse notebook properly
+            print(f"{result.status} {notebook}")
+        else:
+            print(f"{health_bar} {notebook}")
+            print(f"  ran {result.num_passing_cells} of {result.num_cells} cells")
             print(f"  {result.status} {result.err_line}")
 
         print()
@@ -205,6 +212,11 @@ def start(upload_outputs: bool = True):
                             f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅"
                         )
                         sys.exit(0)
+                    else:
+                        click.echo(
+                            f"\nℹ️ Strict mode is disabled! This means notebooks are allowed to fail as you ad any missing dependencies to your project requirements."
+                        )
+                click.echo()
         except Exception as ex:
             click.echo(f"Import checker encountered and error...")
             capture_exception(ex)
