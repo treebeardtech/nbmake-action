@@ -52,7 +52,7 @@ def run_repo(
 
     client: Any = docker.from_env()  # type: ignore
     subprocess.check_output(
-        f"docker login -u {os.getenv('DOCKER_USERNAME')} -p {os.getenv('DOCKER_PASSWORD')}",
+        f"docker login -u {os.getenv('DOCKER_USERNAME')} -p {os.getenv('DOCKER_PASSWORD')} {os.getenv('DOCKER_REGISTRY')}",
         shell=True,
     )
     try:
