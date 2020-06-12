@@ -176,4 +176,4 @@ runner_endpoint = (
 )
 service_status_endpoint = f"{api_url}/service_status"
 
-registry = os.getenv("DOCKER_REGISTRY", "gcr.io/treebeard-259315/projects/")
+registry = os.getenv("DOCKER_REGISTRY", "gcr.io/treebeard-259315/projects")

@@ -50,7 +50,11 @@ project_id = treebeard_env.project_id
     "watch", "--watch", is_flag=True, help="Run and check completed build status"
 )
 @click.option(
-    "local", "--local", is_flag=True, help="Build image with local docker installation",
+    "local",
+    "--local",
+    is_flag=True,
+    default=True,
+    help="Build image with local docker installation",
 )
 @click.option("-n", "--notebooks", help="Notebooks to be run", multiple=True)
 @click.option(
