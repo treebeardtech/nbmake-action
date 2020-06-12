@@ -118,8 +118,10 @@ def run_repo(
         click.echo(
             f"Image built: Pushing {versioned_image_name} and {latest_image_name}"
         )
-        client.images.push(versioned_image_name)
-        client.images.push(latest_image_name)  # this tag is necessary for caching
+        subprocess.check_output(f"docker push {versioned_image_name}", shell=True)
+        subprocess.check_output(
+            f"docker push {latest_image_name}", shell=True
+        )  # this tag is necessary for caching
     except Exception:
         click.echo(f"Failed to push image, will try again on success\n{format_exc()}")
 
@@ -131,7 +133,8 @@ def run_repo(
 
     subprocess.check_output(["docker", "tag", versioned_image_name, passing_image_name])
     click.echo(f"tagged {versioned_image_name} as {passing_image_name}")
-    client.images.push(passing_image_name)
+    subprocess.check_output(f"docker push {passing_image_name}", shell=True)
+
     return 0
 
 
