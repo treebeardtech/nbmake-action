@@ -27,6 +27,7 @@ from treebeard.conf import (
     api_url,
     config_path,
     get_time,
+    registry,
     runner_endpoint,
     treebeard_config,
     treebeard_env,
@@ -183,7 +184,7 @@ def run(
 
     if local:
         build_tag = str(time.mktime(datetime.datetime.today().timetuple()))
-        repo_image_name = f"gcr.io/treebeard-259315/projects/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
+        repo_image_name = f"{registry}/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
         click.echo(f"🌲  Building {repo_image_name} Locally\n")
         secrets_archive = get_secrets_archive()
         repo_url = f"file://{src_archive.name}"
@@ -196,7 +197,6 @@ def run(
             repo_url,
             secrets_url,
             branch="cli",
-            local=True,
         )
         click.echo(f"Local build exited with status code {status}")
         sys.exit(status)

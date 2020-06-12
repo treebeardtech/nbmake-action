@@ -10,7 +10,12 @@ import docker  # type: ignore
 from docker.errors import ImageNotFound, NotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
-from treebeard.conf import get_treebeard_config, run_path, treebeard_env
+from treebeard.conf import (
+    get_treebeard_config,
+    registry,
+    run_path,
+    treebeard_env,
+)
 from treebeard.helper import sanitise_notebook_id
 from treebeard.util import fatal_exit
 
@@ -41,7 +46,6 @@ def run_repo(
     repo_url: str,
     secrets_url: Optional[str],
     branch: str,
-    local: bool = False,
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
     click.echo(f"Run path: {run_path}")
@@ -79,15 +83,14 @@ def run_repo(
         subprocess.run(["ls", "-la", abs_notebook_dir])
 
     # Pull down images to use in cache
-    image_name = f"gcr.io/treebeard-259315/projects/{sanitise_notebook_id(project_id)}/{sanitise_notebook_id(notebook_id)}"
+    image_name = f"{registry}/{sanitise_notebook_id(project_id)}/{sanitise_notebook_id(notebook_id)}"
 
     # Build image but don't run
     versioned_image_name = f"{image_name}:{build_tag}"
     passing_image_name = f"{image_name}:{branch}"
     latest_image_name = f"{image_name}:{branch}-latest"
 
-    if not local:
-        fetch_image_for_cache(client, latest_image_name)
+    fetch_image_for_cache(client, latest_image_name)
 
     user_name = "project_user"  # All images having the same home dir enables caching
     r2d = f"""
@@ -110,17 +113,15 @@ def run_repo(
         return 1
 
     subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
-    if not local:
-        try:
-            click.echo(
-                f"Image built: Pushing {versioned_image_name} and {latest_image_name}"
-            )
-            client.images.push(versioned_image_name)
-            client.images.push(latest_image_name)  # this tag is necessary for caching
-        except Exception:
-            click.echo(
-                f"Failed to push image, will try again on success\n{format_exc()}"
-            )
+
+    try:
+        click.echo(
+            f"Image built: Pushing {versioned_image_name} and {latest_image_name}"
+        )
+        client.images.push(versioned_image_name)
+        client.images.push(latest_image_name)  # this tag is necessary for caching
+    except Exception:
+        click.echo(f"Failed to push image, will try again on success\n{format_exc()}")
 
     click.echo(f"Image built successfully, now running.")
     status = run_image(project_id, notebook_id, run_id, versioned_image_name)

@@ -68,10 +68,7 @@ class TreebeardConfig(BaseModel):
         return [nb for nb in deglobbed_notebooks if nb not in ignored_notebooks]
 
 
-env = "production"
-if os.getenv("TREEBEARD_ENVIRONMENT"):
-    env = os.getenv("TREEBEARD_ENVIRONMENT")
-
+env = os.getenv("TREEBEARD_ENVIRONMENT", "production")
 
 if env == "development":
     click.echo("WARNING: RUNNING IN LOCAL MODE", err=True)
@@ -178,3 +175,5 @@ runner_endpoint = (
     f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/runs"
 )
 service_status_endpoint = f"{api_url}/service_status"
+
+registry = os.getenv("DOCKER_REGISTRY", "gcr.io/treebeard-259315/projects/")

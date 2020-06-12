@@ -143,8 +143,8 @@ def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookRe
     return notebook_results
 
 
-def finish(status: int = 0):
-    if os.path.exists("treebeard.log"):
+def finish(status: int = 0, upload_outputs: bool = False):
+    if os.path.exists("treebeard.log") and upload_outputs:
         upload_artifact("treebeard.log", f"{run_path}/treebeard.log", None)
     sys.exit(status)
 
@@ -204,7 +204,7 @@ def start(upload_outputs: bool = True):
                         click.echo(
                             f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅"
                         )
-                        finish(0)
+                        finish(0, upload_outputs)
                     else:
                         click.echo(
                             f"\nℹ️ Strict mode is disabled! Fix missing dependencies to get a passing run."
@@ -213,9 +213,9 @@ def start(upload_outputs: bool = True):
         except Exception as ex:
             click.echo(f"Import checker encountered and error...")
             capture_exception(ex)
-        finish(1)
+        finish(1, upload_outputs)
     else:
-        finish(0)
+        finish(0, upload_outputs)
 
 
 if __name__ == "__main__":
