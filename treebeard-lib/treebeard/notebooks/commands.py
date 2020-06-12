@@ -71,6 +71,9 @@ project_id = treebeard_env.project_id
     default=False,
     help="Run locally without docker container",
 )
+@click.option(
+    "--upload/--no-upload", default=False, help="Upload outputs",
+)
 @click.pass_obj  # type: ignore
 def run(
     cli_context: CliContext,
@@ -81,6 +84,7 @@ def run(
     confirm: bool,
     push_secrets: bool,
     dockerless: bool,
+    upload: bool,
 ):
     """
     Run a notebook and optionally schedule it to run periodically
@@ -111,7 +115,7 @@ def run(
         # Note: import runtime.run causes win/darwin devices missing magic to fail at start
         import treebeard.runtime.run
 
-        treebeard.runtime.run.start(upload_outputs=False)  # will sys.exit
+        treebeard.runtime.run.start(upload_outputs=upload)  # will sys.exit
 
     params = {}
     if treebeard_config.schedule:
