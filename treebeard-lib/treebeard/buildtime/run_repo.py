@@ -131,6 +131,7 @@ def run_repo(
 
     subprocess.check_output(["docker", "tag", versioned_image_name, passing_image_name])
     click.echo(f"tagged {versioned_image_name} as {passing_image_name}")
+    client.images.push(passing_image_name)
     return 0
 
 

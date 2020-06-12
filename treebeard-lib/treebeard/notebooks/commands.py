@@ -1,43 +1,33 @@
 import datetime
 import glob
-import json
 import os
 import os.path
 import pprint
-import shutil
 import subprocess
 import sys
 import tarfile
 import tempfile
 import time
 from distutils.dir_util import copy_tree
-from typing import Any, List
+from typing import List
 
 import click
 import docker  # type: ignore
-import requests
 import yaml
-from dateutil import parser
 from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
 from treebeard.buildtime.run_repo import run_repo
 from treebeard.conf import (
-    api_url,
     config_path,
-    get_time,
     registry,
-    runner_endpoint,
     treebeard_config,
     treebeard_env,
     validate_notebook_directory,
 )
 from treebeard.helper import CliContext, sanitise_notebook_id
-from treebeard.notebooks.types import Run
-from treebeard.secrets.commands import push_secrets as push_secrets_to_store
 from treebeard.secrets.helper import get_secrets_archive
-from treebeard.util import fatal_exit
 
 pp = pprint.PrettyPrinter(indent=2)
 
@@ -48,13 +38,6 @@ project_id = treebeard_env.project_id
 @click.command()
 @click.option(
     "watch", "--watch", is_flag=True, help="Run and check completed build status"
-)
-@click.option(
-    "local",
-    "--local",
-    is_flag=True,
-    default=True,
-    help="Build image with local docker installation",
 )
 @click.option("-n", "--notebooks", help="Notebooks to be run", multiple=True)
 @click.option(
@@ -82,7 +65,6 @@ def run(
     watch: bool,
     notebooks: List[str],
     ignore: List[str],
-    local: bool,
     confirm: bool,
     push_secrets: bool,
     dockerless: bool,
@@ -124,17 +106,6 @@ def run(
             f"📅 treebeard.yaml contains schedule '{treebeard_config.schedule}'. Enable it?"
         ):
             params["schedule"] = treebeard_config.schedule
-
-    if (
-        not local
-        and len(treebeard_config.secret) > 0
-        and not confirm
-        and not push_secrets
-    ):
-        push_secrets = click.confirm("Push secrets first?", default=True)
-
-    if push_secrets:
-        push_secrets_to_store([], confirm=confirm)
 
     if treebeard_config:
         ignore += (
@@ -186,149 +157,22 @@ def run(
         click.echo("Exiting")
         sys.exit()
 
-    if local:
-        build_tag = str(time.mktime(datetime.datetime.today().timetuple()))
-        repo_image_name = f"{registry}/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
-        click.echo(f"🌲  Building {repo_image_name} Locally\n")
-        secrets_archive = get_secrets_archive()
-        repo_url = f"file://{src_archive.name}"
-        secrets_url = f"file://{secrets_archive.name}"
-        status = run_repo(
-            str(project_id),
-            str(notebook_id),
-            treebeard_env.run_id,
-            build_tag,
-            repo_url,
-            secrets_url,
-            branch="cli",
-        )
-        click.echo(f"Local build exited with status code {status}")
-        sys.exit(status)
-
-    size = os.path.getsize(src_archive.name)
-    max_upload_size = "100MB"
-    if size > parse_size(max_upload_size):
-        fatal_exit(
-            click.style(
-                (
-                    f"ERROR: Compressed notebook directory is {format_size(size)},"
-                    f" max upload size is {max_upload_size}. \nPlease ensure you ignore any virtualenv subdirectory"
-                    " using `treebeard run --ignore venv`"
-                ),
-                fg="red",
-            )
-        )
-
-    time_seconds = int(time.mktime(datetime.datetime.today().timetuple()))
-    build_tag = str(time_seconds)
-
-    upload_api = f"{api_url}/source_upload_url/{project_id}/{notebook_id}/{build_tag}"
-    resp = requests.get(upload_api)  # type: ignore
-
-    signed_url: str = resp.text
-    put_resp = requests.put(  # type: ignore
-        signed_url,
-        open(src_archive.name, "rb"),
-        headers={"Content-Type": "application/x-tar"},
+    build_tag = str(time.mktime(datetime.datetime.today().timetuple()))
+    repo_image_name = (
+        f"{registry}/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
     )
-    assert put_resp.status_code == 200
-
-    if os.getenv("GITHUB_ACTIONS"):
-        params["event"] = os.getenv("GITHUB_EVENT_NAME")
-        params["sha"] = os.getenv("GITHUB_SHA")
-        params["branch"] = os.getenv("GITHUB_REF").split("/")[-1]
-        workflow = os.getenv("GITHUB_WORKFLOW")
-        params["workflow"] = (
-            workflow.replace(".yml", "").replace(".yaml", "").split("/")[-1]
-        )
-
-    click.echo(f"🌲  submitting archive to runner ({format_size(size)})...")
-    submit_endpoint = f"{api_url}/runs/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{build_tag}"
-    response = requests.post(  # type: ignore
-        submit_endpoint,
-        params=params,
-        headers={"api_key": treebeard_env.api_key, "email": treebeard_env.email},
+    click.echo(f"🌲  Building {repo_image_name} Locally\n")
+    secrets_archive = get_secrets_archive()
+    repo_url = f"file://{src_archive.name}"
+    secrets_url = f"file://{secrets_archive.name}"
+    status = run_repo(
+        str(project_id),
+        str(notebook_id),
+        treebeard_env.run_id,
+        build_tag,
+        repo_url,
+        secrets_url,
+        branch="cli",
     )
-    shutil.rmtree(temp_dir)
-
-    if response.status_code != 200:
-        raise click.ClickException(f"Request failed: {response.text}")
-
-    try:
-        json_data = json.loads(response.text)
-        click.echo(f"✨  Run has been accepted! {json_data['admin_url']}")
-    except:
-        click.echo("❗  Request to run failed")
-        click.echo(sys.exc_info())
-
-    if watch:
-        build_result = None
-        while not build_result:
-            time.sleep(5)
-            response = requests.get(runner_endpoint, headers=treebeard_env.dict())  # type: ignore
-            json_data = json.loads(response.text)
-            if len(json_data["runs"]) == 0:
-                status = "FAILURE"
-            else:
-                status = json_data["runs"][-1]["status"]
-            click.echo(f"{get_time()} Build status: {status}")
-            if status == "SUCCESS":
-                build_result = status
-                click.echo(f"Build result: {build_result}")
-            elif status in ["FAILURE", "TIMEOUT", "INTERNAL_ERROR", "CANCELLED"]:
-                fatal_exit(f"Build failed")
-
-
-@click.command()
-def cancel():
-    """Cancels the current notebook build and schedule"""
-    validate_notebook_directory(treebeard_env, treebeard_config)
-    notif = f"🌲  Cancelling {notebook_id}"
-    spinner: Any = Halo(text=notif, spinner="dots")
-    spinner.start()
-    requests.delete(runner_endpoint, headers=treebeard_env.dict())  # type: ignore
-    spinner.stop()
-    click.echo(f"{notif}...🛑 cancellation confirmed!")
-
-
-@click.command()
-def status():
-    """Show the status of the current notebook"""
-    validate_notebook_directory(treebeard_env, treebeard_config)
-    response = requests.get(runner_endpoint, headers=treebeard_env.dict())  # type: ignore
-    if response.status_code != 200:
-        raise click.ClickException(f"Request failed: {response.text}")
-
-    json_data = json.loads(response.text)
-    if len(json_data) == 0:
-        fatal_exit(
-            "This notebook has not been run. Try running it with `treebeard run`"
-        )
-    click.echo("🌲  Recent runs:\n")
-
-    max_results = 5
-    status_emoji = {
-        "SUCCESS": "✅",
-        "QUEUED": "💤",
-        "WORKING": "⏳",
-        "FAILURE": "❌",
-        "TIMEOUT": "⏰",
-        "CANCELLED": "🛑",
-    }
-
-    runs: List[Run] = [Run.parse_obj(run) for run in json_data["runs"][-max_results:]]  # type: ignore
-    for run in runs:
-        now = parser.isoparse(datetime.datetime.utcnow().isoformat() + "Z")
-        start_time = parser.isoparse(run.start_time)
-        time_string: str = timeago_format(start_time, now=now)
-
-        mechanism: str = run.trigger["mechanism"]
-        ran_via = "" if len(mechanism) == 0 else f"via {mechanism}"
-        try:
-            branch = f"🔀{run.trigger['branch']}"
-        except:
-            branch = ""
-
-        click.echo(
-            f"  {status_emoji[run.status]}  {time_string} {ran_via} {branch} -- {run.url}"
-        )
+    click.echo(f"Local build exited with status code {status}")
+    sys.exit(status)

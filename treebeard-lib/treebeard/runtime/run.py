@@ -149,7 +149,7 @@ def finish(status: int = 0, upload_outputs: bool = False):
     sys.exit(status)
 
 
-def start(upload_outputs: bool = True):
+def start(upload_outputs: bool = False):
     if not treebeard_env.notebook_id:
         raise Exception("No notebook ID at runtime")
     if not treebeard_env.project_id:
