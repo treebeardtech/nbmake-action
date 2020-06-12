@@ -68,7 +68,7 @@ class TreebeardConfig(BaseModel):
         return [nb for nb in deglobbed_notebooks if nb not in ignored_notebooks]
 
 
-env = os.getenv("TREEBEARD_ENVIRONMENT", "production")
+env = os.getenv("TREEBEARD_ENVIRONMENT", "staging")
 
 if env == "development":
     click.echo("WARNING: RUNNING IN LOCAL MODE", err=True)
