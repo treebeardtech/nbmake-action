@@ -85,8 +85,10 @@ def update(status: str):
     else:
         data["end_time"] = get_time()
 
-    requests.post(  # type:ignore
-        f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{os.getenv('GITHUB_RUN_ID')}",
-        data=data,
+    resp = requests.post(  # type:ignore
+        f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{os.getenv('GITHUB_RUN_ID')}/update",
+        json=data,
         headers={"api_key": treebeard_env.api_key},
     )
+
+    print(f"{resp.status_code}")

@@ -89,6 +89,9 @@ def run(
 
         yaml.dump(treebeard_config.dict(), yaml_file)  # type: ignore
 
+    if upload or not dockerless:
+        update(status="WORKING")
+
     if dockerless:
         click.echo(
             f"🌲  Running locally without docker using your current python environment"
@@ -103,8 +106,6 @@ def run(
         import treebeard.runtime.run
 
         treebeard.runtime.run.start(upload_outputs=upload)  # will sys.exit
-
-    update(status="WORKING")
 
     params = {}
     if treebeard_config.schedule:
