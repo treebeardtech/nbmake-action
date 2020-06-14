@@ -9,7 +9,7 @@ def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str) -
 
     container = client.containers.run(
         image_name,
-        "bash -c '(which treebeard > /dev/null || pip install treebeard) && treebeard run --dockerless --upload --confirm",
+        "bash -c '(which treebeard > /dev/null || pip install treebeard) && treebeard run --dockerless --upload --confirm'",
         environment={
             "TREEBEARD_PROJECT_ID": project_id,
             "TREEBEARD_NOTEBOOK_ID": notebook_id,
