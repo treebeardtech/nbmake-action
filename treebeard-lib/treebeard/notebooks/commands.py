@@ -26,7 +26,7 @@ from treebeard.conf import (
     treebeard_env,
     validate_notebook_directory,
 )
-from treebeard.helper import CliContext, sanitise_notebook_id
+from treebeard.helper import CliContext, sanitise_notebook_id, update
 from treebeard.secrets.helper import get_secrets_archive
 
 pp = pprint.PrettyPrinter(indent=2)
@@ -99,6 +99,8 @@ def run(
         import treebeard.runtime.run
 
         treebeard.runtime.run.start(upload_outputs=False)  # will sys.exit
+
+    update(status="WORKING")
 
     params = {}
     if treebeard_config.schedule:

@@ -1,4 +1,5 @@
 import configparser
+import datetime
 import json
 import os
 from pathlib import Path
@@ -8,7 +9,7 @@ import click
 import requests
 from pydantic import BaseModel
 
-from treebeard.conf import config_path
+from treebeard.conf import api_url, config_path, treebeard_env
 from treebeard.version import get_version
 
 version = get_version()
@@ -66,3 +67,26 @@ def create_example_yaml():
     with open(Path(f"{dirname}/example_treebeard.yaml"), "rb") as f:
         open("treebeard.yaml", "wb").write(f.read())
     return
+
+
+def update(status: str):
+    branch = os.getenv("GITHUB_REF").split("/")[-1]
+    data = {
+        "status": status,
+        "sha": os.getenv("GITHUB_SHA"),
+        "branch": branch,
+    }
+
+    def get_time():
+        return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+
+    if status == "WORKING":
+        data["start_time"] = get_time()
+    else:
+        data["end_time"] = get_time()
+
+    requests.post(  # type:ignore
+        f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{os.getenv('GITHUB_RUN_ID')}",
+        data=data,
+        headers={"api_key": treebeard_env.api_key},
+    )

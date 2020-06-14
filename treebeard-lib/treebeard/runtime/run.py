@@ -11,6 +11,7 @@ import papermill as pm  # type: ignore
 from sentry_sdk import capture_exception, capture_message  # type: ignore
 
 from treebeard.conf import run_path, treebeard_config, treebeard_env
+from treebeard.helper import update
 from treebeard.importchecker.imports import check_imports
 from treebeard.logs import log as tb_log
 from treebeard.logs.helpers import clean_log_file
@@ -144,8 +145,18 @@ def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookRe
 
 
 def finish(status: int = 0, upload_outputs: bool = False):
-    if os.path.exists("treebeard.log") and upload_outputs:
-        upload_artifact("treebeard.log", f"{run_path}/treebeard.log", None)
+    def get_status_str():
+        if status == 0:
+            return "SUCCESS"
+        else:
+            return "FAILURE"
+
+    if upload_outputs:
+        if os.path.exists("treebeard.log"):
+            upload_artifact("treebeard.log", f"{run_path}/treebeard.log", None)
+
+        update(status=get_status_str())
+
     sys.exit(status)
 
 
