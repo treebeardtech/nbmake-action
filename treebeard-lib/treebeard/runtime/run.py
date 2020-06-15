@@ -151,6 +151,8 @@ def finish(status: int, upload_outputs: bool, results: str):
         else:
             return "FAILURE"
 
+    print(results)
+
     if upload_outputs:
         if os.path.exists("treebeard.log"):
             upload_artifact("treebeard.log", f"{run_path}/treebeard.log", None)
@@ -163,7 +165,8 @@ def finish(status: int, upload_outputs: bool, results: str):
         )
         update(status=get_status_str())
 
-    print(results)
+        print(f"🌲 View your outputs at https://treebeard.io/admin/{run_path}")
+
     sys.exit(status)
 
 

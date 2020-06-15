@@ -1,8 +1,9 @@
+import os
 from typing import Any
 
 import click
 import docker  # type: ignore
-import os
+
 from treebeard.conf import treebeard_env
 
 
