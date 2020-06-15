@@ -136,7 +136,7 @@ def get_treebeard_config() -> TreebeardConfig:
 def get_treebeard_env():
     """Reads variables from a local file, credentials.cfg"""
     treebeard_project_id = os.getenv("TREEBEARD_PROJECT_ID")
-    run_id = os.getenv("TREEBEARD_RUN_ID")
+    run_id = os.getenv("GITHUB_RUN_ID")
     if run_id is None:
         run_id = f"local-{int(time.time())}"
 
