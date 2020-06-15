@@ -144,7 +144,7 @@ def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookRe
     return notebook_results
 
 
-def finish(status: int = 0, upload_outputs: bool = False):
+def finish(status: int, upload_outputs: bool, results: str):
     def get_status_str():
         if status == 0:
             return "SUCCESS"
@@ -155,8 +155,15 @@ def finish(status: int = 0, upload_outputs: bool = False):
         if os.path.exists("treebeard.log"):
             upload_artifact("treebeard.log", f"{run_path}/treebeard.log", None)
 
+        with open("tb_results.log", "w") as results_log:
+            results_log.write(results)
+
+        upload_artifact(
+            "tb_results.log", f"{run_path}/__treebeard__/tb_results.log", None
+        )
         update(status=get_status_str())
 
+    print(results)
     sys.exit(status)
 
 
@@ -177,6 +184,7 @@ def start(upload_outputs: bool = False):
 
     log("🌲 Run Finished. Results:\n")
 
+    results = ""
     for notebook in notebook_results.keys():
         result = notebook_results[notebook]
         health_bar = get_health_bar(
@@ -184,16 +192,16 @@ def start(upload_outputs: bool = False):
         )
 
         if result.status == "✅":
-            print(f"{health_bar} {notebook}")
-            print(f"  ran {result.num_passing_cells} of {result.num_cells} cells")
+            results += f"{health_bar} {notebook}"
+            results += f"  ran {result.num_passing_cells} of {result.num_cells} cells"
         elif not result.err_line:  # failed to parse notebook properly
-            print(f"{result.status} {notebook}")
+            results += f"{result.status} {notebook}"
         else:
-            print(f"{health_bar} {notebook}")
-            print(f"  ran {result.num_passing_cells} of {result.num_cells} cells")
-            print(f"  {result.status} {result.err_line}")
+            results += f"{health_bar} {notebook}"
+            results += f"  ran {result.num_passing_cells} of {result.num_cells} cells"
+            results += f"  {result.status} {result.err_line}"
 
-        print()
+        results += "\n"
 
     n_passed = len(list(filter(lambda v: v.status == "✅", notebook_results.values())))
 
@@ -207,26 +215,20 @@ def start(upload_outputs: bool = False):
                 result = check_imports()
 
                 if treebeard_config.strict_mode:
-                    click.echo(
-                        f"\nℹ️ If you would like to ignore notebook run failures and only fail on missing dependencies, add `strict_mode: False` to a `treebeard.yaml` file"
-                    )
+                    results += f"\nℹ️ If you would like to ignore notebook run failures and only fail on missing dependencies, add `strict_mode: False` to a `treebeard.yaml` file"
                 else:
                     if result:
-                        click.echo(
-                            f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅"
-                        )
-                        finish(0, upload_outputs)
+                        results += f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅"
+                        finish(0, upload_outputs, results)
                     else:
-                        click.echo(
-                            f"\nℹ️ Strict mode is disabled! Fix missing dependencies to get a passing run."
-                        )
-                click.echo()
+                        results += f"\nℹ️ Strict mode is disabled! Fix missing dependencies to get a passing run."
+                results += "\n"
         except Exception as ex:
             click.echo(f"Import checker encountered and error...")
             capture_exception(ex)
-        finish(1, upload_outputs)
+        finish(1, upload_outputs, results)
     else:
-        finish(0, upload_outputs)
+        finish(0, upload_outputs, results)
 
 
 if __name__ == "__main__":
