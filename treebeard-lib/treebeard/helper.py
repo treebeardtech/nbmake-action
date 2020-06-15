@@ -70,12 +70,16 @@ def create_example_yaml():
 
 
 def update(status: str):
-    branch = os.getenv("GITHUB_REF").split("/")[-1]
     data = {
         "status": status,
-        "sha": os.getenv("GITHUB_SHA"),
-        "branch": branch,
     }
+
+    sha = os.getenv("GITHUB_SHA")
+    ref = os.getenv("GITHUB_REF")
+    if sha and ref:
+        branch = ref.split("/")[-1]
+        data["sha"] = sha
+        data["branch"] = branch
 
     def get_time():
         return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"

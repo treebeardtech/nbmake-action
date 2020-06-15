@@ -2,6 +2,7 @@ from typing import Any
 
 import click
 import docker  # type: ignore
+import os
 
 
 def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str) -> int:
@@ -17,6 +18,8 @@ def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str) -
             "TREEBEARD_PROJECT_ID": project_id,
             "TREEBEARD_NOTEBOOK_ID": notebook_id,
             "GITHUB_RUN_ID": run_id,
+            "GITHUB_REF": os.getenv("GITHUB_REF"),
+            "GITHUB_SHA": os.getenv("GITHUB_SHA"),
         },
         detach=True,
     )
