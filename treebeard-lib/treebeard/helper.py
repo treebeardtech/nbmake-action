@@ -91,6 +91,7 @@ def update(status: str):
 
     update_url = f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{treebeard_env.run_id}/update"
     click.echo(f"Updating {update_url}")
+    click.echo(f"data: {data}")
     resp = requests.post(  # type:ignore
         update_url, json=data, headers={"api_key": treebeard_env.api_key},
     )

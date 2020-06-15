@@ -17,7 +17,7 @@ def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str) -
         environment={
             "TREEBEARD_PROJECT_ID": project_id,
             "TREEBEARD_NOTEBOOK_ID": notebook_id,
-            "GITHUB_RUN_ID": run_id,
+            "GITHUB_RUN_ID": os.getenv("GITHUB_RUN_ID"),
             "GITHUB_REF": os.getenv("GITHUB_REF"),
             "GITHUB_SHA": os.getenv("GITHUB_SHA"),
         },
