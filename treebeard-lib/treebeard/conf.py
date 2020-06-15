@@ -148,7 +148,7 @@ def get_treebeard_env():
         notebook_id = Path(os.getcwd()).name
 
     email = None
-    api_key = None
+    api_key = os.getenv("TREEBEARD_API_KEY")
 
     # .treebeard config is present in CLI in place of env variables
     if os.path.exists(config_path):

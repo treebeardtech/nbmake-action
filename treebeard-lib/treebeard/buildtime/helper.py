@@ -3,6 +3,7 @@ from typing import Any
 import click
 import docker  # type: ignore
 import os
+from treebeard.conf import treebeard_env
 
 
 def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str) -> int:
@@ -17,6 +18,7 @@ def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str) -
         environment={
             "TREEBEARD_PROJECT_ID": project_id,
             "TREEBEARD_NOTEBOOK_ID": notebook_id,
+            "TREEBEARD_API_KEY": treebeard_env.api_key,
             "GITHUB_RUN_ID": os.getenv("GITHUB_RUN_ID"),
             "GITHUB_REF": os.getenv("GITHUB_REF"),
             "GITHUB_SHA": os.getenv("GITHUB_SHA"),
