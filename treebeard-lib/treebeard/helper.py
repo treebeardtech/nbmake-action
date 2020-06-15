@@ -8,6 +8,7 @@ from typing import Optional
 import click
 import requests
 from pydantic import BaseModel
+from sentry_sdk import capture_exception, capture_message  # type: ignore
 
 from treebeard.conf import api_url, config_path, treebeard_env
 from treebeard.version import get_version
@@ -90,10 +91,9 @@ def update(status: str):
         data["end_time"] = get_time()
 
     update_url = f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{treebeard_env.run_id}/update"
-    click.echo(f"Updating {update_url}")
-    click.echo(f"data: {data}")
     resp = requests.post(  # type:ignore
         update_url, json=data, headers={"api_key": treebeard_env.api_key},
     )
 
-    print(f"{resp.status_code}")
+    if resp.status_code != 200:
+        capture_message(f"Failed to update tb {resp.status_code}\n{update_url}\n{data}")
