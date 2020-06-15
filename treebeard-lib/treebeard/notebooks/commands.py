@@ -1,4 +1,3 @@
-import datetime
 import glob
 import os
 import os.path
@@ -7,7 +6,6 @@ import subprocess
 import sys
 import tarfile
 import tempfile
-import time
 from distutils.dir_util import copy_tree
 from typing import List
 
@@ -164,7 +162,7 @@ def run(
         click.echo("Exiting")
         sys.exit()
 
-    build_tag = str(time.mktime(datetime.datetime.today().timetuple()))
+    build_tag = treebeard_env.run_id
     repo_image_name = (
         f"{registry}/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
     )
