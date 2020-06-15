@@ -8,6 +8,8 @@ def run_image(project_id: str, notebook_id: str, run_id: str, image_name: str) -
     client: Any = docker.from_env()  # type: ignore
 
     pip_treebeard = f"pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib"
+
+    click.echo(f"Starting: {pip_treebeard}")
     container = client.containers.run(
         image_name,
         f"bash -c '(which treebeard > /dev/null || {pip_treebeard}) && treebeard run --dockerless --upload --confirm'",
