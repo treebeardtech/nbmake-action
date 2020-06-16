@@ -35,6 +35,9 @@ project_id = treebeard_env.project_id
 @click.command()
 @click.option("-n", "--notebooks", help="Notebooks to be run", multiple=True)
 @click.option(
+    "-e", "--env", help="Environment variables to forward into container", multiple=True
+)
+@click.option(
     "-i",
     "--ignore",
     help="Don't submit unneeded virtual envs and large files",
@@ -55,6 +58,7 @@ project_id = treebeard_env.project_id
 def run(
     cli_context: CliContext,
     notebooks: List[str],
+    envs: List[str],
     ignore: List[str],
     confirm: bool,
     dockerless: bool,
@@ -164,6 +168,7 @@ def run(
         build_tag,
         repo_url,
         branch="cli",
+        envs_to_forward=envs,
     )
     click.echo(f"Local build exited with status code {status}")
     sys.exit(status)

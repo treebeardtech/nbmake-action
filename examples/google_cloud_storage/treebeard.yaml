@@ -1,6 +1,4 @@
 notebooks:
   - run.ipynb
-secret:
-  - service-account.json
 ignore:
   - venv

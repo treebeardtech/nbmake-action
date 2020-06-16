@@ -1,9 +1,8 @@
 import os
 import subprocess
-import sys
 from pathlib import Path
 from traceback import format_exc
-from typing import Any
+from typing import Any, List
 
 import click
 import docker  # type: ignore
@@ -14,10 +13,8 @@ from treebeard.conf import (
     get_treebeard_config,
     registry,
     run_path,
-    treebeard_env,
 )
 from treebeard.helper import sanitise_notebook_id
-from treebeard.util import fatal_exit
 
 
 def download_archive(unzip_location: str, download_location: str, url: str):
@@ -45,6 +42,7 @@ def run_repo(
     build_tag: str,
     repo_url: str,
     branch: str,
+    envs_to_forward: List[str],
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
     click.echo(f"Run path: {run_path}")
@@ -123,7 +121,9 @@ def run_repo(
         click.echo(f"Failed to push image, will try again on success\n{format_exc()}")
 
     click.echo(f"Image built successfully, now running.")
-    status = run_image(project_id, notebook_id, run_id, versioned_image_name)
+    status = run_image(
+        project_id, notebook_id, run_id, versioned_image_name, envs_to_forward
+    )
     if status != 0:
         click.echo(f"Image run failed, not updated {passing_image_name}")
         return status
@@ -133,39 +133,3 @@ def run_repo(
     subprocess.check_output(f"docker push {passing_image_name}", shell=True)
 
     return 0
-
-
-if __name__ == "__main__":
-    build_tag_key = "TREEBEARD_BUILD_TAG"
-    repo_url_key = "TREEBEARD_REPO_URL"
-    branch_key = "TREEBEARD_BRANCH"
-
-    subprocess.run(["bash", "-c", "echo Building repo"])
-
-    build_tag = os.getenv(build_tag_key)
-    if not build_tag:
-        fatal_exit(f"No build_tag provided inside {build_tag_key}")
-
-    branch = os.getenv(branch_key)
-    if not branch:
-        fatal_exit(f"No branch provided inside {branch_key}")
-
-    repo_url = os.getenv(repo_url_key)
-    if not repo_url:
-        fatal_exit(f"No repo_url provided inside {repo_url_key}")
-
-    if not treebeard_env.notebook_id:
-        raise Exception("No notebook ID at runtime")
-    if not treebeard_env.project_id:
-        raise Exception("No project ID at buildtime")
-
-    status = run_repo(
-        treebeard_env.project_id,
-        treebeard_env.notebook_id,
-        treebeard_env.run_id,
-        build_tag,
-        repo_url,
-        branch,
-    )
-
-    sys.exit(status)

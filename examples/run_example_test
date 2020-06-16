@@ -31,4 +31,4 @@ fi
 
 treebeard configure --email robot@treebeard.io --api_key "$api_key" --project_id d8a0c5b6c9
 
-treebeard run  --confirm
+treebeard run  --confirm --env GCP_SERVICE_ACCOUNT_KEY

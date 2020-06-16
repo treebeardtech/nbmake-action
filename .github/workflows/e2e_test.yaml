@@ -38,6 +38,8 @@ jobs:
           python-version: 3.7
       - name: Run
         run: ./e2e-test/local_test ${{ secrets.TREEBEARD_API_KEY }}
+        env:
+          GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SA_KEY }}
 
   hello_treebeard:
     timeout-minutes: 20
