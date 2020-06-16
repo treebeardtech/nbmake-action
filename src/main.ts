@@ -18,13 +18,13 @@ async function run(): Promise<void> {
     )
 
     if (dockerUsername) {
-      script.push(`export DOCKER_USERNAME="${dockerUsername}"`)
+      script.push(`export DOCKER_USERNAME='${dockerUsername}'`)
     }
     if (dockerPassword) {
-      script.push(`export DOCKER_PASSWORD="${dockerPassword}"`)
+      script.push(`export DOCKER_PASSWORD='${dockerPassword}'`)
     }
     if (dockerRegistry) {
-      script.push(`export DOCKER_REGISTRY="${dockerRegistry}"`)
+      script.push(`export DOCKER_REGISTRY='${dockerRegistry}'`)
     }
     const envs = new Array()
     if (notebookEnv) {
