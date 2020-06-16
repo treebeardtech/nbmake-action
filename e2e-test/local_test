@@ -13,4 +13,4 @@ pushd "$DIR"
 dir_name="testrepo-local$(date +%s)"
 cp -r ../examples/hello_treebeard ../examples/"$dir_name"
 
-../examples/run_example_test "$api_key" "$dir_name" --local
+../examples/run_example_test "$api_key" "$dir_name"

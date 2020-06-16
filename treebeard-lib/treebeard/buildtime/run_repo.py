@@ -3,7 +3,7 @@ import subprocess
 import sys
 from pathlib import Path
 from traceback import format_exc
-from typing import Any, Optional
+from typing import Any
 
 import click
 import docker  # type: ignore
@@ -44,7 +44,6 @@ def run_repo(
     run_id: str,
     build_tag: str,
     repo_url: str,
-    secrets_url: Optional[str],
     branch: str,
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
@@ -173,7 +172,6 @@ if __name__ == "__main__":
         treebeard_env.run_id,
         build_tag,
         repo_url,
-        secrets_url,
         branch,
     )
 

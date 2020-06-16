@@ -10,7 +10,6 @@ from treebeard.conf import treebeard_env
 from treebeard.helper import CliContext, check_for_updates
 from treebeard.notebooks.commands import run
 from treebeard.other.commands import config, configure, setup, version
-from treebeard.secrets.commands import secrets
 from treebeard.sentry_setup import setup_sentry
 
 project_id = treebeard_env.project_id
@@ -43,7 +42,6 @@ def process_result(*args: Any, **kwargs: Any):
 
 cli.add_command(configure)  # type: ignore
 cli.add_command(run)  # type: ignore
-cli.add_command(secrets)  # type: ignore
 cli.add_command(setup)  # type: ignore
 cli.add_command(config)  # type: ignore
 cli.add_command(version)  # type: ignore

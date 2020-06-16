@@ -25,7 +25,6 @@ from treebeard.conf import (
     validate_notebook_directory,
 )
 from treebeard.helper import CliContext, sanitise_notebook_id, update
-from treebeard.secrets.helper import get_secrets_archive
 
 pp = pprint.PrettyPrinter(indent=2)
 
@@ -34,9 +33,6 @@ project_id = treebeard_env.project_id
 
 
 @click.command()
-@click.option(
-    "watch", "--watch", is_flag=True, help="Run and check completed build status"
-)
 @click.option("-n", "--notebooks", help="Notebooks to be run", multiple=True)
 @click.option(
     "-i",
@@ -46,11 +42,6 @@ project_id = treebeard_env.project_id
 )
 @click.option(
     "--confirm/--no-confirm", default=False, help="Confirm all prompt options"
-)
-@click.option(
-    "--push-secrets/--no-push-secrets",
-    default=False,
-    help="Confirm all prompt options except pushing secrets",
 )
 @click.option(
     "--dockerless/--no-dockerless",
@@ -63,11 +54,9 @@ project_id = treebeard_env.project_id
 @click.pass_obj  # type: ignore
 def run(
     cli_context: CliContext,
-    watch: bool,
     notebooks: List[str],
     ignore: List[str],
     confirm: bool,
-    push_secrets: bool,
     dockerless: bool,
     upload: bool,
 ):
@@ -167,16 +156,13 @@ def run(
         f"{registry}/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
     )
     click.echo(f"🌲  Building {repo_image_name} Locally\n")
-    secrets_archive = get_secrets_archive()
     repo_url = f"file://{src_archive.name}"
-    secrets_url = f"file://{secrets_archive.name}"
     status = run_repo(
         str(project_id),
         str(notebook_id),
         treebeard_env.run_id,
         build_tag,
         repo_url,
-        secrets_url,
         branch="cli",
     )
     click.echo(f"Local build exited with status code {status}")

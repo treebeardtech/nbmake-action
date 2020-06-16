@@ -31,11 +31,4 @@ fi
 
 treebeard configure --email robot@treebeard.io --api_key "$api_key" --project_id d8a0c5b6c9
 
-if [[ $* == *--local* ]]
-then
-    echo running locally
-    treebeard run --watch --confirm --no-push-secrets --local
-else
-    echo running remotely
-    treebeard run --watch --confirm --no-push-secrets
-fi
+treebeard run  --confirm
