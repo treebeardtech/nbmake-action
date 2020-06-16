@@ -1,17 +1,10 @@
-# action.yml
-name: "Treebeard"
-description: "Automatically containerise and run notebooks"
+name: 'Your name here'
+description: 'Provide a description here'
+author: 'Your name or organization here'
 inputs:
-  api-key:
-    description: "treebeard api key"
-    required: true
-  notebooks:
-    description: "notebooks to run"
-    required: false
-    default: "**/*ipynb"
+  myInput:              # change this
+    description: 'input description here'
+    default: 'default value if applicable'
 runs:
-  using: "docker"
-  image: "Dockerfile"
-  args:
-    - ${{ inputs.api-key }}
-    - ${{ inputs.notebooks }}
+  using: 'node12'
+  main: 'dist/index.js'
