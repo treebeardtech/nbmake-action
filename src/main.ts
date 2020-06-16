@@ -8,21 +8,23 @@ async function run(): Promise<void> {
     const dockerPassword = core.getInput('docker-password')
     const dockerRegistry = core.getInput('docker-registry')
     const notebookEnv = core.getInput('notebook-env')
-    await exec.exec(
+
+    const script = []
+    script.push(
       'pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib'
     )
-    await exec.exec(
+    script.push(
       `treebeard configure --api_key ${apiKey} --project_id "$GITHUB_REPOSITORY_OWNER"`
     )
 
     if (dockerUsername) {
-      await exec.exec(`export DOCKER_USERNAME=${dockerUsername}`)
+      script.push(`export DOCKER_USERNAME=${dockerUsername}`)
     }
     if (dockerPassword) {
-      await exec.exec(`export DOCKER_PASSWORD=${dockerPassword}`)
+      script.push(`export DOCKER_PASSWORD=${dockerPassword}`)
     }
     if (dockerRegistry) {
-      await exec.exec(`export DOCKER_REGISTRY=${dockerRegistry}`)
+      script.push(`export DOCKER_REGISTRY=${dockerRegistry}`)
     }
     const envs = new Array()
     if (notebookEnv) {
@@ -31,9 +33,10 @@ async function run(): Promise<void> {
         exec.exec(`export ${line}`)
       })
     }
-    await exec.exec(
+    script.push(
       `treebeard run --confirm ${envs.join(' ')} --notebooks ${notebooks}`
     )
+    exec.exec(`bash -c ${script.join('\n')}`)
   } catch (error) {
     core.setFailed(error.message)
   }
