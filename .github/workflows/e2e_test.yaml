@@ -7,6 +7,11 @@ jobs:
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
       - uses: actions/checkout@v2
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
@@ -19,6 +24,11 @@ jobs:
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
       - uses: actions/checkout@v2
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
@@ -31,6 +41,11 @@ jobs:
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
       - uses: actions/checkout@v2
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
@@ -44,6 +59,11 @@ jobs:
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
       - uses: actions/checkout@v2
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
