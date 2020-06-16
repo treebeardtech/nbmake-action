@@ -58,7 +58,7 @@ project_id = treebeard_env.project_id
 def run(
     cli_context: CliContext,
     notebooks: List[str],
-    envs: List[str],
+    env: List[str],
     ignore: List[str],
     confirm: bool,
     dockerless: bool,
@@ -168,7 +168,7 @@ def run(
         build_tag,
         repo_url,
         branch="cli",
-        envs_to_forward=envs,
+        envs_to_forward=env,
     )
     click.echo(f"Local build exited with status code {status}")
     sys.exit(status)
