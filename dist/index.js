@@ -1010,10 +1010,10 @@ function run() {
             if (notebookEnv) {
                 notebookEnv.split('\n').forEach(line => {
                     envs.push(`--env ${line.replace(/=.*/, '')} `);
-                    exec.exec(`export ${line}`);
+                    script.push(`export ${line}`);
                 });
             }
-            script.push(`treebeard run --confirm ${envs.join(' ')} --notebooks ${notebooks}`);
+            script.push(`treebeard run --confirm ${envs.join(' ')} ${notebooks ? '--notebooks ' + notebooks : ''}`);
             yield exec.exec(`bash -c "${script.join('\n')}"`);
         }
         catch (error) {

@@ -30,11 +30,13 @@ async function run(): Promise<void> {
     if (notebookEnv) {
       notebookEnv.split('\n').forEach(line => {
         envs.push(`--env ${line.replace(/=.*/, '')} `)
-        exec.exec(`export ${line}`)
+        script.push(`export ${line}`)
       })
     }
     script.push(
-      `treebeard run --confirm ${envs.join(' ')} --notebooks ${notebooks}`
+      `treebeard run --confirm ${envs.join(' ')} ${
+        notebooks ? '--notebooks ' + notebooks : ''
+      }`
     )
     await exec.exec(`bash -c "${script.join('\n')}"`)
   } catch (error) {
