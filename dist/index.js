@@ -1014,7 +1014,7 @@ function run() {
                 });
             }
             script.push(`treebeard run --confirm ${envs.join(' ')} --notebooks ${notebooks}`);
-            exec.exec(`bash -c ${script.join('\n')}`);
+            exec.exec(`bash -c "${script.join('\n')}"`);
         }
         catch (error) {
             core.setFailed(error.message);
