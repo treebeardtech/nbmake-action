@@ -55,7 +55,7 @@ def run_repo(
         and os.getenv("DOCKER_REGISTRY")
     ):
         subprocess.check_output(
-            f"docker login -u {os.getenv('DOCKER_USERNAME')} -p {os.getenv('DOCKER_PASSWORD')} {os.getenv('DOCKER_REGISTRY')}",
+            f"printenv DOCKER_PASSWORD | docker login -u {os.getenv('DOCKER_USERNAME')} --password-stdin {os.getenv('DOCKER_REGISTRY')}",
             shell=True,
         )
     try:
