@@ -195,14 +195,14 @@ def start(upload_outputs: bool = False):
         )
 
         if result.status == "✅":
-            results += f"{health_bar} {notebook}"
-            results += f"  ran {result.num_passing_cells} of {result.num_cells} cells"
+            results += f"{health_bar} {notebook}\n"
+            results += f"  ran {result.num_passing_cells} of {result.num_cells} cells\n"
         elif not result.err_line:  # failed to parse notebook properly
             results += f"{result.status} {notebook}"
         else:
-            results += f"{health_bar} {notebook}"
-            results += f"  ran {result.num_passing_cells} of {result.num_cells} cells"
-            results += f"  {result.status} {result.err_line}"
+            results += f"{health_bar} {notebook}\n"
+            results += f"  ran {result.num_passing_cells} of {result.num_cells} cells\n"
+            results += f"  {result.status} {result.err_line}\n"
 
         results += "\n"
 
@@ -218,13 +218,13 @@ def start(upload_outputs: bool = False):
                 result = check_imports()
 
                 if treebeard_config.strict_mode:
-                    results += f"\nℹ️ If you would like to ignore notebook run failures and only fail on missing dependencies, add `strict_mode: False` to a `treebeard.yaml` file"
+                    results += f"\nℹ️ If you would like to ignore notebook run failures and only fail on missing dependencies, add `strict_mode: False` to a `treebeard.yaml` file\n"
                 else:
                     if result:
-                        results += f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅"
+                        results += f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅\n"
                         finish(0, upload_outputs, results)
                     else:
-                        results += f"\nℹ️ Strict mode is disabled! Fix missing dependencies to get a passing run."
+                        results += f"\nℹ️ Strict mode is disabled! Fix missing dependencies to get a passing run.\n"
                 results += "\n"
         except Exception as ex:
             click.echo(f"Import checker encountered and error...")
