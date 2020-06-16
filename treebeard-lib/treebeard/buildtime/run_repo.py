@@ -63,11 +63,6 @@ def run_repo(
         # Add repo to bundle
         download_archive(abs_notebook_dir, f"/tmp/{notebook_id}_repo.tgz", repo_url)
 
-        if secrets_url:
-            download_archive(
-                abs_notebook_dir, f"/tmp/{notebook_id}_secrets.tgz", secrets_url
-            )
-
         notebook_files = get_treebeard_config().get_deglobbed_notebooks()
         if len(notebook_files) == 0:
             raise Exception(
@@ -143,7 +138,6 @@ def run_repo(
 if __name__ == "__main__":
     build_tag_key = "TREEBEARD_BUILD_TAG"
     repo_url_key = "TREEBEARD_REPO_URL"
-    secrets_url_key = "TREEBEARD_SECRETS_URL"
     branch_key = "TREEBEARD_BRANCH"
 
     subprocess.run(["bash", "-c", "echo Building repo"])
@@ -160,7 +154,6 @@ if __name__ == "__main__":
     if not repo_url:
         fatal_exit(f"No repo_url provided inside {repo_url_key}")
 
-    secrets_url = os.getenv(secrets_url_key)
     if not treebeard_env.notebook_id:
         raise Exception("No notebook ID at runtime")
     if not treebeard_env.project_id:
