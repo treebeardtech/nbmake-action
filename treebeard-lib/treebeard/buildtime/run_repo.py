@@ -48,10 +48,16 @@ def run_repo(
     click.echo(f"Run path: {run_path}")
 
     client: Any = docker.from_env()  # type: ignore
-    # subprocess.check_output(
-    #     f"docker login -u {os.getenv('DOCKER_USERNAME')} -p {os.getenv('DOCKER_PASSWORD')} {os.getenv('DOCKER_REGISTRY')}",
-    #     shell=True,
-    # )
+
+    if (
+        os.getenv("DOCKER_USERNAME")
+        and os.getenv("DOCKER_PASSWORD")
+        and os.getenv("DOCKER_REGISTRY")
+    ):
+        subprocess.check_output(
+            f"docker login -u {os.getenv('DOCKER_USERNAME')} -p {os.getenv('DOCKER_PASSWORD')} {os.getenv('DOCKER_REGISTRY')}",
+            shell=True,
+        )
     try:
         # Create bundle directory
         abs_notebook_dir = f"/tmp/{notebook_id}"
