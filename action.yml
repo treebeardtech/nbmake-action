@@ -1,10 +1,26 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: "treebeard"
+author: "treebeardtech"
+description: "Automatically containerise and run notebooks"
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  api-key:
+    description: "treebeard api key"
+    required: false
+  notebooks:
+    description: "notebooks to run"
+    required: false
+    default: "**/*ipynb"
+  docker-username:
+    description: ""
+    required: false
+  docker-password:
+    description: ""
+    required: false
+  docker-registry:
+    description: ""
+    required: false
+  notebook-env:
+    description: "env vars"
+    required: false
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node12"
+  main: "dist/index.js"
