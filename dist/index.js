@@ -994,16 +994,17 @@ function run() {
             const dockerPassword = core.getInput('docker-password');
             const dockerRegistry = core.getInput('docker-registry');
             const notebookEnv = core.getInput('notebook-env');
-            yield exec.exec('pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib');
-            yield exec.exec(`treebeard configure --api_key ${apiKey} --project_id "$GITHUB_REPOSITORY_OWNER"`);
+            const script = [];
+            script.push('pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib');
+            script.push(`treebeard configure --api_key ${apiKey} --project_id "$GITHUB_REPOSITORY_OWNER"`);
             if (dockerUsername) {
-                yield exec.exec(`export DOCKER_USERNAME=${dockerUsername}`);
+                script.push(`export DOCKER_USERNAME=${dockerUsername}`);
             }
             if (dockerPassword) {
-                yield exec.exec(`export DOCKER_PASSWORD=${dockerPassword}`);
+                script.push(`export DOCKER_PASSWORD=${dockerPassword}`);
             }
             if (dockerRegistry) {
-                yield exec.exec(`export DOCKER_REGISTRY=${dockerRegistry}`);
+                script.push(`export DOCKER_REGISTRY=${dockerRegistry}`);
             }
             const envs = new Array();
             if (notebookEnv) {
@@ -1012,7 +1013,8 @@ function run() {
                     exec.exec(`export ${line}`);
                 });
             }
-            yield exec.exec(`treebeard run --confirm ${envs.join(' ')} --notebooks ${notebooks}`);
+            script.push(`treebeard run --confirm ${envs.join(' ')} --notebooks ${notebooks}`);
+            exec.exec(`bash -c ${script.join('\n')}`);
         }
         catch (error) {
             core.setFailed(error.message);
