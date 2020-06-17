@@ -997,7 +997,9 @@ function run() {
             const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
             const script = [];
             script.push('pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib');
-            script.push(`treebeard configure --api_key ${apiKey} --project_id "$GITHUB_REPOSITORY_OWNER"`);
+            if (apiKey) {
+                script.push(`treebeard configure --api_key ${apiKey} --project_id "$GITHUB_REPOSITORY_OWNER"`);
+            }
             if (dockerUsername) {
                 script.push(`export DOCKER_USERNAME='${dockerUsername}'`);
             }
@@ -1026,7 +1028,7 @@ function run() {
                 tbRunCommand += ' --dockerless ';
             }
             script.push(tbRunCommand);
-            yield exec.exec(`bash -c "${script.join('\n')}"`);
+            yield exec.exec(`bash -c '${script.join('\n')}'`);
         }
         catch (error) {
             core.setFailed(error.message);
