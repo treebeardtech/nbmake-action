@@ -24,9 +24,11 @@ async function run(): Promise<void> {
       return
     }
 
+    core.startGroup('🌲 Install Treebeard')
     script.push(
       'pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib'
     )
+    core.endGroup()
 
     if (apiKey) {
       script.push(
@@ -46,6 +48,7 @@ async function run(): Promise<void> {
     const envs = new Array()
     if (notebookEnv) {
       notebookEnv.split('\n').forEach(line => {
+        console.log(`Treebeard forwarding ${line}`)
         envs.push(`--env ${line.replace(/=.*/, '')} `)
         script.push(`export ${line}`)
       })

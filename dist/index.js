@@ -1004,7 +1004,9 @@ function run() {
                 core.setFailed('Python does not appear to be setup, please include "- uses: actions/setup-python@v2" in your workflow.');
                 return;
             }
+            core.startGroup('🌲 Install Treebeard');
             script.push('pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib');
+            core.endGroup();
             if (apiKey) {
                 script.push(`treebeard configure --api_key ${apiKey} --project_id "$GITHUB_REPOSITORY_OWNER"`);
             }
@@ -1020,6 +1022,7 @@ function run() {
             const envs = new Array();
             if (notebookEnv) {
                 notebookEnv.split('\n').forEach(line => {
+                    console.log(`Treebeard forwarding ${line}`);
                     envs.push(`--env ${line.replace(/=.*/, '')} `);
                     script.push(`export ${line}`);
                 });
