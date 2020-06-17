@@ -1014,7 +1014,18 @@ function run() {
                     script.push(`export ${line}`);
                 });
             }
-            script.push(`treebeard run --confirm --upload ${envs.join(' ')} ${notebooks ? '--notebooks ' + notebooks : ''} ${useDocker ? '' : '--dockerless'}`);
+            let tbRunCommand = `treebeard run --confirm `;
+            if (apiKey) {
+                tbRunCommand += ' --upload ';
+            }
+            tbRunCommand += envs.join(' ');
+            if (notebooks) {
+                tbRunCommand += ` --notebooks ${notebooks} `;
+            }
+            if (!useDocker) {
+                tbRunCommand += ' --dockerless ';
+            }
+            script.push(tbRunCommand);
             yield exec.exec(`bash -c "${script.join('\n')}"`);
         }
         catch (error) {
