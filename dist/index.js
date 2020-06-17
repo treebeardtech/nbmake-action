@@ -1022,13 +1022,13 @@ function run() {
             }
             tbRunCommand += envs.join(' ');
             if (notebooks) {
-                tbRunCommand += ` --notebooks ${notebooks} `;
+                tbRunCommand += ` --notebooks '${notebooks}' `;
             }
             if (!useDocker) {
                 tbRunCommand += ' --dockerless ';
             }
             script.push(tbRunCommand);
-            yield exec.exec(`bash -c '${script.join('\n')}'`);
+            yield exec.exec(`bash -c ${script.join('\n')}`);
         }
         catch (error) {
             core.setFailed(error.message);
