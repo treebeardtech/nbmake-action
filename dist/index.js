@@ -996,7 +996,10 @@ function run() {
             const notebookEnv = core.getInput('notebook-env');
             const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
             const script = [];
-            const pythonSetupCheck = yield exec.exec("python -c 'from setuptools import find_namespace_packages'");
+            const pythonSetupCheck = yield exec.exec('python', [
+                '-c',
+                'from setuptools import find_namespace_packages'
+            ]);
             if (pythonSetupCheck !== 0) {
                 core.setFailed('Python does not appear to be setup, please include "- uses: actions/setup-python@v2" in your workflow.');
                 return;
