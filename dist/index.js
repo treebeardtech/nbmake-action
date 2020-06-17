@@ -994,6 +994,7 @@ function run() {
             const dockerPassword = core.getInput('docker-password');
             const dockerRegistry = core.getInput('docker-registry');
             const notebookEnv = core.getInput('notebook-env');
+            const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
             const script = [];
             script.push('pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib');
             script.push(`treebeard configure --api_key ${apiKey} --project_id "$GITHUB_REPOSITORY_OWNER"`);
@@ -1013,7 +1014,7 @@ function run() {
                     script.push(`export ${line}`);
                 });
             }
-            script.push(`treebeard run --confirm ${envs.join(' ')} ${notebooks ? '--notebooks ' + notebooks : ''}`);
+            script.push(`treebeard run --confirm --upload ${envs.join(' ')} ${notebooks ? '--notebooks ' + notebooks : ''} ${useDocker ? '' : '--dockerless'}`);
             yield exec.exec(`bash -c "${script.join('\n')}"`);
         }
         catch (error) {

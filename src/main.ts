@@ -8,6 +8,7 @@ async function run(): Promise<void> {
     const dockerPassword = core.getInput('docker-password')
     const dockerRegistry = core.getInput('docker-registry')
     const notebookEnv = core.getInput('notebook-env')
+    const useDocker = core.getInput('use-docker').toLowerCase() === 'true'
 
     const script = []
     script.push(
@@ -34,9 +35,9 @@ async function run(): Promise<void> {
       })
     }
     script.push(
-      `treebeard run --confirm ${envs.join(' ')} ${
+      `treebeard run --confirm --upload ${envs.join(' ')} ${
         notebooks ? '--notebooks ' + notebooks : ''
-      }`
+      } ${useDocker ? '' : '--dockerless'}`
     )
     await exec.exec(`bash -c "${script.join('\n')}"`)
   } catch (error) {

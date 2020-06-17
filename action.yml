@@ -21,6 +21,10 @@ inputs:
   notebook-env:
     description: "env vars"
     required: false
+  use-docker:
+    description: "run treebeard inside repo2docker"
+    required: false
+    default: "true"
 runs:
   using: "node12"
   main: "dist/index.js"
