@@ -1028,7 +1028,7 @@ function run() {
                 tbRunCommand += ' --dockerless ';
             }
             script.push(tbRunCommand);
-            yield exec.exec(`bash -c ${script.join(' && ')}`);
+            yield exec.exec(`bash -c "${script.join(' && ')}"`);
         }
         catch (error) {
             core.setFailed(error.message);
