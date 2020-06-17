@@ -996,6 +996,11 @@ function run() {
             const notebookEnv = core.getInput('notebook-env');
             const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
             const script = [];
+            const pythonSetupCheck = yield exec.exec("python -c 'from setuptools import find_namespace_packages'");
+            if (pythonSetupCheck !== 0) {
+                core.setFailed('Python does not appear to be setup, please include "- uses: actions/setup-python@v2" in your workflow.');
+                return;
+            }
             script.push('pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib');
             if (apiKey) {
                 script.push(`treebeard configure --api_key ${apiKey} --project_id "$GITHUB_REPOSITORY_OWNER"`);
