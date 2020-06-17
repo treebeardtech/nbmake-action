@@ -55,7 +55,7 @@ async function run(): Promise<void> {
 
     script.push(tbRunCommand)
 
-    await exec.exec(`bash -c ${script.join('\n')}`)
+    await exec.exec(`bash -c ${script.join(' && ')}`)
   } catch (error) {
     core.setFailed(error.message)
   }
