@@ -37,7 +37,7 @@ def run_image(
                 fg="yellow",
             )
 
-    click.echo(f"Starting: {pip_treebeard}")
+    click.echo(f"Starting container: {pip_treebeard}\nEnvironment: {env}")
     container = client.containers.run(
         image_name,
         f"bash -c '(which treebeard > /dev/null || {pip_treebeard}) && treebeard run --dockerless --upload --confirm'",

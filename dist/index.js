@@ -1005,7 +1005,7 @@ function run() {
                 return;
             }
             core.startGroup('🌲 Install Treebeard');
-            script.push('pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib');
+            yield exec.exec('pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib');
             core.endGroup();
             if (apiKey) {
                 script.push(`treebeard configure --api_key ${apiKey} --project_id "$GITHUB_REPOSITORY_OWNER"`);

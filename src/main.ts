@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import * as io from '@actions/io'
+
 async function run(): Promise<void> {
   try {
     const apiKey = core.getInput('api-key')
@@ -25,9 +25,10 @@ async function run(): Promise<void> {
     }
 
     core.startGroup('🌲 Install Treebeard')
-    script.push(
+    await exec.exec(
       'pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib'
     )
+
     core.endGroup()
 
     if (apiKey) {
