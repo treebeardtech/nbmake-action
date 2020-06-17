@@ -46,7 +46,7 @@ async function run(): Promise<void> {
     tbRunCommand += envs.join(' ')
 
     if (notebooks) {
-      tbRunCommand += ` --notebooks ${notebooks} `
+      tbRunCommand += ` --notebooks '${notebooks}' `
     }
 
     if (!useDocker) {
@@ -55,7 +55,7 @@ async function run(): Promise<void> {
 
     script.push(tbRunCommand)
 
-    await exec.exec(`bash -c '${script.join('\n')}'`)
+    await exec.exec(`bash -c ${script.join('\n')}`)
   } catch (error) {
     core.setFailed(error.message)
   }
