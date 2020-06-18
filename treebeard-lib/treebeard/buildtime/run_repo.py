@@ -56,9 +56,10 @@ def run_repo(
                 --stdout-file /dev/stdout \
                 --stderr-file /dev/stderr \
                 --kernel python3 \
-                --no-progress-bar
-            treebeard/post_install.ipynb
-            treebeard/post_install.ipynb
+                --no-progress-bar \
+                treebeard/post_install.ipynb \
+                treebeard/post_install.ipynb \
+
             """,
             shell=True,
         )
