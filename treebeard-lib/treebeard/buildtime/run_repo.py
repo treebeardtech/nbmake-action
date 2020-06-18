@@ -49,16 +49,17 @@ def run_repo(
     click.echo(f"🌲 Treebeard buildtime, building repo")
     click.echo(f"Run path: {run_path}")
 
-    if os.path.exists("treebeard/repo_setup.ipynb"):
+    repo_setup_nb = "treebeard/repo_setup.ipynb"
+    if os.path.exists(repo_setup_nb):
         subprocess.check_output(
-            """
+            f"""
             papermill \
                 --stdout-file /dev/stdout \
                 --stderr-file /dev/stderr \
                 --kernel python3 \
                 --no-progress-bar \
-                treebeard/post_install.ipynb \
-                treebeard/post_install.ipynb \
+                {repo_setup_nb} \
+                {repo_setup_nb} \
 
             """,
             shell=True,
