@@ -63,8 +63,8 @@ class TreebeardConfig(BaseModel):
                 f"No notebooks found in project! Searched for {self.notebooks}"
             )
 
-        ignored_notebooks = [META_NOTEBOOKS]
-        for pattern in self.ignore:
+        ignored_notebooks = []
+        for pattern in [META_NOTEBOOKS] + self.ignore:
             ignored_notebooks.extend(sorted(glob(pattern, recursive=True)))
 
         return [nb for nb in deglobbed_notebooks if nb not in ignored_notebooks]
