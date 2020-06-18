@@ -16,7 +16,7 @@ from treebeard.conf import (
     treebeard_env,
 )
 from treebeard.helper import sanitise_notebook_id, update
-from treebeard.runtime import save_artifacts
+from treebeard.runtime.run import save_artifacts
 
 
 def download_archive(unzip_location: str, download_location: str, url: str):
