@@ -49,23 +49,27 @@ def run_repo(
     click.echo(f"🌲 Treebeard buildtime, building repo")
     click.echo(f"Run path: {run_path}")
 
+    click.echo(f" Running repo setup")
     repo_setup_nb = "treebeard/repo_setup.ipynb"
     if os.path.exists(repo_setup_nb):
-        subprocess.check_output(
-            f"""
-            papermill \
-                --stdout-file /dev/stdout \
-                --stderr-file /dev/stderr \
-                --kernel python3 \
-                --no-progress-bar \
-                {repo_setup_nb} \
-                {repo_setup_nb} \
+        try:
+            subprocess.check_output(
+                f"""
+                papermill \
+                    --stdout-file /dev/stdout \
+                    --stderr-file /dev/stderr \
+                    --kernel python3 \
+                    --no-progress-bar \
+                    {repo_setup_nb} \
+                    {repo_setup_nb} \
 
-            """,
-            shell=True,
-        )
-
-    click.echo(f" Running repo setup")
+                """,
+                shell=True,
+            )
+        except Exception:
+            save_artifacts({})
+            update("FAILURE")
+            return 1
 
     client: Any = docker.from_env()  # type: ignore
 
