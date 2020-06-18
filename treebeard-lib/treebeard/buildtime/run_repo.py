@@ -13,8 +13,10 @@ from treebeard.conf import (
     get_treebeard_config,
     registry,
     run_path,
+    treebeard_env,
 )
-from treebeard.helper import sanitise_notebook_id
+from treebeard.helper import sanitise_notebook_id, update
+from treebeard.runtime import save_artifacts
 
 
 def download_archive(unzip_location: str, download_location: str, url: str):
@@ -46,6 +48,22 @@ def run_repo(
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
     click.echo(f"Run path: {run_path}")
+
+    if os.path.exists("treebeard/repo_setup.ipynb"):
+        subprocess.check_output(
+            """
+            papermill \
+                --stdout-file /dev/stdout \
+                --stderr-file /dev/stderr \
+                --kernel python3 \
+                --no-progress-bar
+            treebeard/post_install.ipynb
+            treebeard/post_install.ipynb
+            """,
+            shell=True,
+        )
+
+    click.echo(f" Running repo setup")
 
     client: Any = docker.from_env()  # type: ignore
 
@@ -111,6 +129,9 @@ def run_repo(
         click.echo(f"✨  Successfully built {versioned_image_name}")
     except:
         click.echo(f"\n\n❗ Failed to build container from the source repo")
+        if treebeard_env.api_key:
+            save_artifacts({})
+            update("FAILURE")
         return 1
 
     subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])

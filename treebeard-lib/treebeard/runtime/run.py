@@ -3,6 +3,7 @@ import os
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from glob import glob
 from traceback import format_exc
 from typing import Dict
 
@@ -10,7 +11,12 @@ import click
 import papermill as pm  # type: ignore
 from sentry_sdk import capture_exception, capture_message  # type: ignore
 
-from treebeard.conf import run_path, treebeard_config, treebeard_env
+from treebeard.conf import (
+    META_NOTEBOOKS,
+    run_path,
+    treebeard_config,
+    treebeard_env,
+)
 from treebeard.helper import update
 from treebeard.importchecker.imports import check_imports
 from treebeard.logs import log as tb_log
@@ -43,15 +49,24 @@ def save_artifacts(notebook_results: Dict[str, NotebookResult]):
         if treebeard_config is None:
             raise Exception("No Treebeard Config Present at runtime!")
 
-        notebooks_files = treebeard_config.get_deglobbed_notebooks()
+        notebooks_files = treebeard_config.get_deglobbed_notebooks() + glob(
+            META_NOTEBOOKS, recursive=True
+        )
+
         first = True
         for notebook_path in notebooks_files:
             notebook_upload_path = f"{run_path}/{notebook_path}"
+            nb_status = (
+                notebook_results[notebook_path].status
+                if notebook_path in notebook_results
+                else "✅"
+            )
+
             executor.submit(
                 upload_artifact,
                 notebook_path,
                 notebook_upload_path,
-                notebook_status_descriptions[notebook_results[notebook_path].status],
+                notebook_status_descriptions[nb_status],
                 set_as_thumbnail=first,
             )
             first = False

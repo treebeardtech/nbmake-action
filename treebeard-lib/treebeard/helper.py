@@ -2,6 +2,8 @@ import configparser
 import datetime
 import json
 import os
+import subprocess
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -97,3 +99,17 @@ def update(status: str):
 
     if resp.status_code != 200:
         capture_message(f"Failed to update tb {resp.status_code}\n{update_url}\n{data}")
+
+
+def shell(command: str):
+    process = subprocess.Popen(["bash", "-c", command], stdout=subprocess.PIPE)
+    for c in iter(lambda: process.stdout and process.stdout.read(1), b""):
+        if not c or c == b"":
+            print("break")
+            break
+        sys.stdout.write(c.decode())
+
+    process.poll()
+
+    if process.returncode != 0:
+        raise Exception(f"Shell command exited with status code {process.returncode}")

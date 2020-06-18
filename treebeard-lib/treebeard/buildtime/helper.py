@@ -1,5 +1,5 @@
 import os
-from typing import Any, List, Dict
+from typing import Any, Dict, List
 
 import click
 import docker  # type: ignore
@@ -21,11 +21,17 @@ def run_image(
     env: Dict[str, str] = {
         "TREEBEARD_PROJECT_ID": project_id,
         "TREEBEARD_NOTEBOOK_ID": notebook_id,
-        "TREEBEARD_API_KEY": treebeard_env.api_key,
-        "GITHUB_RUN_ID": os.getenv("GITHUB_RUN_ID"),
-        "GITHUB_REF": os.getenv("GITHUB_REF"),
-        "GITHUB_SHA": os.getenv("GITHUB_SHA"),
     }
+
+    if treebeard_env.api_key:
+        env["TREEBEARD_API_KEY"] = treebeard_env.api_key
+
+    if "GITHUB_RUN_ID" in os.environ:
+        env["GITHUB_RUN_ID"] = os.environ["GITHUB_RUN_ID"]
+    if "GITHUB_REF" in os.environ:
+        env["GITHUB_REF"] = os.environ["GITHUB_REF"]
+    if "GITHUB_SHA" in os.environ:
+        env["GITHUB_SHA"] = os.environ["GITHUB_SHA"]
 
     for e in envs_to_forward:
         var = os.getenv(e)

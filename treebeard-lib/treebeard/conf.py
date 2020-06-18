@@ -12,6 +12,8 @@ from pydantic import BaseModel, ValidationError, validator  # type: ignore
 
 from treebeard.util import fatal_exit
 
+META_NOTEBOOKS = "treebeard/**/*ipynb"
+
 
 class TreebeardEnv(BaseModel):
     notebook_id: Optional[
@@ -61,7 +63,7 @@ class TreebeardConfig(BaseModel):
                 f"No notebooks found in project! Searched for {self.notebooks}"
             )
 
-        ignored_notebooks = []
+        ignored_notebooks = [META_NOTEBOOKS]
         for pattern in self.ignore:
             ignored_notebooks.extend(sorted(glob(pattern, recursive=True)))
 
