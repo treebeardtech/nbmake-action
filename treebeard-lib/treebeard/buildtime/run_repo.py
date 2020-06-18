@@ -57,6 +57,7 @@ def run_repo(
                 f"""
                 papermill \
                     --stdout-file /dev/stdout \
+                    --stderr-file /dev/stdout \
                     --kernel python3 \
                     --no-progress-bar \
                     {repo_setup_nb} \
