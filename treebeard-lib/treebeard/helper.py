@@ -102,14 +102,20 @@ def update(status: str):
 
 
 def shell(command: str):
-    process = subprocess.Popen(["bash", "-c", command], stdout=subprocess.PIPE)
-    for c in iter(lambda: process.stdout and process.stdout.read(1), b""):
-        if not c or c == b"":
-            print("break")
-            break
-        sys.stdout.write(c.decode())
+    with subprocess.Popen(
+        ["bash", "-c", command],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        bufsize=1,
+        universal_newlines=True,
+    ) as p:
+        if p.stdout:
+            for line in p.stdout:
+                print(line, end="")  # process line here
 
-    process.poll()
+        if p.stderr:
+            for line in p.stderr:
+                print(line, end="", file=sys.stderr)  # process line here
 
-    if process.returncode != 0:
-        raise Exception(f"Shell command exited with status code {process.returncode}")
+    if p.returncode != 0:
+        raise subprocess.CalledProcessError(p.returncode, p.args)
