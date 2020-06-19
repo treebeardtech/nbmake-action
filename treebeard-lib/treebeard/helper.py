@@ -81,8 +81,26 @@ def update(status: str):
         "status": status,
     }
 
+    # Available at repotime
+    workflow = os.getenv("GITHUB_WORKFLOW")
+
+    if workflow:
+        data["workflow"] = (
+            workflow.replace(".yml", "").replace(".yaml", "").split("/")[-1]
+        )
+
+    event_path = os.getenv("GITHUB_EVENT_PATH")
+
+    if event_path:
+        with open(event_path, "r") as event:
+            event_json = json.load(event)
+            data["sender"] = event_json["sender"]
+            data["head_commit"] = event_json["head_commit"]
+
+    # Envs below should be available at repo/build/runtime
     sha = os.getenv("GITHUB_SHA")
     ref = os.getenv("GITHUB_REF")
+
     if sha and ref:
         branch = ref.split("/")[-1]
         data["sha"] = sha

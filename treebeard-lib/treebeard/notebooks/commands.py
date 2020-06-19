@@ -129,8 +129,7 @@ def run(
             print(f"Failed to nbstripout {notebooks_file}! Is it valid?")
     click.echo(notebooks_files)
 
-    if confirm:
-        click.echo("🌲  Compressing Repo")
+    click.echo("🌲  Compressing Repo")
 
     with tempfile.NamedTemporaryFile(
         "wb", suffix=".tar.gz", delete=False
@@ -145,7 +144,7 @@ def run(
                     if info.name in glob.glob(ignored, recursive=True):
                         return None
 
-                if confirm:
+                if not confirm:
                     click.echo(f"  Including {info.name}")
                 return info
 

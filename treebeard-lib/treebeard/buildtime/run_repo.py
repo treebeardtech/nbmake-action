@@ -20,8 +20,8 @@ def download_archive(unzip_location: str, download_location: str, url: str):
         [
             "bash",
             "-c",
-            f'curl -o {download_location} "{url}" && tar -C {unzip_location} -xvf {download_location}',
-        ]
+            f'curl -o {download_location} "{url}" && tar -C {unzip_location} -xvf {download_location} >/dev/null',
+        ],
     )
 
 
@@ -126,7 +126,6 @@ def run_repo(
     user_name = "project_user"  # All images having the same home dir enables caching
     r2d = f"""
     repo2docker \
-        --debug \
         --no-run \
         --user-name {user_name} \
         --user-id 1000 \
