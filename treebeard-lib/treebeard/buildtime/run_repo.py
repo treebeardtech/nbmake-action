@@ -71,11 +71,6 @@ def run_repo(
 
     dirname, _ = os.path.split(os.path.abspath(__file__))
 
-    if os.path.exists("treebeard/container_setup.ipynb"):
-        copyfile(f"{dirname}/../r2d/start", "start")
-    if os.path.exists("treebeard/post_install.ipynb"):
-        copyfile(f"{dirname}/../r2d/postBuild", "postBuild")
-
     client: Any = docker.from_env()  # type: ignore
 
     if (
@@ -95,6 +90,12 @@ def run_repo(
 
         # Add repo to bundle
         download_archive(abs_notebook_dir, f"/tmp/{notebook_id}_repo.tgz", repo_url)
+
+        if os.path.exists("treebeard/container_setup.ipynb"):
+            copyfile(f"{dirname}/../r2d/start", "start")
+
+        if os.path.exists("treebeard/post_install.ipynb"):
+            copyfile(f"{dirname}/../r2d/postBuild", "postBuild")
 
         notebook_files = get_treebeard_config().get_deglobbed_notebooks()
         if len(notebook_files) == 0:
