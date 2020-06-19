@@ -57,16 +57,16 @@ def save_artifacts(notebook_results: Dict[str, NotebookResult]):
         for notebook_path in notebooks_files:
             notebook_upload_path = f"{run_path}/{notebook_path}"
             nb_status = (
-                notebook_results[notebook_path].status
+                notebook_status_descriptions[notebook_results[notebook_path].status]
                 if notebook_path in notebook_results
-                else "✅"
+                else None
             )
 
             executor.submit(
                 upload_artifact,
                 notebook_path,
                 notebook_upload_path,
-                notebook_status_descriptions[nb_status],
+                nb_status,
                 set_as_thumbnail=first,
             )
             first = False

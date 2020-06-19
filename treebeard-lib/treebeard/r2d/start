@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
-echo ::group::Running container_setup.ipynb
 pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib
 
 papermill \
@@ -12,5 +11,4 @@ papermill \
   treebeard/container_setup.ipynb \
   treebeard/container_setup.ipynb \
 
-echo ::endgroup::
 exec "$@"

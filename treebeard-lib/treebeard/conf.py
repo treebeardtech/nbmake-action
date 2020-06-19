@@ -141,7 +141,10 @@ def get_treebeard_env():
 
     github_run_id = os.getenv("GITHUB_RUN_ID")
     if github_run_id:
-        run_id = f"github-{github_run_id}"
+        time_id = str(int(time.time()))[
+            -3:
+        ]  # add time to id to prevent clashes when restarted workflows have the same ID
+        run_id = f"github-{github_run_id}-{time_id}"
     else:
         run_id = f"local-{int(time.time())}"
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
-echo ::group::Running post_install.ipynb
-
 pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib
 
 papermill \
@@ -12,5 +10,3 @@ papermill \
   --no-progress-bar \
   treebeard/post_install.ipynb \
   treebeard/post_install.ipynb \
-
-echo ::endgroup::
