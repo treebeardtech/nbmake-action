@@ -169,6 +169,7 @@ def run(
         repo_url,
         branch="cli",
         envs_to_forward=env,
+        upload=upload,
     )
     click.echo(f"Local build exited with status code {status}")
     sys.exit(status)

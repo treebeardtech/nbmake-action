@@ -51,7 +51,7 @@ setuptools.setup(  # type: ignore
     ],
     license="Apache-2.0",
     python_requires=">=3.6",
-    package_data={"treebeard": ["version.txt", "example_treebeard.yaml"]},
+    package_data={"treebeard": ["version.txt", "example_treebeard.yaml", "r2d/*"]},
     entry_points={
         "console_scripts": [
             "treebeard = treebeard:cli",

@@ -1,6 +1,7 @@
 import os
 import subprocess
 from pathlib import Path
+from shutil import copyfile
 from traceback import format_exc
 from typing import Any, List
 
@@ -9,12 +10,7 @@ import docker  # type: ignore
 from docker.errors import ImageNotFound, NotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
-from treebeard.conf import (
-    get_treebeard_config,
-    registry,
-    run_path,
-    treebeard_env,
-)
+from treebeard.conf import get_treebeard_config, registry, run_path
 from treebeard.helper import sanitise_notebook_id, update
 from treebeard.runtime.run import save_artifacts
 
@@ -45,6 +41,7 @@ def run_repo(
     repo_url: str,
     branch: str,
     envs_to_forward: List[str],
+    upload: bool,
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
     click.echo(f"Run path: {run_path}")
@@ -67,9 +64,17 @@ def run_repo(
                 shell=True,
             )
         except Exception:
-            save_artifacts({})
-            update("FAILURE")
+            if upload:
+                save_artifacts({})
+                update("FAILURE")
             return 1
+
+    dirname, _ = os.path.split(os.path.abspath(__file__))
+
+    if os.path.exists("treebeard/container_setup.ipynb"):
+        copyfile(f"{dirname}/../r2d/start", "start")
+    if os.path.exists("treebeard/post_install.ipynb"):
+        copyfile(f"{dirname}/../r2d/postBuild", "postBuild")
 
     client: Any = docker.from_env()  # type: ignore
 
@@ -135,7 +140,7 @@ def run_repo(
         click.echo(f"✨  Successfully built {versioned_image_name}")
     except:
         click.echo(f"\n\n❗ Failed to build container from the source repo")
-        if treebeard_env.api_key:
+        if upload:
             save_artifacts({})
             update("FAILURE")
         return 1
@@ -155,7 +160,7 @@ def run_repo(
 
     click.echo(f"Image built successfully, now running.")
     status = run_image(
-        project_id, notebook_id, run_id, versioned_image_name, envs_to_forward
+        project_id, notebook_id, run_id, versioned_image_name, envs_to_forward, upload
     )
     if status != 0:
         click.echo(f"Image run failed, not updated {passing_image_name}")
