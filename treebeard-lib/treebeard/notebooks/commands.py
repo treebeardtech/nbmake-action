@@ -2,7 +2,6 @@ import glob
 import os
 import os.path
 import pprint
-import subprocess
 import sys
 import tarfile
 import tempfile
@@ -10,15 +9,10 @@ from distutils.dir_util import copy_tree
 from typing import List
 
 import click
-import docker  # type: ignore
 import yaml
-from halo import Halo  # type: ignore
-from humanfriendly import format_size, parse_size  # type: ignore
-from timeago import format as timeago_format  # type: ignore
 
 from treebeard.buildtime.run_repo import run_repo
 from treebeard.conf import (
-    config_path,
     registry,
     treebeard_config,
     treebeard_env,
