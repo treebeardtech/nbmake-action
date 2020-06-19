@@ -139,14 +139,18 @@ def get_treebeard_env():
     """Reads variables from a local file, credentials.cfg"""
     treebeard_project_id = os.getenv("TREEBEARD_PROJECT_ID")
 
-    github_run_id = os.getenv("GITHUB_RUN_ID")
-    if github_run_id:
-        time_id = str(int(time.time()))[
-            -3:
-        ]  # add time to id to prevent clashes when restarted workflows have the same ID
-        run_id = f"github-{github_run_id}-{time_id}"
-    else:
-        run_id = f"local-{int(time.time())}"
+    run_id = os.getenv("TREEBEARD_RUN_ID")  # available at runtime
+
+    if not run_id:
+        github_run_id = os.getenv("GITHUB_RUN_ID")  # available at repotime
+        if github_run_id:
+            time_id = str(int(time.time()))[
+                -3:
+            ]  # add time to id to prevent clashes when restarted workflows have the same ID
+            run_id = f"github-{github_run_id}-{time_id}"
+        else:
+            run_id = f"local-{int(time.time())}"
+    os.environ["TREEBEARD_RUN_ID"] = run_id
 
     notebook_id = os.getenv("TREEBEARD_NOTEBOOK_ID")
     if not notebook_id:

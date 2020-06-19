@@ -23,13 +23,12 @@ def run_image(
         "TREEBEARD_PROJECT_ID": project_id,
         "TREEBEARD_NOTEBOOK_ID": notebook_id,
         "TREEBEARD_START_TIME": os.environ["TREEBEARD_START_TIME"],
+        "TREEBEARD_RUN_ID": os.environ["TREEBEARD_RUN_ID"],
     }
 
     if treebeard_env.api_key:
         env["TREEBEARD_API_KEY"] = treebeard_env.api_key
 
-    if "GITHUB_RUN_ID" in os.environ:
-        env["GITHUB_RUN_ID"] = os.environ["GITHUB_RUN_ID"]
     if "GITHUB_REF" in os.environ:
         env["GITHUB_REF"] = os.environ["GITHUB_REF"]
     if "GITHUB_SHA" in os.environ:

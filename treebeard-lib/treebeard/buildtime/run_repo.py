@@ -20,14 +20,14 @@ def download_archive(unzip_location: str, download_location: str, url: str):
         [
             "bash",
             "-c",
-            f'curl -o {download_location} "{url}" && tar -C {unzip_location} -xvf {download_location} >/dev/null',
+            f'curl -o {download_location} "{url}" >/dev/null && tar -C {unzip_location} -xvf {download_location} >/dev/null',
         ],
     )
 
 
 def fetch_image_for_cache(client: Any, image_name: str):
     try:
-        click.echo(f"Pulling {image_name}")
+        click.echo(f"🐳 Pulling {image_name}")
         client.images.pull(image_name)
     except:
         click.echo(f"Could not pull image for cache, continuing without.")
@@ -106,7 +106,7 @@ def run_repo(
             subprocess.check_output(["nbstripout"] + notebook_files)
         except:
             print(
-                f"Failed to nbstripout a notebook! Do you have an invalid .ipynb?\nNotebooks: {notebook_files}"
+                f"❗Failed to nbstripout a notebook! Do you have an invalid .ipynb?\nNotebooks: {notebook_files}"
             )
     finally:
         click.echo("Treebeard Bundle Contents:")
@@ -148,15 +148,15 @@ def run_repo(
     subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
 
     try:
-        click.echo(
-            f"Image built: Pushing {versioned_image_name} and {latest_image_name}"
-        )
+        click.echo(f"🐳 Pushing {versioned_image_name} and {latest_image_name}")
         subprocess.check_output(f"docker push {versioned_image_name}", shell=True)
         subprocess.check_output(
             f"docker push {latest_image_name}", shell=True
         )  # this tag is necessary for caching
     except Exception:
-        click.echo(f"Failed to push image, will try again on success\n{format_exc()}")
+        click.echo(
+            f"🐳❌ Failed to push image, will try again on success\n{format_exc()}"
+        )
 
     click.echo(f"Image built successfully, now running.")
     status = run_image(
@@ -167,7 +167,7 @@ def run_repo(
         return status
 
     subprocess.check_output(["docker", "tag", versioned_image_name, passing_image_name])
-    click.echo(f"tagged {versioned_image_name} as {passing_image_name}")
+    click.echo(f"🐳 tagged {versioned_image_name} as {passing_image_name}")
     subprocess.check_output(f"docker push {passing_image_name}", shell=True)
 
     return 0

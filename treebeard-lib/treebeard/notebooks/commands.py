@@ -103,13 +103,6 @@ def run(
     if upload:
         update(status="BUILDING")
 
-    params = {}
-    if treebeard_config.schedule:
-        if confirm or click.confirm(
-            f"📅 treebeard.yaml contains schedule '{treebeard_config.schedule}'. Enable it?"
-        ):
-            params["schedule"] = treebeard_config.schedule
-
     if treebeard_config:
         ignore += (
             treebeard_config.ignore
@@ -117,16 +110,11 @@ def run(
             + treebeard_config.output_dirs
         )
 
-    click.echo("🌲  Copying project to tempdir and stripping notebooks")
+    click.echo("🌲  Creating Project bundle")
 
     temp_dir = tempfile.mkdtemp()
     copy_tree(os.getcwd(), str(temp_dir), preserve_symlinks=1)
     notebooks_files = treebeard_config.get_deglobbed_notebooks()
-    for notebooks_file in notebooks_files:
-        try:
-            subprocess.check_output(["nbstripout"] + notebooks_file, cwd=temp_dir)
-        except:
-            print(f"Failed to nbstripout {notebooks_file}! Is it valid?")
     click.echo(notebooks_files)
 
     click.echo("🌲  Compressing Repo")
@@ -151,7 +139,6 @@ def run(
             tar.add(
                 str(temp_dir), arcname=os.path.basename(os.path.sep), filter=zip_filter,
             )
-            tar.add(config_path, arcname=os.path.basename(config_path))
             tar.add(treebeard_yaml_path, arcname="treebeard.yaml")
 
     if not confirm and not click.confirm(
