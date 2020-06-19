@@ -22,6 +22,7 @@ def run_image(
     env: Dict[str, str] = {
         "TREEBEARD_PROJECT_ID": project_id,
         "TREEBEARD_NOTEBOOK_ID": notebook_id,
+        "TREEBEARD_START_TIME": os.environ["TREEBEARD_START_TIME"],
     }
 
     if treebeard_env.api_key:

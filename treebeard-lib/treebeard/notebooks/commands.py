@@ -24,7 +24,7 @@ from treebeard.conf import (
     treebeard_env,
     validate_notebook_directory,
 )
-from treebeard.helper import CliContext, sanitise_notebook_id, update
+from treebeard.helper import CliContext, get_time, sanitise_notebook_id, update
 
 pp = pprint.PrettyPrinter(indent=2)
 
@@ -80,10 +80,12 @@ def run(
 
         yaml.dump(treebeard_config.dict(), yaml_file)  # type: ignore
 
-    if upload or not dockerless:
-        update(status="WORKING")
+    if "TREEBEARD_START_TIME" not in os.environ:
+        os.environ["TREEBEARD_START_TIME"] = get_time()
 
     if dockerless:
+        if upload:
+            update(status="WORKING")
         click.echo(
             f"🌲  Running locally without docker using your current python environment"
         )
@@ -97,6 +99,9 @@ def run(
         import treebeard.runtime.run
 
         treebeard.runtime.run.start(upload_outputs=upload)  # will sys.exit
+
+    if upload:
+        update(status="BUILDING")
 
     params = {}
     if treebeard_config.schedule:
@@ -123,7 +128,9 @@ def run(
         except:
             print(f"Failed to nbstripout {notebooks_file}! Is it valid?")
     click.echo(notebooks_files)
-    click.echo("🌲  Compressing Repo")
+
+    if confirm:
+        click.echo("🌲  Compressing Repo")
 
     with tempfile.NamedTemporaryFile(
         "wb", suffix=".tar.gz", delete=False
@@ -138,9 +145,8 @@ def run(
                     if info.name in glob.glob(ignored, recursive=True):
                         return None
 
-                # if len(git_files) > 0 and info.name not in git_files:
-                #     return None
-                click.echo(f"  Including {info.name}")
+                if confirm:
+                    click.echo(f"  Including {info.name}")
                 return info
 
             tar.add(

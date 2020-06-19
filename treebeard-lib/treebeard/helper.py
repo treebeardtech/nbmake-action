@@ -72,6 +72,10 @@ def create_example_yaml():
     return
 
 
+def get_time():
+    return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+
+
 def update(status: str):
     data = {
         "status": status,
@@ -84,12 +88,8 @@ def update(status: str):
         data["sha"] = sha
         data["branch"] = branch
 
-    def get_time():
-        return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
-
-    if status == "WORKING":
-        data["start_time"] = get_time()
-    else:
+    data["start_time"] = os.getenv("TREEBEARD_START_TIME") or get_time()
+    if status != "WORKING":
         data["end_time"] = get_time()
 
     update_url = f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{treebeard_env.run_id}/update"
