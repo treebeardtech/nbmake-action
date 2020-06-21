@@ -108,7 +108,7 @@ def update(status: str):
         data["branch"] = branch
 
     data["start_time"] = os.getenv("TREEBEARD_START_TIME") or get_time()
-    if status != "WORKING":
+    if status in ["SUCCESS", "FAILURE"]:
         data["end_time"] = get_time()
 
     update_url = f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{treebeard_env.run_id}/update"
