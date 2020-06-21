@@ -1,4 +1,4 @@
-def log(content: str):
+def log(content: str, print_content: bool = True):
     """Manually log your custom content to a local file
     The file is saved at the end of the run and uploaded as an output
     then fetched by the notification function
@@ -7,7 +7,8 @@ def log(content: str):
 
     Params: content, custom string used in a command from a notebook
     """
-    print(content)
+    if print_content:
+        print(content)
     with open("treebeard.log", "a+") as f:
         f.write("\n")
         f.write(content)

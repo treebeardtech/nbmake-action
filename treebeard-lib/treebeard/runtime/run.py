@@ -226,7 +226,8 @@ def start(upload_outputs: bool = False):
     total_nbs = len(notebook_results)
     if n_passed < total_nbs:
         summary_block = get_summary(notebook_results, n_passed, total_nbs)
-        tb_log(summary_block)
+        results += summary_block + "\n"
+        tb_log(summary_block, print_content=False)
 
         try:
             if treebeard_config.kernel_name == "python3":

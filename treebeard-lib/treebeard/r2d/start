@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
-pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib
+echo Running treebeard/container_setup.ipynb
+pip install -U git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib > /dev/null
 
 papermill \
   --stdout-file /dev/stdout \
