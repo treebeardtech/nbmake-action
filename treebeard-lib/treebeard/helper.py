@@ -89,9 +89,10 @@ def update(status: str):
             workflow.replace(".yml", "").replace(".yaml", "").split("/")[-1]
         )
 
+    event_name = os.getenv("GITHUB_EVENT_NAME")
     event_path = os.getenv("GITHUB_EVENT_PATH")
 
-    if event_path:
+    if event_name == "push" and event_path:
         with open(event_path, "r") as event:
             event_json = json.load(event)
             data["sender"] = event_json["sender"]
