@@ -73,10 +73,11 @@ def run_repo(
 
     client: Any = docker.from_env()  # type: ignore
 
+    use_docker_registry = os.getenv("DOCKER_REGISTRY")
     if (
         os.getenv("DOCKER_USERNAME")
         and os.getenv("DOCKER_PASSWORD")
-        and os.getenv("DOCKER_REGISTRY")
+        and use_docker_registry
     ):
         subprocess.check_output(
             f"printenv DOCKER_PASSWORD | docker login -u {os.getenv('DOCKER_USERNAME')} --password-stdin {os.getenv('DOCKER_REGISTRY')}",
@@ -147,16 +148,17 @@ def run_repo(
 
     subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
 
-    try:
-        click.echo(f"🐳 Pushing {versioned_image_name} and {latest_image_name}")
-        subprocess.check_output(f"docker push {versioned_image_name}", shell=True)
-        subprocess.check_output(
-            f"docker push {latest_image_name}", shell=True
-        )  # this tag is necessary for caching
-    except Exception:
-        click.echo(
-            f"🐳❌ Failed to push image, will try again on success\n{format_exc()}"
-        )
+    if use_docker_registry:
+        try:
+            click.echo(f"🐳 Pushing {versioned_image_name} and {latest_image_name}")
+            subprocess.check_output(f"docker push {versioned_image_name}", shell=True)
+            subprocess.check_output(
+                f"docker push {latest_image_name}", shell=True
+            )  # this tag is necessary for caching
+        except Exception:
+            click.echo(
+                f"🐳❌ Failed to push image, will try again on success\n{format_exc()}"
+            )
 
     click.echo(f"Image built successfully, now running.")
     status = run_image(
@@ -168,6 +170,8 @@ def run_repo(
 
     subprocess.check_output(["docker", "tag", versioned_image_name, passing_image_name])
     click.echo(f"🐳 tagged {versioned_image_name} as {passing_image_name}")
-    subprocess.check_output(f"docker push {passing_image_name}", shell=True)
+
+    if use_docker_registry:
+        subprocess.check_output(f"docker push {passing_image_name}", shell=True)
 
     return 0
