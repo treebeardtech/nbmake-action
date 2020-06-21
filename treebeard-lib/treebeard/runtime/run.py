@@ -41,42 +41,40 @@ notebook_status_descriptions = {
     "⏰": "TIMEOUT",
 }
 
+executor = ThreadPoolExecutor(max_workers=4)
 
-def save_artifacts(notebook_results: Dict[str, NotebookResult]):
-    with ThreadPoolExecutor(max_workers=4) as executor:
-        log(f"Uploading outputs...")
 
-        if treebeard_config is None:
-            raise Exception("No Treebeard Config Present at runtime!")
+def upload_nb(notebook_path: str, nb_status: str, set_as_thumbnail: bool):
+    notebook_upload_path = f"{run_path}/{notebook_path}"
 
-        notebooks_files = treebeard_config.get_deglobbed_notebooks() + glob(
-            META_NOTEBOOKS, recursive=True
+    executor.submit(
+        upload_artifact,
+        notebook_path,
+        notebook_upload_path,
+        nb_status,
+        set_as_thumbnail=set_as_thumbnail,
+    )
+
+
+def upload_meta_nbs():
+    notebooks_files = glob(META_NOTEBOOKS, recursive=True)
+
+    for notebook_path in notebooks_files:
+        notebook_upload_path = f"{run_path}/{notebook_path}"
+        nb_status = None
+
+        executor.submit(
+            upload_artifact, notebook_path, notebook_upload_path, nb_status,
         )
 
-        first = True
-        for notebook_path in notebooks_files:
-            notebook_upload_path = f"{run_path}/{notebook_path}"
-            nb_status = (
-                notebook_status_descriptions[notebook_results[notebook_path].status]
-                if notebook_path in notebook_results
-                else None
-            )
 
-            executor.submit(
-                upload_artifact,
-                notebook_path,
-                notebook_upload_path,
-                nb_status,
-                set_as_thumbnail=first,
-            )
-            first = False
-
-        for output_dir in treebeard_config.output_dirs:
-            for root, _, files in os.walk(output_dir, topdown=False):
-                for name in files:
-                    full_name = os.path.join(root, name)
-                    upload_path = f"{run_path}/{full_name}"
-                    executor.submit(upload_artifact, full_name, upload_path, None)
+def upload_outputs():
+    for output_dir in treebeard_config.output_dirs:
+        for root, _, files in os.walk(output_dir, topdown=False):
+            for name in files:
+                full_name = os.path.join(root, name)
+                upload_path = f"{run_path}/{full_name}"
+                executor.submit(upload_artifact, full_name, upload_path, None)
 
 
 def run_notebook(notebook_path: str) -> NotebookResult:
@@ -124,7 +122,9 @@ def run_notebook(notebook_path: str) -> NotebookResult:
         )
 
 
-def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookResult]:
+def _run(
+    project_id: str, notebook_id: str, run_id: str, upload: bool
+) -> Dict[str, NotebookResult]:
     log(f"🌲 treebeard runtime: running repo")
     subprocess.run(
         [
@@ -152,9 +152,18 @@ def _run(project_id: str, notebook_id: str, run_id: str) -> Dict[str, NotebookRe
     [print(nb) for nb in notebook_files]
     print()
 
+    set_as_thumbnail = True
     for i, notebook_path in enumerate(notebook_files):
         log(f"⏳ Running {i + 1}/{len(notebook_files)}: {notebook_path}")
-        notebook_results[notebook_path] = run_notebook(notebook_path)
+        result = run_notebook(notebook_path)
+        notebook_results[notebook_path] = result
+        if upload:
+            upload_nb(
+                notebook_path,
+                notebook_status_descriptions.get(result.status, str(None)),
+                set_as_thumbnail,
+            )
+        set_as_thumbnail = False
 
     return notebook_results
 
@@ -185,20 +194,26 @@ def finish(status: int, upload_outputs: bool, results: str):
     sys.exit(status)
 
 
-def start(upload_outputs: bool = False):
+def start(upload: bool = False):
     if not treebeard_env.notebook_id:
         raise Exception("No notebook ID at runtime")
     if not treebeard_env.project_id:
         raise Exception("No project ID at buildtime")
 
+    if upload:
+        upload_meta_nbs()
+
     clean_log_file()
 
     notebook_results = _run(
-        treebeard_env.project_id, treebeard_env.notebook_id, treebeard_env.run_id
+        treebeard_env.project_id,
+        treebeard_env.notebook_id,
+        treebeard_env.run_id,
+        upload,
     )
 
-    if upload_outputs:
-        save_artifacts(notebook_results)
+    if upload:
+        upload_outputs()
 
     log("🌲 Run Finished. Results:\n")
 
@@ -238,16 +253,16 @@ def start(upload_outputs: bool = False):
                 else:
                     if result:
                         results += f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅\n"
-                        finish(0, upload_outputs, results)
+                        finish(0, upload, results)
                     else:
                         results += f"\nℹ️ Strict mode is disabled! Fix missing dependencies to get a passing run.\n"
                 results += "\n"
         except Exception as ex:
             click.echo(f"Import checker encountered and error...")
             capture_exception(ex)
-        finish(1, upload_outputs, results)
+        finish(1, upload, results)
     else:
-        finish(0, upload_outputs, results)
+        finish(0, upload, results)
 
 
 if __name__ == "__main__":

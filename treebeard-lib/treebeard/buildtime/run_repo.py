@@ -12,7 +12,7 @@ from docker.errors import ImageNotFound, NotFound  # type: ignore
 from treebeard.buildtime.helper import run_image
 from treebeard.conf import get_treebeard_config, registry, run_path
 from treebeard.helper import sanitise_notebook_id, update
-from treebeard.runtime.run import save_artifacts
+from treebeard.runtime.run import upload_meta_nbs
 
 
 def download_archive(unzip_location: str, download_location: str, url: str):
@@ -65,7 +65,7 @@ def run_repo(
             )
         except Exception:
             if upload:
-                save_artifacts({})
+                upload_meta_nbs()
                 update("FAILURE")
             return 1
 
@@ -142,7 +142,7 @@ def run_repo(
     except:
         click.echo(f"\n\n❗ Failed to build container from the source repo")
         if upload:
-            save_artifacts({})
+            upload_meta_nbs()
             update("FAILURE")
         return 1
 

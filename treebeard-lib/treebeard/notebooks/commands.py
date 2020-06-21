@@ -92,7 +92,7 @@ def run(
         # Note: import runtime.run causes win/darwin devices missing magic to fail at start
         import treebeard.runtime.run
 
-        treebeard.runtime.run.start(upload_outputs=upload)  # will sys.exit
+        treebeard.runtime.run.start(upload=upload)  # will sys.exit
 
     if upload:
         update(status="BUILDING")
