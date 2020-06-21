@@ -8,7 +8,8 @@ from requests import Response
 from sentry_sdk import capture_exception, capture_message  # type: ignore
 
 from treebeard.conf import api_url, treebeard_config
-from treebeard.helper import update
+
+# from treebeard.helper import update
 
 mime: Any = magic.Magic(mime=True)  # type: ignore
 
@@ -60,7 +61,7 @@ def upload_artifact(
 
         qs = "set_as_thumbnail=true" if set_as_thumbnail else ""
         requests.post(f"{api_url}/{upload_path}/create_extras?{qs}")  # type: ignore
-    update(status="WORKING")
+    # update(status="WORKING") TODO ensure we don't update the status or know the correct one
 
 
 def get_failed_nb_details(nb_dict: Any) -> Tuple[str, int, str]:
