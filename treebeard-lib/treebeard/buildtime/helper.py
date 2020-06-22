@@ -17,7 +17,7 @@ def run_image(
 ) -> int:
     client: Any = docker.from_env()  # type: ignore
 
-    pip_treebeard = f"pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib"
+    pip_treebeard = f"pip install -U git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib"
 
     env: Dict[str, str] = {
         "TREEBEARD_PROJECT_ID": project_id,
@@ -54,7 +54,7 @@ def run_image(
     upload_flag = "--upload" if upload else "--no-upload"
     container = client.containers.run(
         image_name,
-        f"bash -cx '(which treebeard > /dev/null || {pip_treebeard} > /dev/null) && treebeard run --dockerless {upload_flag} --confirm'",
+        f"bash -cx '({pip_treebeard} > /dev/null) && treebeard run --dockerless {upload_flag} --confirm'",
         environment=env,
         detach=True,
     )
