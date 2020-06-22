@@ -33,6 +33,10 @@ def run_image(
         env["GITHUB_REF"] = os.environ["GITHUB_REF"]
     if "GITHUB_SHA" in os.environ:
         env["GITHUB_SHA"] = os.environ["GITHUB_SHA"]
+    if "GITHUB_EVENT_NAME" in os.environ:
+        env["GITHUB_EVENT_NAME"] = os.environ["GITHUB_EVENT_NAME"]
+    if "GITHUB_WORKFLOW" in os.environ:
+        env["GITHUB_WORKFLOW"] = os.environ["GITHUB_WORKFLOW"]
 
     for e in envs_to_forward:
         var = os.getenv(e)
