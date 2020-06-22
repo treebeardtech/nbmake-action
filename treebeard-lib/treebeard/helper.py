@@ -92,11 +92,13 @@ def update(status: str):
     event_name = os.getenv("GITHUB_EVENT_NAME")
     event_path = os.getenv("GITHUB_EVENT_PATH")
 
-    if event_name == "push" and event_path:
-        with open(event_path, "r") as event:
-            event_json = json.load(event)
-            data["sender"] = event_json["sender"]
-            data["head_commit"] = event_json["head_commit"]
+    if event_name:
+        data["event_name"] = event_name
+        if event_name == "push" and event_path:
+            with open(event_path, "r") as event:
+                event_json = json.load(event)
+                data["sender"] = event_json["sender"]
+                data["head_commit"] = event_json["head_commit"]
 
     # Envs below should be available at repo/build/runtime
     sha = os.getenv("GITHUB_SHA")
