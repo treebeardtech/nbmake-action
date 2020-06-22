@@ -996,10 +996,12 @@ function run() {
             const notebookEnv = core.getInput('notebook-env');
             const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
             const script = [];
+            core.startGroup('Checking Python is Installed');
             const pythonSetupCheck = yield exec.exec('python', [
                 '-c',
                 'from setuptools import find_namespace_packages'
             ]);
+            core.endGroup();
             if (pythonSetupCheck !== 0) {
                 core.setFailed('Python does not appear to be setup, please include "- uses: actions/setup-python@v2" in your workflow.');
                 return;
@@ -1047,7 +1049,7 @@ function run() {
                 core.setFailed(`Treebeard CLI run failed with status code ${status}`);
             }
             else if (status > 1) {
-                console.log(`Treebeard action ignoring Treebeard CLI failure status code ${status} to enable other notifications.`);
+                console.log(`Treebeard action ignoring Treebeard CLI failure status code ${status} to enable other notifications.\n\n`);
             }
         }
         catch (error) {

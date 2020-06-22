@@ -12,10 +12,12 @@ async function run(): Promise<void> {
     const useDocker = core.getInput('use-docker').toLowerCase() === 'true'
 
     const script = []
+    core.startGroup('Checking Python is Installed')
     const pythonSetupCheck = await exec.exec('python', [
       '-c',
       'from setuptools import find_namespace_packages'
     ])
+    core.endGroup()
 
     if (pythonSetupCheck !== 0) {
       core.setFailed(
@@ -85,7 +87,7 @@ async function run(): Promise<void> {
       core.setFailed(`Treebeard CLI run failed with status code ${status}`)
     } else if (status > 1) {
       console.log(
-        `Treebeard action ignoring Treebeard CLI failure status code ${status} to enable other notifications.`
+        `Treebeard action ignoring Treebeard CLI failure status code ${status} to enable other notifications.\n\n`
       )
     }
   } catch (error) {
