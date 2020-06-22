@@ -12,7 +12,12 @@ import requests
 from pydantic import BaseModel
 from sentry_sdk import capture_exception, capture_message  # type: ignore
 
-from treebeard.conf import api_url, config_path, treebeard_env
+from treebeard.conf import (
+    api_url,
+    config_path,
+    treebeard_config,
+    treebeard_env,
+)
 from treebeard.version import get_version
 
 version = get_version()
@@ -117,6 +122,9 @@ def update(status: str):
     resp = requests.post(  # type:ignore
         update_url, json=data, headers={"api_key": treebeard_env.api_key},
     )
+
+    if treebeard_config.debug:
+        print(f"Updating backend with data\n{data}")
 
     if resp.status_code != 200:
         capture_message(f"Failed to update tb {resp.status_code}\n{update_url}\n{data}")

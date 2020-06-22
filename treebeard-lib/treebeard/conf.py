@@ -44,6 +44,7 @@ class TreebeardConfig(BaseModel):
     strict_mode: bool = True
     cell_execution_timeout_seconds: int = 300
     schedule: Optional[str] = None
+    debug: bool = False
 
     @validator("schedule")
     def schedule_valdiator(cls, v: Optional[str]):

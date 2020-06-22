@@ -4,7 +4,7 @@ from typing import Any, Dict, List
 import click
 import docker  # type: ignore
 
-from treebeard.conf import treebeard_env
+from treebeard.conf import treebeard_config, treebeard_env
 
 
 def run_image(
@@ -48,11 +48,13 @@ def run_image(
                 fg="yellow",
             )
 
-    click.echo(f"Starting container: {pip_treebeard}\nEnvironment: {env}")
+    if treebeard_config.debug:
+        click.echo(f"Starting container: {pip_treebeard}\nEnvironment: {env}")
+
     upload_flag = "--upload" if upload else "--no-upload"
     container = client.containers.run(
         image_name,
-        f"bash -c '(which treebeard > /dev/null || {pip_treebeard}) && treebeard run --dockerless {upload_flag} --confirm'",
+        f"bash -cx '(which treebeard > /dev/null || {pip_treebeard} > /dev/null) && treebeard run --dockerless {upload_flag} --confirm'",
         environment=env,
         detach=True,
     )

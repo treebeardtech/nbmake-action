@@ -3,3 +3,4 @@
 export GITHUB_REF="refs/heads/master"
 export GITHUB_SHA="ffac537e6cbbf934b08745a378932722df287a53"
 export GITHUB_RUN_ID=1
+export GITHUB_WORKFLOW='debug-workflow.yml'
