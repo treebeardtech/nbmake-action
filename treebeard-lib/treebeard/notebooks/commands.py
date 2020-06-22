@@ -157,5 +157,5 @@ def run(
         envs_to_forward=env,
         upload=upload,
     )
-    click.echo(f"Local build exited with status code {status}")
+    click.echo(f"Build exited with status code {status}")
     sys.exit(status)

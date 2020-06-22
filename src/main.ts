@@ -72,7 +72,22 @@ async function run(): Promise<void> {
 
     script.push(tbRunCommand)
 
-    await exec.exec(`bash -c "${script.join(' && ')}"`)
+    const status = await exec.exec(
+      `bash -c "${script.join(' && ')}"`,
+      undefined,
+      {
+        ignoreReturnCode: true
+      }
+    )
+
+    if (status === 1) {
+      // Ignore status code > 1 to allow other reporting mechanisms e.g. slack
+      core.setFailed(`Treebeard CLI run failed with status code ${status}`)
+    } else if (status > 1) {
+      console.log(
+        `Treebeard action ignoring Treebeard CLI failure status code ${status} to enable other notifications.`
+      )
+    }
   } catch (error) {
     core.setFailed(error.message)
   }

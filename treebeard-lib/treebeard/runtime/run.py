@@ -260,7 +260,9 @@ def start(upload: bool = False):
         except Exception as ex:
             click.echo(f"Import checker encountered and error...")
             capture_exception(ex)
-        finish(1, upload, results)
+
+        fail_status = 2 if upload else 1
+        finish(fail_status, upload, results)
     else:
         finish(0, upload, results)
 

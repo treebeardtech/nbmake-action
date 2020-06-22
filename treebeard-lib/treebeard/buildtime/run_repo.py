@@ -67,7 +67,9 @@ def run_repo(
             if upload:
                 upload_meta_nbs()
                 update("FAILURE")
-            return 1
+                return 2
+            else:
+                return 1
 
     dirname, _ = os.path.split(os.path.abspath(__file__))
 
@@ -144,7 +146,9 @@ def run_repo(
         if upload:
             upload_meta_nbs()
             update("FAILURE")
-        return 1
+            return 2
+        else:
+            return 1
 
     subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
 
