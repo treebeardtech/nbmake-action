@@ -170,7 +170,7 @@ def _run(
     return notebook_results
 
 
-def finish(status: int, upload_outputs: bool, results: str):
+def finish(status: int, should_upload_outputs: bool, results: str):
     def get_status_str():
         if status == 0:
             return "SUCCESS"
@@ -179,7 +179,7 @@ def finish(status: int, upload_outputs: bool, results: str):
 
     print(results)
 
-    if upload_outputs:
+    if should_upload_outputs:
         if os.path.exists("treebeard.log"):
             upload_artifact("treebeard.log", f"{run_path}/treebeard.log", None)
 
@@ -219,6 +219,8 @@ def start(upload: bool = False):
 
     if upload:
         upload_outputs()
+
+    executor.shutdown(wait=True)
 
     log("🌲 Run Finished. Results:\n")
 
