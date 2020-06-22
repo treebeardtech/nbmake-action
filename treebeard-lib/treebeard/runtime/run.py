@@ -5,7 +5,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 from glob import glob
 from traceback import format_exc
-from typing import Dict
+from typing import Dict, List
 
 import click
 import papermill as pm  # type: ignore
@@ -31,8 +31,6 @@ from treebeard.runtime.helper import (
 )
 
 bucket_name = "treebeard-notebook-outputs"
-
-notebook_files = treebeard_config.get_deglobbed_notebooks()
 
 notebook_status_descriptions = {
     "✅": "SUCCESS",
@@ -123,7 +121,11 @@ def run_notebook(notebook_path: str) -> NotebookResult:
 
 
 def _run(
-    project_id: str, notebook_id: str, run_id: str, upload: bool
+    project_id: str,
+    notebook_id: str,
+    run_id: str,
+    upload: bool,
+    notebook_files: List[str],
 ) -> Dict[str, NotebookResult]:
     log(f"🌲 treebeard runtime: running repo")
     subprocess.run(
@@ -205,11 +207,14 @@ def start(upload: bool = False):
 
     clean_log_file()
 
+    notebook_files = treebeard_config.get_deglobbed_notebooks()
+
     notebook_results = _run(
         treebeard_env.project_id,
         treebeard_env.notebook_id,
         treebeard_env.run_id,
         upload,
+        notebook_files,
     )
 
     if upload:
