@@ -63,7 +63,7 @@ Notebooks: 11 of 22 passed (50%)
 Cells: 291 of 587 passed (49%)
 ```
 
-### Functionality:
+## Functionality
 
 - Automatically installs dependencies for binder-ready repos using repo2docker (which can use conda, pip, or pipenv)
 - Runs notebooks in the repo (using papermill)
