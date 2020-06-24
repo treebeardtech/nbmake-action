@@ -8,13 +8,15 @@
 <img src="https://github.com/treebeardtech/treebeard/workflows/Integration%20Test/badge.svg" alt="Integration Test">
 <a href="https://gitter.im/treebeardtech/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the Gitter Chat"></a></p>
 
-**Note: This GitHub Action is in Pre-release. Drop us an issue or email [Alex](mailto:alex@treebeard.io) before using.**
+**Note: This GitHub Action is in Pre-release. Drop us an issue or email [Alex](mailto:alex@treebeard.io) before using as docs are patchy**
 
 ## What is Treebeard?
 
-A continuous integration framework for data science teams using Jupyter Notebooks.
+A low-config continuous integration framework for data science teams using Jupyter Notebooks.
 
 Works either through our pypi package or GitHub Actions.
+
+### GitHub Actions Example
 
 ```
 # .github/workflows/test.yml
@@ -35,6 +37,7 @@ jobs:
             MY_TOKEN=${{ secrets.MY_TOKEN }}
 ```
 
+### Output Example
 ```
 🟩🟩🟩🟩🟩🟩🟩🟩🟩✅ module/GUI/Initialise project.ipynb
   ran 11 of 11 cells
@@ -67,8 +70,29 @@ Cells: 291 of 587 passed (49%)
 - On failure, flags all imports which cannot be resolved
 - Supports notebook build scripts. `treebeard/post_install.ipynb` can manually install dependencies and `treebeard/container_setup.ipynb` can install credential files. 
 
+## Why use this?
 
-### Treebeard Teams
+This framework is made for teams with lots of data science ability but constrained in terms of devops.
+
+**Testing**: If you are frequently blocked by bugs in Jupyter Notebooks or Python scripts, then setting up treebeard via GitHub actions will provide automated testing to resolve issues faster.
+
+**Automation**: Scheduling notebooks to run is trivial once you have a working dependency file.
+
+## Why not use this?
+
+Experienced Docker users: This project containerises Python repos using repo2docker. It is simple to setup, but is slower to build and results in large images.
+
+## Design Philosophy
+
+**Promote devops culture** We believe good teams have a devops champion, but the best teams have a devops culture. As a result we want to make team infrastructure as similar as possible to team code.
+
+For data science this means treating Jupyter Notebooks as first class citizens. You do not need to write any bash scripts with boilerplate here.
+
+**Help with integration** Tools are most powerful when combined. We aim to strike a balance between being purely open source and readily linking with platforms such as GitHub and Slack.
+
+We are keen to know what you would like treebeard to work with.
+
+## Treebeard Teams
 
 We are a startup and are building a separate product which the library integrates with. Our goal with Teams is to improve the observability of testing/deployment to speed up debugging. Let [laurence](mailto:laurence@treebeard.io) know if you want to try it out.
 
