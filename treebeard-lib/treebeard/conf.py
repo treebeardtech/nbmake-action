@@ -98,9 +98,9 @@ def get_config_path():
 
 
 def validate_notebook_directory(
-    treebeard_env: TreebeardEnv, treebeard_config: TreebeardConfig
+    treebeard_env: TreebeardEnv, treebeard_config: TreebeardConfig, upload: bool
 ):
-    if treebeard_env.project_id is None:
+    if upload and treebeard_env.project_id is None:
         fatal_exit("No account config detected! Please run `treebeard configure`")
 
     if not Path("treebeard.yaml").is_file():

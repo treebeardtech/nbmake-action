@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
+import {branch} from './conf'
 
 async function run(): Promise<void> {
   try {
@@ -28,7 +29,7 @@ async function run(): Promise<void> {
 
     core.startGroup('🌲 Install Treebeard')
     await exec.exec(
-      'pip install git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib'
+      `pip install git+https://github.com/treebeardtech/treebeard.git@${branch}#subdirectory=treebeard-lib`
     )
 
     core.endGroup()
@@ -48,13 +49,13 @@ async function run(): Promise<void> {
     if (dockerRegistry) {
       script.push(`export DOCKER_REGISTRY='${dockerRegistry}'`)
     }
-    const envs = new Array()
+    const envs = []
     if (notebookEnv) {
-      notebookEnv.split('\n').forEach(line => {
+      for (const line of notebookEnv.split('\n')) {
         console.log(`Treebeard forwarding ${line}`)
         envs.push(`--env ${line.replace(/=.*/, '')} `)
         script.push(`export ${line}`)
-      })
+      }
     }
 
     let tbRunCommand = `treebeard run --confirm `
