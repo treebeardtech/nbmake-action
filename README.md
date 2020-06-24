@@ -72,6 +72,5 @@ We are a startup and are building a separate product which the library integrate
 
 ## More Information
 
-- [GitHub App](https://github.com/marketplace/treebeard-build)
 - [Docs](https://treebeard.readthedocs.io/en/latest/)
 - [Website](https://treebeard.io)
