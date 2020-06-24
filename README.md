@@ -30,6 +30,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: treebeardtech/treebeard@master
+        with:
+          notebook-env: |
+            MY_TOKEN=${{ secrets.MY_TOKEN }}
 ```
 
 ```
@@ -62,6 +65,7 @@ Cells: 291 of 587 passed (49%)
 - Automatically installs dependencies for binder-ready repos using repo2docker (which can use conda, pip, or pipenv)
 - Runs notebooks in the repo (using papermill)
 - On failure, flags all imports which cannot be resolved
+- Supports notebook build scripts. `treebeard/post_install.ipynb` can manually install dependencies and `treebeard/container_setup.ipynb` can install credential files. 
 
 
 ### Treebeard Teams
