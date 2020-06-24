@@ -1,5 +1,5 @@
 <p align="center"><a href="https://treebeard.io"><img width=50% alt="Treebeard - continuous integration for data science" src="https://github.com/treebeardtech/treebeard/blob/master/docs/img/treebeard.jpg?raw=true"></a></p>
-<h2 align="center">Devops for data science</h2>
+<h2 align="center">Jupyter notebook continuous integration</h2>
 
 <p align="center">
 <a href="https://badge.fury.io/py/treebeard"><img src="https://badge.fury.io/py/treebeard.svg" alt="PyPI version"></a>
@@ -102,3 +102,4 @@ We are a startup and are building a separate product which the library integrate
 
 - [Docs](https://treebeard.readthedocs.io/en/latest/)
 - [Website](https://treebeard.io)
+- [Medium blog on dependency management](https://towardsdatascience.com/devops-for-data-science-making-your-python-project-reproducible-f55646e110fa)
