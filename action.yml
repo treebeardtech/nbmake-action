@@ -1,4 +1,4 @@
-name: "treebeard: Continuous Integration for Python Data Science supporting Jupyter Notebooks"
+name: "treebeard CI"
 author: "treebeardtech"
 description: "Automatically containerise and run notebooks"
 inputs:
