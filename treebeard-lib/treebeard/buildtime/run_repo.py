@@ -154,7 +154,7 @@ def run_repo(
 
     if use_docker_registry:
         try:
-            click.echo(f"🐳 Pushing {versioned_image_name} and {latest_image_name}")
+            click.echo(f"🐳 Pushing {versioned_image_name} and {latest_image_name}\n")
             subprocess.check_output(f"docker push {versioned_image_name}", shell=True)
             subprocess.check_output(
                 f"docker push {latest_image_name}", shell=True
