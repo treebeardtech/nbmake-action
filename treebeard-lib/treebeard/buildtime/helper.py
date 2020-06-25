@@ -52,9 +52,10 @@ def run_image(
         click.echo(f"Starting container: {pip_treebeard}\nEnvironment: {env}")
 
     upload_flag = "--upload" if upload else "--no-upload"
+    debug = " --debug " if treebeard_config.debug else " "
     container = client.containers.run(
         image_name,
-        f"bash -cx '({pip_treebeard} > /dev/null) && treebeard run --dockerless {upload_flag} --confirm'",
+        f"bash -cx '({pip_treebeard} > /dev/null) && treebeard run {debug} --dockerless {upload_flag} --confirm'",
         environment=env,
         detach=True,
     )

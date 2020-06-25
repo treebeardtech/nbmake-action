@@ -3,7 +3,7 @@ import subprocess
 if __name__ == "__main__":
     print("Test local failure fails")
     process = subprocess.Popen(
-        "treebeard run   --confirm", shell=True, stdout=subprocess.PIPE
+        "treebeard run --debug   --confirm", shell=True, stdout=subprocess.PIPE
     )
     while True:
         output = process.stdout.readline()

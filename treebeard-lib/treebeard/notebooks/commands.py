@@ -48,6 +48,9 @@ user_name = treebeard_env.user_name
 @click.option(
     "--upload/--no-upload", default=False, help="Upload outputs",
 )
+@click.option(
+    "--debug/--no-debug", default=False, help="Enable debug logging",
+)
 @click.pass_obj  # type: ignore
 def run(
     cli_context: CliContext,
@@ -57,13 +60,14 @@ def run(
     confirm: bool,
     dockerless: bool,
     upload: bool,
+    debug: bool,
 ):
     """
     Run a notebook and optionally schedule it to run periodically
     """
     notebooks = list(notebooks)
     ignore = list(ignore)
-
+    treebeard_config.debug = True
     validate_notebook_directory(treebeard_env, treebeard_config, upload)
 
     # Apply cli config overrides

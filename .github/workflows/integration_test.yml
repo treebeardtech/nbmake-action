@@ -28,7 +28,7 @@ jobs:
         run: |
           cd integration-test/conda
           cp -R ../../treebeard-lib .
-          treebeard run  --confirm
+          treebeard run --debug  --confirm
   virtualenv:
     timeout-minutes: 20
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
         run: |
           cd integration-test/virtualenv
           cp -R ../../treebeard-lib .
-          treebeard run  --confirm
+          treebeard run --debug  --confirm
           branch=$(git rev-parse --abbrev-ref HEAD)
           wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/main.ipynb"
           wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/another.ipynb"
@@ -83,13 +83,13 @@ jobs:
       - name: Run Local
         run: |
           cd integration-test/dagster
-          treebeard run  --confirm
+          treebeard run --debug  --confirm
       - name: Run Dockerless
         run: |
           cd integration-test/dagster
           pip install -r requirements.txt
           pip install treebeard
-          treebeard run --dockerless --confirm
+          treebeard run --debug --dockerless --confirm
   failing_build:
     timeout-minutes: 20
     runs-on: ubuntu-latest
