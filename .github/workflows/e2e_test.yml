@@ -17,6 +17,7 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: './'
         with:
+          api-key: ${{ secrets.TREEBEARD_API_KEY }}
           docker-registry: gcr.io/treebeard-259315/tests
           path: './examples/hello_treebeard'
           debug: 'true'
@@ -35,6 +36,7 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: './'
         with:
+          api-key: ${{ secrets.TREEBEARD_API_KEY }}
           docker-registry: gcr.io/treebeard-259315/tests
           path: './examples/google_cloud_storage'
           notebook-env: |
@@ -42,3 +44,28 @@ jobs:
           debug: 'true'
 
 
+
+  virtualenv:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - run: gcloud auth configure-docker
+      - uses: "./"
+        with:
+          api-key: ${{ secrets.TREEBEARD_API_KEY }}
+          docker-registry: gcr.io/treebeard-259315/tests
+          debug: "true"
+          path: './integration-test/virtualenv'
+      - name: Check uploads
+        run: |
+          branch=$(git rev-parse --abbrev-ref HEAD)
+          wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/main.ipynb"
+          wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/another.ipynb"
+          wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/subdir/another.ipynb"
