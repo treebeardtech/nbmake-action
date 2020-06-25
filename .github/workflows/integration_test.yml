@@ -3,23 +3,22 @@ name: Integration Test
 on: [push]
 
 jobs:
-  # conda:
-  #   timeout-minutes: 20
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Set up Python 3.7
-  #       uses: actions/setup-python@v1
-  #       with:
-  #         python-version: 3.7
-  #     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-  #       with:
-  #         project_id: ${{ secrets.GCP_PROJECT_ID }}
-  #         service_account_key: ${{ secrets.GCP_SA_KEY }}
-  #         export_default_credentials: true
-  #     - run: gcloud auth configure-docker
-  #     - name: Install dependencies
-  #       run: |
+  conda:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - run: gcloud auth configure-docker
+      - uses: "./"
+        with:
+          docker-registry: gcr.io/treebeard-259315/tests
+          path: './integration-test/conda'
 
   virtualenv:
     timeout-minutes: 20
