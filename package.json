@@ -28,7 +28,8 @@
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@actions/exec": "^1.0.4",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "yaml": "^1.10.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",

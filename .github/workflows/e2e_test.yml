@@ -38,7 +38,7 @@ jobs:
           docker-registry: gcr.io/treebeard-259315/tests
           path: './examples/google_cloud_storage'
           notebook-env: |
-            GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SA_KEY }}
+            GCP_SERVICE_ACCOUNT_KEY='${{ secrets.GCP_SA_KEY }}'
           debug: 'true'
 
 
