@@ -1011,7 +1011,6 @@ function run() {
                 return;
             }
             core.startGroup('🌲 Install Treebeard');
-            yield exec.exec(`export TREEBEARD_REF='${conf_1.treebeardRef}'`);
             yield exec.exec(`pip install git+https://github.com/treebeardtech/treebeard.git@${conf_1.treebeardRef}#subdirectory=treebeard-lib`);
             core.endGroup();
             if (apiKey) {
@@ -1050,7 +1049,10 @@ function run() {
             }
             script.push(tbRunCommand);
             const status = yield exec.exec(`bash -c "${script.join(' && ')}"`, undefined, {
-                ignoreReturnCode: true
+                ignoreReturnCode: true,
+                env: {
+                    TREEBEARD_REF: conf_1.treebeardRef
+                }
             });
             if (status === 1) {
                 // Ignore status code > 1 to allow other reporting mechanisms e.g. slack
@@ -1359,7 +1361,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'e317af8525e380523ba28a98832ebd9345206dfa';
+exports.treebeardRef = 'e0f84c749a0d4731e7a57000b5cf013bf0872cb0';
 
 
 /***/ }),

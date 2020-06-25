@@ -32,7 +32,6 @@ async function run(): Promise<void> {
     }
 
     core.startGroup('🌲 Install Treebeard')
-    await exec.exec(`export TREEBEARD_REF='${treebeardRef}'`)
     await exec.exec(
       `pip install git+https://github.com/treebeardtech/treebeard.git@${treebeardRef}#subdirectory=treebeard-lib`
     )
@@ -88,7 +87,10 @@ async function run(): Promise<void> {
       `bash -c "${script.join(' && ')}"`,
       undefined,
       {
-        ignoreReturnCode: true
+        ignoreReturnCode: true,
+        env: {
+          TREEBEARD_REF: treebeardRef
+        }
       }
     )
 
