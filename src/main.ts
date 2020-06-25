@@ -52,6 +52,13 @@ async function run(): Promise<void> {
         if (debug) {
           console.log(`Treebeard forwarding ${key}`)
         }
+
+        const value = notebookEnvObj[key]
+        if (value.startsWith('"') || value.startsWith("'")) {
+          console.log(
+            `❗ Warning: ${key} starts with a quote. Check notebook-env is correct.`
+          )
+        }
         envs.push(`--env ${key} `)
       }
     }
