@@ -996,6 +996,9 @@ function run() {
             const dockerRegistry = core.getInput('docker-registry');
             const notebookEnv = core.getInput('notebook-env');
             const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
+            const debug = core.getInput('debug').toLowerCase() === 'true';
+            const path = core.getInput('path');
+            process.chdir(path);
             const script = [];
             core.startGroup('Checking Python is Installed');
             const pythonSetupCheck = yield exec.exec('python', [
@@ -1040,6 +1043,9 @@ function run() {
             }
             if (!useDocker) {
                 tbRunCommand += ' --dockerless ';
+            }
+            if (debug) {
+                tbRunCommand += ' --debug ';
             }
             script.push(tbRunCommand);
             const status = yield exec.exec(`bash -c "${script.join(' && ')}"`, undefined, {
