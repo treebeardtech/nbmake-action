@@ -17,7 +17,7 @@ test('wait 500 ms', async () => {
   expect(delta).toBeGreaterThan(450)
 })
 
-test('branch is correct', async () => {
+test('ref is correct', async () => {
   const sha = cp
     .execSync('git rev-parse HEAD')
     .toString()
