@@ -25,6 +25,15 @@ inputs:
     description: "run treebeard inside repo2docker"
     required: false
     default: "true"
+  debug:
+    description: "Enable debug logging"
+    required: false
+    default: "false"
+  path:
+    description: "Path of the repo to run"
+    required: false
+    default: "."
+    
 runs:
   using: "node12"
   main: "dist/index.js"

@@ -11,6 +11,10 @@ async function run(): Promise<void> {
     const dockerRegistry = core.getInput('docker-registry')
     const notebookEnv = core.getInput('notebook-env')
     const useDocker = core.getInput('use-docker').toLowerCase() === 'true'
+    const debug = core.getInput('debug').toLowerCase() === 'true'
+    const path = core.getInput('path')
+
+    process.chdir(path)
 
     const script = []
     core.startGroup('Checking Python is Installed')
@@ -71,6 +75,10 @@ async function run(): Promise<void> {
 
     if (!useDocker) {
       tbRunCommand += ' --dockerless '
+    }
+
+    if (debug) {
+      tbRunCommand += ' --debug '
     }
 
     script.push(tbRunCommand)
