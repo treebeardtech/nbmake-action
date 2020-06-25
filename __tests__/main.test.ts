@@ -2,7 +2,7 @@ import {wait} from '../src/wait'
 import * as process from 'process'
 import * as cp from 'child_process'
 import * as path from 'path'
-import {branch} from '../src/conf'
+import {treebeardRef} from '../src/conf'
 
 test('throws invalid number', async () => {
   const input = parseInt('foo', 10)
@@ -18,11 +18,11 @@ test('wait 500 ms', async () => {
 })
 
 test('branch is correct', async () => {
-  const currentBranch = cp
-    .execSync('git rev-parse --abbrev-ref HEAD')
+  const sha = cp
+    .execSync('git rev-parse HEAD')
     .toString()
     .replace('\n', '')
-  expect(branch).toBe(currentBranch)
+  expect(treebeardRef).toBe(sha)
 })
 
 // shows how the runner will run a javascript action with env / stdout protocol

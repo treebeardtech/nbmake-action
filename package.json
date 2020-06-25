@@ -11,7 +11,7 @@
     "lint": "eslint src/**/*.ts",
     "pack": "ncc build",
     "test": "jest",
-    "create-conf": "echo \"export const branch = '$(git rev-parse --abbrev-ref HEAD)'\" > src/conf.ts",
+    "create-conf": "echo \"// Do not edit this generated file\nexport const treebeardRef = '$(git rev-parse HEAD)'\" > src/conf.ts",
     "all": "npm run create-conf && npm run build && npm run format && npm run lint && npm run pack && npm test"
   },
   "repository": {

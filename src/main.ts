@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import {branch} from './conf'
+import {treebeardRef} from './conf'
 
 async function run(): Promise<void> {
   try {
@@ -33,7 +33,7 @@ async function run(): Promise<void> {
 
     core.startGroup('🌲 Install Treebeard')
     await exec.exec(
-      `pip install git+https://github.com/treebeardtech/treebeard.git@${branch}#subdirectory=treebeard-lib`
+      `pip install git+https://github.com/treebeardtech/treebeard.git@${treebeardRef}#subdirectory=treebeard-lib`
     )
 
     core.endGroup()
