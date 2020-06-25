@@ -126,7 +126,6 @@ def run_repo(
 
     fetch_image_for_cache(client, latest_image_name)
 
-    user_name = "project_user"  # All images having the same home dir enables caching
     r2d = f"""
     repo2docker \
         --no-run \

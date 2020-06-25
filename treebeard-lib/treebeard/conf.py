@@ -136,7 +136,7 @@ def get_treebeard_config() -> TreebeardConfig:
 
 def get_treebeard_env():
     """Reads variables from a local file, credentials.cfg"""
-    user_name = os.getenv("USER_NAME")
+    user_name = os.getenv("TREEBEARD_USER_NAME")
 
     run_id = os.getenv("TREEBEARD_RUN_ID")  # available at runtime
 

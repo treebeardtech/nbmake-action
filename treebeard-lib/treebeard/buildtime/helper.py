@@ -20,7 +20,7 @@ def run_image(
     pip_treebeard = f"pip install -U git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib"
 
     env: Dict[str, str] = {
-        "USER_NAME": user_name,
+        "TREEBEARD_USER_NAME": user_name,
         "REPO_SHORT_NAME": repo_short_name,
         "TREEBEARD_START_TIME": os.environ["TREEBEARD_START_TIME"],
         "TREEBEARD_RUN_ID": os.environ["TREEBEARD_RUN_ID"],
