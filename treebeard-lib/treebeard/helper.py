@@ -27,9 +27,9 @@ def set_credentials(email: str, key: str, user_name: str):
     """Create user credentials"""
     config = configparser.RawConfigParser()
     config.add_section("credentials")
-    config.set("credentials", "TREEBEARD_EMAIL", email)
-    config.set("credentials", "USER_NAME", user_name)
-    config.set("credentials", "TREEBEARD_API_KEY", key)
+    config.set("credentials", "email", email)
+    config.set("credentials", "user_name", user_name)
+    config.set("credentials", "api_key", key)
     with open(config_path, "w") as configfile:
         config.write(configfile)
     click.echo(f"🔑  Config saved in {config_path}")

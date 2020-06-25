@@ -136,7 +136,7 @@ def get_treebeard_config() -> TreebeardConfig:
 
 def get_treebeard_env():
     """Reads variables from a local file, credentials.cfg"""
-    treebeard_user_name = os.getenv("USER_NAME")
+    user_name = os.getenv("USER_NAME")
 
     run_id = os.getenv("TREEBEARD_RUN_ID")  # available at runtime
 
@@ -162,13 +162,13 @@ def get_treebeard_env():
     if os.path.exists(config_path):
         config = configparser.RawConfigParser()
         config.read(config_path)
-        email = config.get("credentials", "treebeard_email")
-        treebeard_user_name = config.get("credentials", "treebeard_user_name")
-        api_key = config.get("credentials", "treebeard_api_key")
+        email = config.get("credentials", "email")
+        user_name = config.get("credentials", "user_name")
+        api_key = config.get("credentials", "api_key")
 
     return TreebeardEnv(
         repo_short_name=repo_short_name,
-        user_name=treebeard_user_name,
+        user_name=user_name,
         run_id=run_id,
         email=email,
         api_key=api_key,

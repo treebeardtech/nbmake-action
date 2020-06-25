@@ -12,5 +12,5 @@ def setup_sentry():
 
     with configure_scope() as scope:  # type: ignore
         scope.set_tag("treebeard_version", get_version())  # type: ignore
-        scope.set_tag("treebeard_user_name", str(treebeard_env.user_name))  # type: ignore
+        scope.set_tag("user_name", str(treebeard_env.user_name))  # type: ignore
         scope.set_tag("treebeard_repo_short_name", str(treebeard_env.repo_short_name))  # type: ignore
