@@ -18,7 +18,12 @@ from treebeard.conf import (
     treebeard_env,
     validate_notebook_directory,
 )
-from treebeard.helper import CliContext, get_time, sanitise_repo_short_name, update
+from treebeard.helper import (
+    CliContext,
+    get_time,
+    sanitise_repo_short_name,
+    update,
+)
 
 pp = pprint.PrettyPrinter(indent=2)
 
@@ -149,15 +154,16 @@ def run(
     repo_image_name = f"{registry}/{user_name}/{sanitise_repo_short_name(str(repo_short_name))}:{build_tag}"
     click.echo(f"🌲  Building {repo_image_name} Locally\n")
     repo_url = f"file://{src_archive.name}"
+
     status = run_repo(
         str(user_name),
         str(repo_short_name),
         treebeard_env.run_id,
         build_tag,
         repo_url,
-        branch="cli",
         envs_to_forward=env,
         upload=upload,
+        branch=treebeard_env.branch,
     )
     click.echo(f"Build exited with status code {status}")
     sys.exit(status)

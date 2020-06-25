@@ -23,6 +23,7 @@ class TreebeardEnv(BaseModel):
     run_id: str
     email: Optional[str] = None  # Not present at build time
     api_key: Optional[str] = None  # Not present at build time
+    branch: str = "cli"
 
     def __str__(self) -> str:
         dict_obj = self.dict()
@@ -167,12 +168,19 @@ def get_treebeard_env():
         user_name = config.get("credentials", "user_name")
         api_key = config.get("credentials", "api_key")
 
+    def get_branch():
+        if os.getenv("CI"):
+            return os.environ["GITHUB_REF"].split("/")[-1]
+        else:
+            return "cli"
+
     return TreebeardEnv(
         repo_short_name=repo_short_name,
         user_name=user_name,
         run_id=run_id,
         email=email,
         api_key=api_key,
+        branch=get_branch(),
     )
 
 
