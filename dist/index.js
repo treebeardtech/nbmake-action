@@ -1050,16 +1050,14 @@ function run() {
             script.push(tbRunCommand);
             const status = yield exec.exec(`bash -c "${script.join(' && ')}"`, undefined, {
                 ignoreReturnCode: true,
-                env: {
-                    TREEBEARD_REF: conf_1.treebeardRef
-                }
+                env: Object.assign({ TREEBEARD_REF: conf_1.treebeardRef }, process.env)
             });
-            if (status === 1) {
-                // Ignore status code > 1 to allow other reporting mechanisms e.g. slack
-                core.setFailed(`Treebeard CLI run failed with status code ${status}`);
-            }
-            else if (status > 1) {
+            // Ignore status code 2 to allow other reporting mechanisms e.g. slack
+            if (status === 2) {
                 console.log(`Treebeard action ignoring Treebeard CLI failure status code ${status} to enable other notifications.\n\n`);
+            }
+            else if (status > 0) {
+                core.setFailed(`Treebeard CLI run failed with status code ${status}`);
             }
         }
         catch (error) {
@@ -1361,7 +1359,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'e0f84c749a0d4731e7a57000b5cf013bf0872cb0';
+exports.treebeardRef = '6dfa59c654249316146b5a87bedf6b94d30342f9';
 
 
 /***/ }),

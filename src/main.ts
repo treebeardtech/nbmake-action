@@ -89,18 +89,19 @@ async function run(): Promise<void> {
       {
         ignoreReturnCode: true,
         env: {
-          TREEBEARD_REF: treebeardRef
+          TREEBEARD_REF: treebeardRef,
+          ...process.env
         }
       }
     )
 
-    if (status === 1) {
-      // Ignore status code > 1 to allow other reporting mechanisms e.g. slack
-      core.setFailed(`Treebeard CLI run failed with status code ${status}`)
-    } else if (status > 1) {
+    // Ignore status code 2 to allow other reporting mechanisms e.g. slack
+    if (status === 2) {
       console.log(
         `Treebeard action ignoring Treebeard CLI failure status code ${status} to enable other notifications.\n\n`
       )
+    } else if (status > 0) {
+      core.setFailed(`Treebeard CLI run failed with status code ${status}`)
     }
   } catch (error) {
     core.setFailed(error.message)

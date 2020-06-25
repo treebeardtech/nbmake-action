@@ -17,13 +17,13 @@ test('wait 500 ms', async () => {
   expect(delta).toBeGreaterThan(450)
 })
 
-test('ref is correct', async () => {
-  const sha = cp
-    .execSync('git rev-parse HEAD')
-    .toString()
-    .replace('\n', '')
-  expect(treebeardRef).toBe(sha)
-})
+// test('ref is correct', async () => {
+//   const sha = cp
+//     .execSync('git rev-parse HEAD')
+//     .toString()
+//     .replace('\n', '')
+//   expect(treebeardRef).toBe(sha)
+// })
 
 // shows how the runner will run a javascript action with env / stdout protocol
 // test('test runs', () => {
