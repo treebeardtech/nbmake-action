@@ -1351,7 +1351,7 @@ exports.getState = getState;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.branch = 'loggedout-test';
+exports.branch = 'master';
 
 
 /***/ }),
