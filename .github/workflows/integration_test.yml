@@ -75,6 +75,8 @@ jobs:
         with:
           docker-registry: gcr.io/treebeard-259315/tests
           path: './integration-test/failing_build'
+        continue-on-error: true
+      - run: "false"
   failing_notebook:
     timeout-minutes: 20
     runs-on: ubuntu-latest
@@ -91,3 +93,5 @@ jobs:
         with:
           docker-registry: gcr.io/treebeard-259315/tests
           path: './integration-test/failing_notebook'
+        continue-on-error: true
+      - run: "false"

@@ -3,9 +3,22 @@ name: Check Action Dist
 on: [push]
 
 jobs:
-  first_time_flow:
+  npm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: npm install
       - run: npm test
+  blah:
+    runs-on: ubuntu-latest
+    steps:
+      - run: "exit 1"
+        continue-on-error: true
+      - run: '[[ "blah" == "blfah" ]]'
+
+  blahs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: "exit 1"
+        continue-on-error: true
+      - run: '[[ "blah" == "blah" ]]'
