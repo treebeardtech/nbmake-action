@@ -1147,6 +1147,10 @@ function run() {
                     if (debug) {
                         console.log(`Treebeard forwarding ${key}`);
                     }
+                    const value = notebookEnvObj[key];
+                    if (value.startsWith('"') || value.startsWith("'")) {
+                        console.log(`❗ Warning: ${key} starts with a quote. Check notebook-env is correct.`);
+                    }
                     envs.push(`--env ${key} `);
                 }
             }
@@ -1486,7 +1490,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = '1d4138defa62586988aab55551878dd197fba6ae';
+exports.treebeardRef = '0b5b53387d79c675da3a61a3905647c1cc9e6162';
 
 
 /***/ }),
