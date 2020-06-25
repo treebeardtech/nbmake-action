@@ -49,10 +49,6 @@ async function run(): Promise<void> {
     const envs = []
     if (notebookEnvObj) {
       for (const key of Object.keys(notebookEnvObj)) {
-        if (debug) {
-          console.log(`Treebeard forwarding ${key}`)
-        }
-
         const value = notebookEnvObj[key]
         if (value.startsWith('"') || value.startsWith("'")) {
           console.log(
@@ -67,6 +63,10 @@ async function run(): Promise<void> {
       TREEBEARD_REF: treebeardRef,
       ...process.env,
       ...notebookEnvObj
+    }
+
+    if (debug) {
+      console.log(`Treebeard submitting env:\n${env}`)
     }
 
     if (dockerUsername) {

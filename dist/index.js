@@ -1144,9 +1144,6 @@ function run() {
             const envs = [];
             if (notebookEnvObj) {
                 for (const key of Object.keys(notebookEnvObj)) {
-                    if (debug) {
-                        console.log(`Treebeard forwarding ${key}`);
-                    }
                     const value = notebookEnvObj[key];
                     if (value.startsWith('"') || value.startsWith("'")) {
                         console.log(`❗ Warning: ${key} starts with a quote, notebook-env should not wrap values in quotes.`);
@@ -1155,6 +1152,9 @@ function run() {
                 }
             }
             const env = Object.assign(Object.assign({ TREEBEARD_REF: conf_1.treebeardRef }, process.env), notebookEnvObj);
+            if (debug) {
+                console.log(`Treebeard submitting env:\n${env}`);
+            }
             if (dockerUsername) {
                 env.DOCKER_USERNAME = dockerUsername;
             }
@@ -1490,7 +1490,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'eeb6c02f0f98c33be67bf00a6c6cc009a7fbb5ac';
+exports.treebeardRef = 'f93bd6699469580514803f5eda58ff192ba6ceac';
 
 
 /***/ }),

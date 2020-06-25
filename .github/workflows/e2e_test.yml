@@ -64,7 +64,7 @@ jobs:
           debug: "true"
           path: './integration-test/virtualenv'
         env:
-          TREEBEARD_USER_NAME: d8a0c5b6c9
+          TREEBEARD_USER_NAME: 'd8a0c5b6c9'
       - name: Check uploads
         run: |
           branch=$(git rev-parse --abbrev-ref HEAD)
