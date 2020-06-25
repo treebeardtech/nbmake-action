@@ -76,7 +76,7 @@ pip 20.0.2 from /Users/.../python3.7/site-packages/pip (python 3.7)
 ```
 
 ```bash
-➜ pip install -e ./treebeard-lib
+➜ pip install treebeard
 ```
 
 ## Get started

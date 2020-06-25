@@ -60,50 +60,35 @@ jobs:
         with:
           docker-registry: gcr.io/treebeard-259315/tests
           path: './integration-test/dagster'
-  # failing_build:
-  #   timeout-minutes: 20
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Set up Python 3.7
-  #       uses: actions/setup-python@v1
-  #       with:
-  #         python-version: 3.7
-  #     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-  #       with:
-  #         project_id: ${{ secrets.GCP_PROJECT_ID }}
-  #         service_account_key: ${{ secrets.GCP_SA_KEY }}
-  #         export_default_credentials: true
-  #     - run: gcloud auth configure-docker
-  #     - name: Install dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip pipenv
-  #         pip install -e ./treebeard-lib
-  #     - name: Run Buildtime Failure Test
-  #       run: |
-  #         cd integration-test/failing_build
-  #         python -m run_test
-  # failing_notebook:
-  #   timeout-minutes: 20
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Set up Python 3.7
-  #       uses: actions/setup-python@v1
-  #       with:
-  #         python-version: 3.7
-  #     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-  #       with:
-  #         project_id: ${{ secrets.GCP_PROJECT_ID }}
-  #         service_account_key: ${{ secrets.GCP_SA_KEY }}
-  #         export_default_credentials: true
-  #     - run: gcloud auth configure-docker
-  #     - name: Install dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip pipenv
-  #         pip install -e ./treebeard-lib
-  #     - name: Run Runtime Failure Test
-  #       run: |
-  #         cd integration-test/failing_notebook
-  #         cp -R ../../treebeard-lib .
-  #         python -m run_test
+  failing_build:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - run: gcloud auth configure-docker
+      - uses: "./"
+        with:
+          docker-registry: gcr.io/treebeard-259315/tests
+          path: './integration-test/failing_build'
+  failing_notebook:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - run: gcloud auth configure-docker
+      - uses: "./"
+        with:
+          docker-registry: gcr.io/treebeard-259315/tests
+          path: './integration-test/failing_notebook'
