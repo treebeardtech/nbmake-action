@@ -17,7 +17,7 @@ def run_image(
 ) -> int:
     client: Any = docker.from_env()  # type: ignore
 
-    pip_treebeard = f"pip install -U git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib"
+    pip_treebeard = f"pip install -U git+https://github.com/treebeardtech/treebeard.git@$TREEBEARD_SHA#subdirectory=treebeard-lib"
 
     env: Dict[str, str] = {
         "TREEBEARD_USER_NAME": user_name,
@@ -64,3 +64,50 @@ def run_image(
 
     result = container.wait()
     return int(result["StatusCode"])
+
+
+def create_start_script():
+    sha = os.getenv("TREEBEARD_SHA", "master")
+
+    script = f"""
+#!/usr/bin/env bash
+set -xeuo pipefail
+
+echo Running treebeard/post_install.ipynb
+pip install -U "git+https://github.com/treebeardtech/treebeard.git@{sha}#subdirectory=treebeard-lib" > /dev/null
+
+papermill \\
+  --stdout-file /dev/stdout \\
+  --stderr-file /dev/stderr \\
+  --kernel python3 \\
+  --no-progress-bar \\
+  treebeard/post_install.ipynb \\
+  treebeard/post_install.ipynb \\
+"""
+
+    with open("start", "w") as start:
+        start.write(script)
+
+
+def create_post_build_script():
+    sha = os.getenv("TREEBEARD_SHA", "master")
+
+    script = f"""
+#!/usr/bin/env bash
+set -xeuo pipefail
+
+echo Running treebeard/post_install.ipynb
+pip install -U "git+https://github.com/treebeardtech/treebeard.git@{sha}#subdirectory=treebeard-lib" > /dev/null
+
+papermill \\
+  --stdout-file /dev/stdout \\
+  --stderr-file /dev/stderr \\
+  --kernel python3 \\
+  --no-progress-bar \\
+  treebeard/post_install.ipynb \\
+  treebeard/post_install.ipynb \\
+
+"""
+
+    with open("postBuild", "w") as post_build:
+        post_build.write(script)

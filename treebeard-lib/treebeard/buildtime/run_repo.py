@@ -1,7 +1,6 @@
 import os
 import subprocess
 from pathlib import Path
-from shutil import copyfile
 from traceback import format_exc
 from typing import Any, List
 
@@ -9,7 +8,11 @@ import click
 import docker  # type: ignore
 from docker.errors import ImageNotFound, NotFound  # type: ignore
 
-from treebeard.buildtime.helper import run_image
+from treebeard.buildtime.helper import (
+    run_image,
+    create_start_script,
+    create_post_build_script,
+)
 from treebeard.conf import get_treebeard_config, registry, run_path
 from treebeard.helper import sanitise_repo_short_name, update
 from treebeard.runtime.run import upload_meta_nbs
@@ -71,8 +74,6 @@ def run_repo(
             else:
                 return 1
 
-    dirname, _ = os.path.split(os.path.abspath(__file__))
-
     client: Any = docker.from_env()  # type: ignore
 
     use_docker_registry = os.getenv("DOCKER_REGISTRY")
@@ -95,10 +96,10 @@ def run_repo(
         download_archive(abs_notebook_dir, f"/tmp/{repo_short_name}_repo.tgz", repo_url)
 
         if os.path.exists("treebeard/container_setup.ipynb"):
-            copyfile(f"{dirname}/../r2d/start", "start")
+            create_start_script()
 
         if os.path.exists("treebeard/post_install.ipynb"):
-            copyfile(f"{dirname}/../r2d/postBuild", "postBuild")
+            create_post_build_script()
 
         notebook_files = get_treebeard_config().get_deglobbed_notebooks()
         if len(notebook_files) == 0:

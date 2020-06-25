@@ -14,10 +14,11 @@ jobs:
       - uses: actions/setup-python@v2
       - name: Install treebeard
         run: |
+          set -xeuo pipefail
           pip install pipenv
-          pipenv install -e ./treebeard-lib
+          pipenv install --pre -e ./treebeard-lib
           pipenv run python -c 'import treebeard'
           pipenv --rm
-          pipenv install -e treebeard
+          pipenv install --pre treebeard
           pipenv run python -c 'import treebeard'
 
