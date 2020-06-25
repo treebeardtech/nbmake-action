@@ -14,4 +14,10 @@ jobs:
       - uses: actions/setup-python@v2
       - name: Install treebeard
         run: |
-          pip install -e ./treebeard-lib
+          pip install pipenv
+          pipenv install -e ./treebeard-lib
+          pipenv run python -c 'import treebeard'
+          pipenv --rm
+          pipenv install -e treebeard
+          pipenv run python -c 'import treebeard'
+

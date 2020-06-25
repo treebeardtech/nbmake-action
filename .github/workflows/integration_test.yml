@@ -72,6 +72,7 @@ jobs:
           export_default_credentials: true
       - run: gcloud auth configure-docker
       - uses: "./"
+        id: run
         with:
           docker-registry: gcr.io/treebeard-259315/tests
           path: './integration-test/failing_build'
@@ -90,6 +91,7 @@ jobs:
           export_default_credentials: true
       - run: gcloud auth configure-docker
       - uses: "./"
+        id: run
         with:
           docker-registry: gcr.io/treebeard-259315/tests
           path: './integration-test/failing_notebook'

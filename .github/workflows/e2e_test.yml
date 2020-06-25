@@ -3,42 +3,6 @@ name: E2E Test
 on: [push]
 
 jobs:
-  # first_time_flow:
-  #   timeout-minutes: 20
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-  #       with:
-  #         project_id: ${{ secrets.GCP_PROJECT_ID }}
-  #         service_account_key: ${{ secrets.GCP_SA_KEY }}
-  #         export_default_credentials: true
-  #     - run: gcloud auth configure-docker
-  #     - uses: actions/checkout@v2
-  #     - name: Set up Python 3.7
-  #       uses: actions/setup-python@v1
-  #       with:
-  #         python-version: 3.7
-  #     - name: Run
-  #       run: ./e2e-test/new_user_test ${{ secrets.TREEBEARD_API_KEY }}
-
-  # local_install:
-  #   timeout-minutes: 20
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-  #       with:
-  #         project_id: ${{ secrets.GCP_PROJECT_ID }}
-  #         service_account_key: ${{ secrets.GCP_SA_KEY }}
-  #         export_default_credentials: true
-  #     - run: gcloud auth configure-docker
-  #     - uses: actions/checkout@v2
-  #     - name: Set up Python 3.7
-  #       uses: actions/setup-python@v1
-  #       with:
-  #         python-version: 3.7
-  #     - name: Run
-  #       run: ./e2e-test/local_test ${{ secrets.TREEBEARD_API_KEY }}
-
   logged_out:
     timeout-minutes: 20
     runs-on: ubuntu-latest
