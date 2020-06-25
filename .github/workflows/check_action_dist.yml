@@ -13,12 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: "exit 1"
+        id: 'run'
         continue-on-error: true
-      - run: '[[ "blah" == "blfah" ]]'
+      - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
 
   blahs:
     runs-on: ubuntu-latest
     steps:
-      - run: "exit 1"
+      - run: "exit 0"
+        id: 'run'
         continue-on-error: true
-      - run: '[[ "blah" == "blah" ]]'
+      - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
