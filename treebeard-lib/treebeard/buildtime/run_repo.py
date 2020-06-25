@@ -23,7 +23,7 @@ def download_archive(unzip_location: str, download_location: str, url: str):
         [
             "bash",
             "-c",
-            f'curl -o {download_location} "{url}" >/dev/null && tar -C {unzip_location} -xvf {download_location} >/dev/null',
+            f'curl -o {download_location} "{url}" >/dev/null 2>&1 && tar -C {unzip_location} -xvf {download_location} >/dev/null 2>&1',
         ],
     )
 

@@ -3,23 +3,6 @@ name: E2E Test
 on: [push]
 
 jobs:
-  logged_out:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-      - uses: actions/setup-python@v2
-      - uses: actions/checkout@v2
-        with:
-          repository: Rabscuttler/hello_treebeard
-      - uses: actions/checkout@v2
-        with:
-          path: treebeard
-      - uses: ./treebeard
   hello_treebeard:
     timeout-minutes: 20
     runs-on: ubuntu-latest
@@ -36,6 +19,7 @@ jobs:
         with:
           docker-registry: gcr.io/treebeard-259315/tests
           path: './examples/hello_treebeard'
+          debug: 'true'
 
   google_cloud_storage:
     timeout-minutes: 20
@@ -55,4 +39,6 @@ jobs:
           path: './examples/google_cloud_storage'
           notebook-env: |
             GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SA_KEY }}
+          debug: 'true'
+
 

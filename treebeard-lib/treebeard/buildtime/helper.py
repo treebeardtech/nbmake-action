@@ -55,7 +55,7 @@ def run_image(
     debug = " --debug " if treebeard_config.debug else " "
     container = client.containers.run(
         image_name,
-        f"bash -cx '({pip_treebeard} > /dev/null) && treebeard run {debug} --dockerless {upload_flag} --confirm'",
+        f"bash -cxeuo pipefail '({pip_treebeard} > /dev/null 2>&1) && treebeard run {debug} --dockerless {upload_flag} --confirm'",
         environment=env,
         detach=True,
     )
@@ -72,7 +72,7 @@ def create_start_script():
 set -xeuo pipefail
 
 echo Running treebeard/post_install.ipynb
-pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib" > /dev/null
+pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib" > /dev/null 2>&1
 
 papermill \\
   --stdout-file /dev/stdout \\
@@ -93,7 +93,7 @@ def create_post_build_script():
 set -xeuo pipefail
 
 echo Running treebeard/post_install.ipynb
-pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib" > /dev/null
+pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib" > /dev/null 2>&1
 
 papermill \\
   --stdout-file /dev/stdout \\

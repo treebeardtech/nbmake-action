@@ -18,6 +18,7 @@ jobs:
       - uses: "./"
         with:
           docker-registry: gcr.io/treebeard-259315/tests
+          debug: "true"
           path: './integration-test/conda'
 
   virtualenv:
@@ -35,6 +36,7 @@ jobs:
       - uses: "./"
         with:
           docker-registry: gcr.io/treebeard-259315/tests
+          debug: "true"
           path: './integration-test/virtualenv'
       - name: Check uploads
         run: |
@@ -58,6 +60,7 @@ jobs:
       - uses: "./"
         with:
           docker-registry: gcr.io/treebeard-259315/tests
+          debug: "true"
           path: './integration-test/dagster'
   failing_build:
     timeout-minutes: 20
@@ -75,6 +78,7 @@ jobs:
         id: run
         with:
           docker-registry: gcr.io/treebeard-259315/tests
+          debug: "true"
           path: './integration-test/failing_build'
         continue-on-error: true
       - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
@@ -94,6 +98,7 @@ jobs:
         id: run
         with:
           docker-registry: gcr.io/treebeard-259315/tests
+          debug: "true"
           path: './integration-test/failing_notebook'
         continue-on-error: true
       - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
