@@ -947,6 +947,126 @@ class ExecState extends events.EventEmitter {
 
 /***/ }),
 
+/***/ 63:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+/* @flow */
+/*::
+
+type DotenvParseOptions = {
+  debug?: boolean
+}
+
+// keys and values from src
+type DotenvParseOutput = { [string]: string }
+
+type DotenvConfigOptions = {
+  path?: string, // path to .env file
+  encoding?: string, // encoding of .env file
+  debug?: string // turn on logging for debugging purposes
+}
+
+type DotenvConfigOutput = {
+  parsed?: DotenvParseOutput,
+  error?: Error
+}
+
+*/
+
+const fs = __webpack_require__(747)
+const path = __webpack_require__(622)
+
+function log (message /*: string */) {
+  console.log(`[dotenv][DEBUG] ${message}`)
+}
+
+const NEWLINE = '\n'
+const RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*(.*)?\s*$/
+const RE_NEWLINES = /\\n/g
+const NEWLINES_MATCH = /\n|\r|\r\n/
+
+// Parses src into an Object
+function parse (src /*: string | Buffer */, options /*: ?DotenvParseOptions */) /*: DotenvParseOutput */ {
+  const debug = Boolean(options && options.debug)
+  const obj = {}
+
+  // convert Buffers before splitting into lines and processing
+  src.toString().split(NEWLINES_MATCH).forEach(function (line, idx) {
+    // matching "KEY' and 'VAL' in 'KEY=VAL'
+    const keyValueArr = line.match(RE_INI_KEY_VAL)
+    // matched?
+    if (keyValueArr != null) {
+      const key = keyValueArr[1]
+      // default undefined or missing values to empty string
+      let val = (keyValueArr[2] || '')
+      const end = val.length - 1
+      const isDoubleQuoted = val[0] === '"' && val[end] === '"'
+      const isSingleQuoted = val[0] === "'" && val[end] === "'"
+
+      // if single or double quoted, remove quotes
+      if (isSingleQuoted || isDoubleQuoted) {
+        val = val.substring(1, end)
+
+        // if double quoted, expand newlines
+        if (isDoubleQuoted) {
+          val = val.replace(RE_NEWLINES, NEWLINE)
+        }
+      } else {
+        // remove surrounding whitespace
+        val = val.trim()
+      }
+
+      obj[key] = val
+    } else if (debug) {
+      log(`did not match key and value when parsing line ${idx + 1}: ${line}`)
+    }
+  })
+
+  return obj
+}
+
+// Populates process.env from .env file
+function config (options /*: ?DotenvConfigOptions */) /*: DotenvConfigOutput */ {
+  let dotenvPath = path.resolve(process.cwd(), '.env')
+  let encoding /*: string */ = 'utf8'
+  let debug = false
+
+  if (options) {
+    if (options.path != null) {
+      dotenvPath = options.path
+    }
+    if (options.encoding != null) {
+      encoding = options.encoding
+    }
+    if (options.debug != null) {
+      debug = true
+    }
+  }
+
+  try {
+    // specifying an encoding returns a string instead of a buffer
+    const parsed = parse(fs.readFileSync(dotenvPath, { encoding }), { debug })
+
+    Object.keys(parsed).forEach(function (key) {
+      if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
+        process.env[key] = parsed[key]
+      } else if (debug) {
+        log(`"${key}" is already defined in \`process.env\` and will not be overwritten`)
+      }
+    })
+
+    return { parsed }
+  } catch (e) {
+    return { error: e }
+  }
+}
+
+module.exports.config = config
+module.exports.parse = parse
+
+
+/***/ }),
+
 /***/ 87:
 /***/ (function(module) {
 
@@ -982,10 +1102,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
 const conf_1 = __webpack_require__(540);
+const dotenv_1 = __importDefault(__webpack_require__(63));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -1016,22 +1140,25 @@ function run() {
             if (apiKey) {
                 script.push(`treebeard configure --api_key ${apiKey} --user_name "$GITHUB_REPOSITORY_OWNER"`);
             }
+            const notebookEnvObj = notebookEnv ? dotenv_1.default.parse(notebookEnv) : {};
+            const envs = [];
+            if (notebookEnvObj) {
+                for (const key of Object.keys(notebookEnvObj)) {
+                    if (debug) {
+                        console.log(`Treebeard forwarding ${key}`);
+                    }
+                    envs.push(`--env ${key} `);
+                }
+            }
+            const env = Object.assign(Object.assign({ TREEBEARD_REF: conf_1.treebeardRef }, process.env), notebookEnvObj);
             if (dockerUsername) {
-                script.push(`export DOCKER_USERNAME='${dockerUsername}'`);
+                env.DOCKER_USERNAME = dockerUsername;
             }
             if (dockerPassword) {
-                script.push(`export DOCKER_PASSWORD='${dockerPassword}'`);
+                env.DOCKER_PASSWORD = dockerPassword;
             }
             if (dockerRegistry) {
-                script.push(`export DOCKER_REGISTRY='${dockerRegistry}'`);
-            }
-            const envs = [];
-            if (notebookEnv) {
-                for (const line of notebookEnv.split('\n')) {
-                    console.log(`Treebeard forwarding ${line}`);
-                    envs.push(`--env ${line.replace(/=.*/, '')} `);
-                    script.push(`export ${line}`);
-                }
+                env.DOCKER_REGISTRY = dockerRegistry;
             }
             let tbRunCommand = `treebeard run --confirm `;
             if (apiKey) {
@@ -1050,7 +1177,7 @@ function run() {
             script.push(tbRunCommand);
             const status = yield exec.exec(`bash -c "${script.join(' && ')}"`, undefined, {
                 ignoreReturnCode: true,
-                env: Object.assign({ TREEBEARD_REF: conf_1.treebeardRef }, process.env)
+                env
             });
             // Ignore status code 2 to allow other reporting mechanisms e.g. slack
             if (status === 2) {
@@ -1359,7 +1486,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'be563389707c37df47c72d2f29263ef3243dce10';
+exports.treebeardRef = '6ecbc9bae23441817a1c363e1e8b2f35d2c6069e';
 
 
 /***/ }),

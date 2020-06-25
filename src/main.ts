@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import {treebeardRef} from './conf'
+import dotenv from 'dotenv'
 
 async function run(): Promise<void> {
   try {
@@ -44,22 +45,31 @@ async function run(): Promise<void> {
       )
     }
 
+    const notebookEnvObj = notebookEnv ? dotenv.parse(notebookEnv) : {}
+    const envs = []
+    if (notebookEnvObj) {
+      for (const key of Object.keys(notebookEnvObj)) {
+        if (debug) {
+          console.log(`Treebeard forwarding ${key}`)
+        }
+        envs.push(`--env ${key} `)
+      }
+    }
+
+    const env: {[key: string]: string} = {
+      TREEBEARD_REF: treebeardRef,
+      ...process.env,
+      ...notebookEnvObj
+    }
+
     if (dockerUsername) {
-      script.push(`export DOCKER_USERNAME='${dockerUsername}'`)
+      env.DOCKER_USERNAME = dockerUsername
     }
     if (dockerPassword) {
-      script.push(`export DOCKER_PASSWORD='${dockerPassword}'`)
+      env.DOCKER_PASSWORD = dockerPassword
     }
     if (dockerRegistry) {
-      script.push(`export DOCKER_REGISTRY='${dockerRegistry}'`)
-    }
-    const envs = []
-    if (notebookEnv) {
-      for (const line of notebookEnv.split('\n')) {
-        console.log(`Treebeard forwarding ${line}`)
-        envs.push(`--env ${line.replace(/=.*/, '')} `)
-        script.push(`export ${line}`)
-      }
+      env.DOCKER_REGISTRY = dockerRegistry
     }
 
     let tbRunCommand = `treebeard run --confirm `
@@ -88,10 +98,7 @@ async function run(): Promise<void> {
       undefined,
       {
         ignoreReturnCode: true,
-        env: {
-          TREEBEARD_REF: treebeardRef,
-          ...process.env
-        }
+        env
       }
     )
 
