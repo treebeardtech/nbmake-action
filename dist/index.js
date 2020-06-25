@@ -1011,6 +1011,7 @@ function run() {
                 return;
             }
             core.startGroup('🌲 Install Treebeard');
+            yield exec.exec(`export TREEBEARD_REF='${conf_1.treebeardRef}'`);
             yield exec.exec(`pip install git+https://github.com/treebeardtech/treebeard.git@${conf_1.treebeardRef}#subdirectory=treebeard-lib`);
             core.endGroup();
             if (apiKey) {
@@ -1358,7 +1359,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = '6d7f9787fc01718ea853484fca477fbdcc43bed4';
+exports.treebeardRef = 'e317af8525e380523ba28a98832ebd9345206dfa';
 
 
 /***/ }),
