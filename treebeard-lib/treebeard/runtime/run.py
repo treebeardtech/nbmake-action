@@ -121,8 +121,8 @@ def run_notebook(notebook_path: str) -> NotebookResult:
 
 
 def _run(
-    project_id: str,
-    notebook_id: str,
+    user_name: str,
+    repo_short_name: str,
     run_id: str,
     upload: bool,
     notebook_files: List[str],
@@ -197,9 +197,9 @@ def finish(status: int, should_upload_outputs: bool, results: str):
 
 
 def start(upload: bool = False):
-    if not treebeard_env.notebook_id:
+    if not treebeard_env.repo_short_name:
         raise Exception("No notebook ID at runtime")
-    if not treebeard_env.project_id:
+    if not treebeard_env.user_name:
         raise Exception("No project ID at buildtime")
 
     if upload:
@@ -210,8 +210,8 @@ def start(upload: bool = False):
     notebook_files = treebeard_config.get_deglobbed_notebooks()
 
     notebook_results = _run(
-        treebeard_env.project_id,
-        treebeard_env.notebook_id,
+        treebeard_env.user_name,
+        treebeard_env.repo_short_name,
         treebeard_env.run_id,
         upload,
         notebook_files,

@@ -18,12 +18,12 @@ from treebeard.conf import (
     treebeard_env,
     validate_notebook_directory,
 )
-from treebeard.helper import CliContext, get_time, sanitise_notebook_id, update
+from treebeard.helper import CliContext, get_time, sanitise_repo_short_name, update
 
 pp = pprint.PrettyPrinter(indent=2)
 
-notebook_id = treebeard_env.notebook_id
-project_id = treebeard_env.project_id
+repo_short_name = treebeard_env.repo_short_name
+user_name = treebeard_env.user_name
 
 
 @click.command()
@@ -142,14 +142,12 @@ def run(
         sys.exit()
 
     build_tag = treebeard_env.run_id
-    repo_image_name = (
-        f"{registry}/{project_id}/{sanitise_notebook_id(str(notebook_id))}:{build_tag}"
-    )
+    repo_image_name = f"{registry}/{user_name}/{sanitise_repo_short_name(str(repo_short_name))}:{build_tag}"
     click.echo(f"🌲  Building {repo_image_name} Locally\n")
     repo_url = f"file://{src_archive.name}"
     status = run_repo(
-        str(project_id),
-        str(notebook_id),
+        str(user_name),
+        str(repo_short_name),
         treebeard_env.run_id,
         build_tag,
         repo_url,

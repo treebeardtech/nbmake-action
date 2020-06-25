@@ -36,7 +36,7 @@ async function run(): Promise<void> {
 
     if (apiKey) {
       script.push(
-        `treebeard configure --api_key ${apiKey} --project_id "$GITHUB_REPOSITORY_OWNER"`
+        `treebeard configure --api_key ${apiKey} --user_name "$GITHUB_REPOSITORY_OWNER"`
       )
     }
 

@@ -1,0 +1,11 @@
+name: Check Action Dist
+
+on: [push]
+
+jobs:
+  first_time_flow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm install
+      - run: npm test

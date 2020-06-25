@@ -16,10 +16,10 @@ META_NOTEBOOKS = "treebeard/**/*ipynb"
 
 
 class TreebeardEnv(BaseModel):
-    notebook_id: Optional[
+    repo_short_name: Optional[
         str
     ] = None  # Not present when CLI is not in notebook directory
-    project_id: Optional[str] = None  # Not present when initially installing
+    user_name: Optional[str] = None  # Not present when initially installing
     run_id: str
     email: Optional[str] = None  # Not present at build time
     api_key: Optional[str] = None  # Not present at build time
@@ -83,9 +83,7 @@ else:
 
 
 def get_run_path(treebeard_env: TreebeardEnv):
-    return (
-        f"{treebeard_env.project_id}/{treebeard_env.notebook_id}/{treebeard_env.run_id}"
-    )
+    return f"{treebeard_env.user_name}/{treebeard_env.repo_short_name}/{treebeard_env.run_id}"
 
 
 def get_time():
@@ -100,7 +98,7 @@ def get_config_path():
 def validate_notebook_directory(
     treebeard_env: TreebeardEnv, treebeard_config: TreebeardConfig, upload: bool
 ):
-    if upload and treebeard_env.project_id is None:
+    if upload and treebeard_env.user_name is None:
         fatal_exit("No account config detected! Please run `treebeard configure`")
 
     if not Path("treebeard.yaml").is_file():
@@ -138,7 +136,7 @@ def get_treebeard_config() -> TreebeardConfig:
 
 def get_treebeard_env():
     """Reads variables from a local file, credentials.cfg"""
-    treebeard_project_id = os.getenv("TREEBEARD_PROJECT_ID")
+    treebeard_user_name = os.getenv("USER_NAME")
 
     run_id = os.getenv("TREEBEARD_RUN_ID")  # available at runtime
 
@@ -153,9 +151,9 @@ def get_treebeard_env():
             run_id = f"local-{int(time.time())}"
     os.environ["TREEBEARD_RUN_ID"] = run_id
 
-    notebook_id = os.getenv("TREEBEARD_NOTEBOOK_ID")
-    if not notebook_id:
-        notebook_id = Path(os.getcwd()).name
+    repo_short_name = os.getenv("REPO_SHORT_NAME")
+    if not repo_short_name:
+        repo_short_name = Path(os.getcwd()).name
 
     email = None
     api_key = os.getenv("TREEBEARD_API_KEY")
@@ -165,12 +163,12 @@ def get_treebeard_env():
         config = configparser.RawConfigParser()
         config.read(config_path)
         email = config.get("credentials", "treebeard_email")
-        treebeard_project_id = config.get("credentials", "treebeard_project_id")
+        treebeard_user_name = config.get("credentials", "treebeard_user_name")
         api_key = config.get("credentials", "treebeard_api_key")
 
     return TreebeardEnv(
-        notebook_id=notebook_id,
-        project_id=treebeard_project_id,
+        repo_short_name=repo_short_name,
+        user_name=treebeard_user_name,
         run_id=run_id,
         email=email,
         api_key=api_key,
@@ -182,10 +180,10 @@ treebeard_config = get_treebeard_config()
 treebeard_env = get_treebeard_env()
 run_path = get_run_path(treebeard_env)
 secrets_endpoint = (
-    f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/secrets"
+    f"{api_url}/{treebeard_env.user_name}/{treebeard_env.repo_short_name}/secrets"
 )
 runner_endpoint = (
-    f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/runs"
+    f"{api_url}/{treebeard_env.user_name}/{treebeard_env.repo_short_name}/runs"
 )
 service_status_endpoint = f"{api_url}/service_status"
 

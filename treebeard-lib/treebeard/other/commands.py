@@ -15,7 +15,7 @@ from treebeard.version import get_version
 pp = pprint.PrettyPrinter(indent=2)
 
 
-notebook_id = treebeard_env.notebook_id
+repo_short_name = treebeard_env.repo_short_name
 
 warnings.filterwarnings(
     "ignore", "Your application has authenticated using end user credentials"
@@ -25,10 +25,10 @@ warnings.filterwarnings(
 @click.command()
 @click.option("--email")
 @click.option("--api_key")
-@click.option("--project_id")
-def configure(email: str, api_key: str, project_id: str):
+@click.option("--user_name")
+def configure(email: str, api_key: str, user_name: str):
     """Register with Treebeard services"""
-    set_credentials(email, api_key, project_id)
+    set_credentials(email, api_key, user_name)
 
 
 @click.command()

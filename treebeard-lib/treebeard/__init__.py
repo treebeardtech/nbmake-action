@@ -12,8 +12,8 @@ from treebeard.notebooks.commands import run
 from treebeard.other.commands import config, configure, setup, version
 from treebeard.sentry_setup import setup_sentry
 
-project_id = treebeard_env.project_id
-notebook_id = treebeard_env.notebook_id
+user_name = treebeard_env.user_name
+repo_short_name = treebeard_env.repo_short_name
 
 warnings.filterwarnings(
     "ignore", "Your application has authenticated using end user credentials"

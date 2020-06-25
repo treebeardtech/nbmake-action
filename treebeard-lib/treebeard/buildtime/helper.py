@@ -8,8 +8,8 @@ from treebeard.conf import treebeard_config, treebeard_env
 
 
 def run_image(
-    project_id: str,
-    notebook_id: str,
+    user_name: str,
+    repo_short_name: str,
     run_id: str,
     image_name: str,
     envs_to_forward: List[str],
@@ -20,8 +20,8 @@ def run_image(
     pip_treebeard = f"pip install -U git+https://github.com/treebeardtech/treebeard.git@local-docker#subdirectory=treebeard-lib"
 
     env: Dict[str, str] = {
-        "TREEBEARD_PROJECT_ID": project_id,
-        "TREEBEARD_NOTEBOOK_ID": notebook_id,
+        "USER_NAME": user_name,
+        "REPO_SHORT_NAME": repo_short_name,
         "TREEBEARD_START_TIME": os.environ["TREEBEARD_START_TIME"],
         "TREEBEARD_RUN_ID": os.environ["TREEBEARD_RUN_ID"],
     }

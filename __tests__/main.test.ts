@@ -2,6 +2,7 @@ import {wait} from '../src/wait'
 import * as process from 'process'
 import * as cp from 'child_process'
 import * as path from 'path'
+import {branch} from '../src/conf'
 
 test('throws invalid number', async () => {
   const input = parseInt('foo', 10)
@@ -14,6 +15,14 @@ test('wait 500 ms', async () => {
   const end = new Date()
   var delta = Math.abs(end.getTime() - start.getTime())
   expect(delta).toBeGreaterThan(450)
+})
+
+test('branch is correct', async () => {
+  const currentBranch = cp
+    .execSync('git rev-parse --abbrev-ref HEAD')
+    .toString()
+    .replace('\n', '')
+  expect(branch).toBe(currentBranch)
 })
 
 // shows how the runner will run a javascript action with env / stdout protocol

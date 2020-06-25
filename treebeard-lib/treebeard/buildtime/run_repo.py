@@ -11,7 +11,7 @@ from docker.errors import ImageNotFound, NotFound  # type: ignore
 
 from treebeard.buildtime.helper import run_image
 from treebeard.conf import get_treebeard_config, registry, run_path
-from treebeard.helper import sanitise_notebook_id, update
+from treebeard.helper import sanitise_repo_short_name, update
 from treebeard.runtime.run import upload_meta_nbs
 
 
@@ -34,8 +34,8 @@ def fetch_image_for_cache(client: Any, image_name: str):
 
 
 def run_repo(
-    project_id: str,
-    notebook_id: str,
+    user_name: str,
+    repo_short_name: str,
     run_id: str,
     build_tag: str,
     repo_url: str,
@@ -87,12 +87,12 @@ def run_repo(
         )
     try:
         # Create bundle directory
-        abs_notebook_dir = f"/tmp/{notebook_id}"
+        abs_notebook_dir = f"/tmp/{repo_short_name}"
         Path(abs_notebook_dir).mkdir(parents=True, exist_ok=True)
         os.chdir(abs_notebook_dir)
 
         # Add repo to bundle
-        download_archive(abs_notebook_dir, f"/tmp/{notebook_id}_repo.tgz", repo_url)
+        download_archive(abs_notebook_dir, f"/tmp/{repo_short_name}_repo.tgz", repo_url)
 
         if os.path.exists("treebeard/container_setup.ipynb"):
             copyfile(f"{dirname}/../r2d/start", "start")
@@ -117,7 +117,7 @@ def run_repo(
         subprocess.run(["ls", "-la", abs_notebook_dir])
 
     # Pull down images to use in cache
-    image_name = f"{registry}/{sanitise_notebook_id(project_id)}/{sanitise_notebook_id(notebook_id)}"
+    image_name = f"{registry}/{sanitise_repo_short_name(user_name)}/{sanitise_repo_short_name(repo_short_name)}"
 
     # Build image but don't run
     versioned_image_name = f"{image_name}:{build_tag}"
@@ -166,7 +166,12 @@ def run_repo(
 
     click.echo(f"Image built successfully, now running.")
     status = run_image(
-        project_id, notebook_id, run_id, versioned_image_name, envs_to_forward, upload
+        user_name,
+        repo_short_name,
+        run_id,
+        versioned_image_name,
+        envs_to_forward,
+        upload,
     )
     if status != 0:
         click.echo(f"Image run failed, not updated {passing_image_name}")

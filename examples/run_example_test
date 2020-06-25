@@ -29,6 +29,6 @@ if [[ -f "Pipfile" ]]; then
     . "$(pipenv --venv)/bin/activate"
 fi
 
-treebeard configure --email robot@treebeard.io --api_key "$api_key" --project_id d8a0c5b6c9
+treebeard configure --email robot@treebeard.io --api_key "$api_key" --user_name d8a0c5b6c9
 
 treebeard run --confirm --upload --env GCP_SERVICE_ACCOUNT_KEY

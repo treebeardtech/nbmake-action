@@ -23,7 +23,7 @@ jobs:
           python -m pip install --upgrade pip pipenv
           pip install -e ./treebeard-lib
       - name: Add credentials
-        run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }} --project_id d8a0c5b6c9
+        run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }} --user_name d8a0c5b6c9
       - name: Run Test
         run: |
           cd integration-test/conda
@@ -49,7 +49,7 @@ jobs:
           python -m pip install --upgrade pip pipenv
           pip install -e ./treebeard-lib
       - name: Add credentials
-        run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }} --project_id d8a0c5b6c9
+        run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }} --user_name d8a0c5b6c9
       - name: Run Test
         run: |
           cd integration-test/virtualenv
@@ -79,7 +79,7 @@ jobs:
           export_default_credentials: true
       - run: gcloud auth configure-docker
       - name: Add credentials
-        run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }} --project_id d8a0c5b6c9
+        run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }} --user_name d8a0c5b6c9
       - name: Run Local
         run: |
           cd integration-test/dagster
@@ -110,7 +110,7 @@ jobs:
           python -m pip install --upgrade pip pipenv
           pip install -e ./treebeard-lib
       - name: Add credentials
-        run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }} --project_id d8a0c5b6c9
+        run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }} --user_name d8a0c5b6c9
       - name: Run Buildtime Failure Test
         run: |
           cd integration-test/failing_build
@@ -135,7 +135,7 @@ jobs:
           python -m pip install --upgrade pip pipenv
           pip install -e ./treebeard-lib
       - name: Add credentials
-        run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }} --project_id d8a0c5b6c9
+        run: treebeard configure --email robot@treebeard.io --api_key ${{ secrets.TREEBEARD_API_KEY }} --user_name d8a0c5b6c9
       - name: Run Runtime Failure Test
         run: |
           cd integration-test/failing_notebook

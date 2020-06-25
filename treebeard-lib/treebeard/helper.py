@@ -23,17 +23,17 @@ from treebeard.version import get_version
 version = get_version()
 
 
-def set_credentials(email: str, key: str, project_id: str):
+def set_credentials(email: str, key: str, user_name: str):
     """Create user credentials"""
     config = configparser.RawConfigParser()
     config.add_section("credentials")
     config.set("credentials", "TREEBEARD_EMAIL", email)
-    config.set("credentials", "TREEBEARD_PROJECT_ID", project_id)
+    config.set("credentials", "USER_NAME", user_name)
     config.set("credentials", "TREEBEARD_API_KEY", key)
     with open(config_path, "w") as configfile:
         config.write(configfile)
     click.echo(f"🔑  Config saved in {config_path}")
-    return project_id
+    return user_name
 
 
 def check_for_updates():
@@ -63,8 +63,8 @@ class CliContext(BaseModel):
     debug: bool
 
 
-def sanitise_notebook_id(notebook_id: str) -> str:
-    out = notebook_id
+def sanitise_repo_short_name(repo_short_name: str) -> str:
+    out = repo_short_name
     out = out.replace(" ", "-")
     out = out.replace(".", "-")
     return out.lower()
@@ -118,7 +118,7 @@ def update(status: str):
     if status in ["SUCCESS", "FAILURE"]:
         data["end_time"] = get_time()
 
-    update_url = f"{api_url}/{treebeard_env.project_id}/{treebeard_env.notebook_id}/{treebeard_env.run_id}/update"
+    update_url = f"{api_url}/{treebeard_env.user_name}/{treebeard_env.repo_short_name}/{treebeard_env.run_id}/update"
     resp = requests.post(  # type:ignore
         update_url, json=data, headers={"api_key": treebeard_env.api_key},
     )
