@@ -56,7 +56,7 @@ async function run(): Promise<void> {
         const value = notebookEnvObj[key]
         if (value.startsWith('"') || value.startsWith("'")) {
           console.log(
-            `❗ Warning: ${key} starts with a quote. Check notebook-env is correct.`
+            `❗ Warning: ${key} starts with a quote, notebook-env should not wrap values in quotes.`
           )
         }
         envs.push(`--env ${key} `)
