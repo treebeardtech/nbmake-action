@@ -138,7 +138,6 @@ def get_treebeard_config() -> TreebeardConfig:
 
 def get_treebeard_env():
     """Reads variables from a local file, credentials.cfg"""
-    user_name = os.getenv("TREEBEARD_USER_NAME")
 
     run_id = os.getenv("TREEBEARD_RUN_ID")  # available at runtime
 
@@ -161,12 +160,16 @@ def get_treebeard_env():
     api_key = os.getenv("TREEBEARD_API_KEY")
 
     # .treebeard config is present in CLI in place of env variables
+    user_name = "local-user"
     if os.path.exists(config_path):
         config = configparser.RawConfigParser()
         config.read(config_path)
         email = config.get("credentials", "email")
         user_name = config.get("credentials", "user_name")
         api_key = config.get("credentials", "api_key")
+
+    if "TREEBEARD_USER_NAME" in os.environ:
+        user_name = os.environ["TREEBEARD_USER_NAME"]
 
     def get_branch():
         if os.getenv("CI"):
