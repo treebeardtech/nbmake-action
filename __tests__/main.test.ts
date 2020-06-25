@@ -24,6 +24,7 @@ test('parse notebook-env', async () => {
   const file = fs.readFileSync('./__tests__/test.yml', 'utf8')
   const obj = yaml.parse(file)
   const parsed = dotenv.parse(obj['notebook-env'])
+  console.log(parsed)
   expect(parsed).toStrictEqual({FOO: 'bar', baz: '42'})
 })
 

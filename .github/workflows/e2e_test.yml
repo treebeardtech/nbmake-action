@@ -40,7 +40,7 @@ jobs:
           docker-registry: gcr.io/treebeard-259315/tests
           path: './examples/google_cloud_storage'
           notebook-env: |
-            GCP_SERVICE_ACCOUNT_KEY=${{ secrets.GCP_SA_KEY }}
+            GCP_SERVICE_ACCOUNT_KEY="${{ secrets.GCP_SA_KEY }}"
           debug: 'true'
 
 
@@ -63,6 +63,8 @@ jobs:
           docker-registry: gcr.io/treebeard-259315/tests
           debug: "true"
           path: './integration-test/virtualenv'
+        env:
+          TREEBEARD_USER_NAME: d8a0c5b6c9
       - name: Check uploads
         run: |
           branch=$(git rev-parse --abbrev-ref HEAD)
