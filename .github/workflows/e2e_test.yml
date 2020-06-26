@@ -15,12 +15,12 @@ jobs:
       - run: gcloud auth configure-docker
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - uses: './'
+      - uses: "./"
         with:
           api-key: ${{ secrets.TREEBEARD_API_KEY }}
-          docker-registry: gcr.io/treebeard-259315/tests
-          path: './examples/hello_treebeard'
-          debug: 'true'
+          docker-image-name: gcr.io/treebeard-259315/tests/custom-name/hello
+          path: "./examples/hello_treebeard"
+          debug: "true"
 
   google_cloud_storage:
     timeout-minutes: 20
@@ -34,16 +34,14 @@ jobs:
       - run: gcloud auth configure-docker
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - uses: './'
+      - uses: "./"
         with:
           api-key: ${{ secrets.TREEBEARD_API_KEY }}
           docker-registry: gcr.io/treebeard-259315/tests
-          path: './examples/google_cloud_storage'
-          debug: 'true'
+          path: "./examples/google_cloud_storage"
+          debug: "true"
         env:
           TB_GCP_SERVICE_ACCOUNT_KEY: "${{ secrets.GCP_SA_KEY }}" # TB_ prefix directs treebeard to forward env to container
-
-
 
   virtualenv:
     timeout-minutes: 20
@@ -62,9 +60,9 @@ jobs:
           api-key: ${{ secrets.TREEBEARD_API_KEY }}
           docker-registry: gcr.io/treebeard-259315/tests
           debug: "true"
-          path: './integration-test/virtualenv'
+          path: "./integration-test/virtualenv"
         env:
-          TREEBEARD_USER_NAME: 'd8a0c5b6c9'
+          TREEBEARD_USER_NAME: "d8a0c5b6c9"
       - name: Check uploads
         run: |
           branch=$(git rev-parse --abbrev-ref HEAD)

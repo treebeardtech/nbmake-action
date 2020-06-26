@@ -81,7 +81,7 @@ def get_time():
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
-def update(status: Optional[str]):
+def update(status: Optional[str] = None):
     data = {}
     data["status"] = status
 

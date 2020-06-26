@@ -8,7 +8,6 @@ from requests import Response
 from sentry_sdk import capture_exception, capture_message  # type: ignore
 
 from treebeard.conf import api_url, treebeard_config
-
 from treebeard.helper import update
 
 mime: Any = magic.Magic(mime=True)  # type: ignore

@@ -118,7 +118,8 @@ def run_repo(
         subprocess.run(["ls", "-la", abs_notebook_dir])
 
     # Pull down images to use in cache
-    image_name = f"{registry}/{sanitise_repo_short_name(user_name)}/{sanitise_repo_short_name(repo_short_name)}"
+    default_image_name = f"{registry}/{sanitise_repo_short_name(user_name)}/{sanitise_repo_short_name(repo_short_name)}"
+    image_name = os.getenv("TREEBEARD_IMAGE_NAME", default_image_name)
 
     # Build image but don't run
     versioned_image_name = f"{image_name}:{build_tag}"

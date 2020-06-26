@@ -9,6 +9,7 @@ async function run(): Promise<void> {
     const dockerUsername = core.getInput('docker-username')
     const dockerPassword = core.getInput('docker-password')
     const dockerRegistry = core.getInput('docker-registry')
+    const dockerImageName = core.getInput('docker-image-name')
     const useDocker = core.getInput('use-docker').toLowerCase() === 'true'
     const debug = core.getInput('debug').toLowerCase() === 'true'
     const path = core.getInput('path')
@@ -67,6 +68,10 @@ async function run(): Promise<void> {
     }
     if (dockerRegistry) {
       env.DOCKER_REGISTRY = dockerRegistry
+    }
+
+    if (dockerImageName) {
+      env.TREEBEARD_IMAGE_NAME = dockerImageName
     }
 
     let tbRunCommand = `treebeard run --confirm `

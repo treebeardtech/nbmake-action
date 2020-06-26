@@ -994,6 +994,7 @@ function run() {
             const dockerUsername = core.getInput('docker-username');
             const dockerPassword = core.getInput('docker-password');
             const dockerRegistry = core.getInput('docker-registry');
+            const dockerImageName = core.getInput('docker-image-name');
             const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
             const debug = core.getInput('debug').toLowerCase() === 'true';
             const path = core.getInput('path');
@@ -1033,6 +1034,9 @@ function run() {
             }
             if (dockerRegistry) {
                 env.DOCKER_REGISTRY = dockerRegistry;
+            }
+            if (dockerImageName) {
+                env.TREEBEARD_IMAGE_NAME = dockerImageName;
             }
             let tbRunCommand = `treebeard run --confirm `;
             if (apiKey) {
@@ -1360,7 +1364,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = '6aae4ad50227a94cfb540777396160188afda0ab';
+exports.treebeardRef = '9c217686992a3d41744b439865ca09a4ebdd86a9';
 
 
 /***/ }),

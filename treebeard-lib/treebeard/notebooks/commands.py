@@ -13,17 +13,11 @@ import yaml
 
 from treebeard.buildtime.run_repo import run_repo
 from treebeard.conf import (
-    registry,
     treebeard_config,
     treebeard_env,
     validate_notebook_directory,
 )
-from treebeard.helper import (
-    CliContext,
-    get_time,
-    sanitise_repo_short_name,
-    update,
-)
+from treebeard.helper import CliContext, get_time, update
 
 pp = pprint.PrettyPrinter(indent=2)
 
@@ -151,8 +145,6 @@ def run(
         sys.exit()
 
     build_tag = treebeard_env.run_id
-    repo_image_name = f"{registry}/{user_name}/{sanitise_repo_short_name(str(repo_short_name))}:{build_tag}"
-    click.echo(f"🌲  Building {repo_image_name} Locally\n")
     repo_url = f"file://{src_archive.name}"
 
     status = run_repo(
