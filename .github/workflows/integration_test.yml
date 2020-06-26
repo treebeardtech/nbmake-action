@@ -35,9 +35,13 @@ jobs:
       - run: gcloud auth configure-docker
       - uses: "./"
         with:
+          api-key: ${{ secrets.TREEBEARD_API_KEY }}
           docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
           path: './integration-test/dagster'
+      - run: |
+          wget "https://api.treebeard.io/d8a0c5b6c9/dagster/$branch/treebeard/container_setup.ipynb"
+
   failing_build:
     timeout-minutes: 20
     runs-on: ubuntu-latest

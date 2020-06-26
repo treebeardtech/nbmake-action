@@ -67,11 +67,12 @@ def run_image(
 
 
 def create_start_script():
+    notebook = "treebeard/container_setup.ipynb"
     script = f"""
 #!/usr/bin/env bash
 set -xeu
 
-echo Running treebeard/post_install.ipynb
+echo Running {notebook}
 pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib" > /dev/null 2>&1
 
 papermill \\
@@ -79,8 +80,8 @@ papermill \\
   --stderr-file /dev/stderr \\
   --kernel python3 \\
   --no-progress-bar \\
-  treebeard/post_install.ipynb \\
-  treebeard/post_install.ipynb \\
+  {notebook} \\
+  {notebook} \\
 """
 
     with open("start", "w") as start:
@@ -88,11 +89,12 @@ papermill \\
 
 
 def create_post_build_script():
+    notebook = "treebeard/post_install.ipynb"
     script = f"""
 #!/usr/bin/env bash
 set -xeu
 
-echo Running treebeard/post_install.ipynb
+echo Running {notebook}
 pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib" > /dev/null 2>&1
 
 papermill \\
@@ -100,8 +102,8 @@ papermill \\
   --stderr-file /dev/stderr \\
   --kernel python3 \\
   --no-progress-bar \\
-  treebeard/post_install.ipynb \\
-  treebeard/post_install.ipynb \\
+  {notebook} \\
+  {notebook} \\
 
 """
 
