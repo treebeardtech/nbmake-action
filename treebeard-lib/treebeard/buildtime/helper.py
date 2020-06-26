@@ -82,6 +82,8 @@ papermill \\
   --no-progress-bar \\
   {notebook} \\
   {notebook} \\
+
+exec "$@"
 """
 
     with open("start", "w") as start:
