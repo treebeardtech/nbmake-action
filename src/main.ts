@@ -1,7 +1,6 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import {treebeardRef} from './conf'
-import dotenv from 'dotenv'
 
 async function run(): Promise<void> {
   try {
@@ -10,7 +9,6 @@ async function run(): Promise<void> {
     const dockerUsername = core.getInput('docker-username')
     const dockerPassword = core.getInput('docker-password')
     const dockerRegistry = core.getInput('docker-registry')
-    const notebookEnv = core.getInput('notebook-env')
     const useDocker = core.getInput('use-docker').toLowerCase() === 'true'
     const debug = core.getInput('debug').toLowerCase() === 'true'
     const path = core.getInput('path')
@@ -45,24 +43,16 @@ async function run(): Promise<void> {
       )
     }
 
-    const notebookEnvObj = notebookEnv ? dotenv.parse(notebookEnv) : {}
-    const envs = []
-    if (notebookEnvObj) {
-      for (const key of Object.keys(notebookEnvObj)) {
-        const value = notebookEnvObj[key]
-        if (value.startsWith('"') || value.startsWith("'")) {
-          console.log(
-            `❗ Warning: ${key} starts with a quote, notebook-env should not wrap values in quotes.`
-          )
-        }
-        envs.push(`--env ${key} `)
-      }
-    }
-
     const env: {[key: string]: string} = {
       TREEBEARD_REF: treebeardRef,
-      ...process.env,
-      ...notebookEnvObj
+      ...process.env
+    }
+
+    const envsToFwd = []
+    for (const key of Object.keys(env)) {
+      if (key.startsWith('TB_')) {
+        envsToFwd.push(` --env ${key} `)
+      }
     }
 
     if (debug) {
@@ -84,7 +74,7 @@ async function run(): Promise<void> {
       tbRunCommand += ' --upload '
     }
 
-    tbRunCommand += envs.join(' ')
+    tbRunCommand += envsToFwd.join(' ')
 
     if (notebooks) {
       tbRunCommand += ` --notebooks '${notebooks}' `

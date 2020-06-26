@@ -18,9 +18,6 @@ inputs:
   docker-registry:
     description: ""
     required: false
-  notebook-env:
-    description: "env vars"
-    required: false
   use-docker:
     description: "run treebeard inside repo2docker"
     required: false
