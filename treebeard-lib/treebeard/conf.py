@@ -198,5 +198,3 @@ runner_endpoint = (
     f"{api_url}/{treebeard_env.user_name}/{treebeard_env.repo_short_name}/runs"
 )
 service_status_endpoint = f"{api_url}/service_status"
-
-registry = os.getenv("DOCKER_REGISTRY", "gcr.io/treebeard-259315/projects")

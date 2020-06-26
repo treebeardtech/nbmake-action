@@ -15,9 +15,6 @@ inputs:
   docker-password:
     description: ""
     required: false
-  docker-registry:
-    description: ""
-    required: false
   docker-image-name:
     description: "the name of the image built by treebeard"
     required: false

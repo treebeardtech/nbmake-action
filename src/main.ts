@@ -8,7 +8,6 @@ async function run(): Promise<void> {
     const notebooks = core.getInput('notebooks')
     const dockerUsername = core.getInput('docker-username')
     const dockerPassword = core.getInput('docker-password')
-    const dockerRegistry = core.getInput('docker-registry')
     const dockerImageName = core.getInput('docker-image-name')
     const useDocker = core.getInput('use-docker').toLowerCase() === 'true'
     const debug = core.getInput('debug').toLowerCase() === 'true'
@@ -66,10 +65,6 @@ async function run(): Promise<void> {
     if (dockerPassword) {
       env.DOCKER_PASSWORD = dockerPassword
     }
-    if (dockerRegistry) {
-      env.DOCKER_REGISTRY = dockerRegistry
-    }
-
     if (dockerImageName) {
       env.TREEBEARD_IMAGE_NAME = dockerImageName
     }

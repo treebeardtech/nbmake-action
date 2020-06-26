@@ -13,7 +13,7 @@ from treebeard.buildtime.helper import (
     create_start_script,
     run_image,
 )
-from treebeard.conf import get_treebeard_config, registry, run_path
+from treebeard.conf import get_treebeard_config, run_path
 from treebeard.helper import sanitise_repo_short_name, update
 from treebeard.runtime.run import upload_meta_nbs
 
@@ -76,14 +76,14 @@ def run_repo(
 
     client: Any = docker.from_env()  # type: ignore
 
-    use_docker_registry = os.getenv("DOCKER_REGISTRY")
+    use_docker_registry = os.getenv("TREEBEARD_IMAGE_NAME")
     if (
         os.getenv("DOCKER_USERNAME")
         and os.getenv("DOCKER_PASSWORD")
         and use_docker_registry
     ):
         subprocess.check_output(
-            f"printenv DOCKER_PASSWORD | docker login -u {os.getenv('DOCKER_USERNAME')} --password-stdin {os.getenv('DOCKER_REGISTRY')}",
+            f"printenv DOCKER_PASSWORD | docker login -u {os.getenv('DOCKER_USERNAME')} --password-stdin {os.getenv('TREEBEARD_IMAGE_NAME')}",
             shell=True,
         )
     try:
@@ -118,7 +118,7 @@ def run_repo(
         subprocess.run(["ls", "-la", abs_notebook_dir])
 
     # Pull down images to use in cache
-    default_image_name = f"{registry}/{sanitise_repo_short_name(user_name)}/{sanitise_repo_short_name(repo_short_name)}"
+    default_image_name = f"{sanitise_repo_short_name(user_name)}/{sanitise_repo_short_name(repo_short_name)}"
     image_name = os.getenv("TREEBEARD_IMAGE_NAME", default_image_name)
 
     # Build image but don't run
@@ -164,6 +164,18 @@ def run_repo(
             click.echo(
                 f"🐳❌ Failed to push image, will try again on success\n{format_exc()}"
             )
+    else:
+        click.echo(
+            f"""🐳 Not pushing docker image as no registry is configured. 
+
+Use the following config to enable layer caching.
+
+with:
+  docker-username: "${{ secrets.DOCKER_USERNAME }}"
+  docker-password: "${{ secrets.DOCKER_PASSWORD }}"
+  docker-image-name: docker.io/my-user/my-repo
+"""
+        )
 
     click.echo(f"Image built successfully, now running.")
     status = run_image(

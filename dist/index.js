@@ -993,7 +993,6 @@ function run() {
             const notebooks = core.getInput('notebooks');
             const dockerUsername = core.getInput('docker-username');
             const dockerPassword = core.getInput('docker-password');
-            const dockerRegistry = core.getInput('docker-registry');
             const dockerImageName = core.getInput('docker-image-name');
             const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
             const debug = core.getInput('debug').toLowerCase() === 'true';
@@ -1031,9 +1030,6 @@ function run() {
             }
             if (dockerPassword) {
                 env.DOCKER_PASSWORD = dockerPassword;
-            }
-            if (dockerRegistry) {
-                env.DOCKER_REGISTRY = dockerRegistry;
             }
             if (dockerImageName) {
                 env.TREEBEARD_IMAGE_NAME = dockerImageName;
@@ -1364,7 +1360,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = '2d3071741b086909a609931fe077799e90e7d23d';
+exports.treebeardRef = '412e79840642a54fec30dfeb1ad8616831fce080';
 
 
 /***/ }),
