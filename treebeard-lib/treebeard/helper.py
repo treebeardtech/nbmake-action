@@ -83,7 +83,8 @@ def get_time():
 
 def update(status: Optional[str] = None):
     data = {}
-    data["status"] = status
+    if status:
+        data["status"] = status
 
     # Available at repotime
     workflow = os.getenv("GITHUB_WORKFLOW")
