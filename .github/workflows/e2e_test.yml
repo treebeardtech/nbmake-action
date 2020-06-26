@@ -21,7 +21,7 @@ jobs:
           docker-image-name: gcr.io/treebeard-259315/tests/custom-name/hello
           path: "./examples/hello_treebeard"
           debug: "true"
-      - run: docker inspect --type=image gcr.io/treebeard-259315/tests/custom-name/hello
+      - run: docker inspect --type=image "gcr.io/treebeard-259315/tests/custom-name/hello:$(git rev-parse --abbrev-ref HEAD)-latest"
 
   google_cloud_storage:
     timeout-minutes: 20
