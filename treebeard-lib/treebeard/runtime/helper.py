@@ -9,7 +9,7 @@ from sentry_sdk import capture_exception, capture_message  # type: ignore
 
 from treebeard.conf import api_url, treebeard_config
 
-# from treebeard.helper import update
+from treebeard.helper import update
 
 mime: Any = magic.Magic(mime=True)  # type: ignore
 
@@ -31,7 +31,7 @@ def upload_artifact(
     status: Optional[str],
     set_as_thumbnail: bool = False,
 ):
-    log(f"Saving {filename} to {upload_path}")
+    log(f"Uploading {filename} to {upload_path}\n")
     content_type: str = mime.from_file(filename)
 
     get_url_params = {"content_type": content_type}
@@ -45,23 +45,25 @@ def upload_artifact(
             f"{api_url}/get_upload_url/{upload_path}", params=get_url_params,
         )
         if resp.status_code != 200:
-            raise (
-                Exception(
-                    f"Get signed url failed for {filename}, {resp.status_code}\n{resp.text}"
-                )
+            msg = (
+                f"Get signed url failed for {filename}, {resp.status_code}\n{resp.text}"
             )
+            capture_message(msg)
+            raise (Exception(msg))
         signed_url: str = resp.text
         put_resp = requests.put(signed_url, data, headers=put_object_headers,)  # type: ignore
         if put_resp.status_code != 200:
-            raise (
-                Exception(
-                    f"Put object failed for {filename}, {put_resp.status_code}\n{put_resp.text}"
-                )
-            )
+            msg = f"Put object failed for {filename}, {put_resp.status_code}\n{put_resp.text}"
+            capture_message(msg)
+            raise (Exception(msg))
 
         qs = "set_as_thumbnail=true" if set_as_thumbnail else ""
-        requests.post(f"{api_url}/{upload_path}/create_extras?{qs}")  # type: ignore
-    # update(status="WORKING") TODO ensure we don't update the status or know the correct one
+        extras_resp = requests.post(f"{api_url}/{upload_path}/create_extras?{qs}")  # type: ignore
+        if put_resp.status_code != 200:
+            msg = f"Extras failed for {filename}, {extras_resp.status_code}\n{extras_resp.text}"
+            capture_message(msg)
+
+    update()
 
 
 def get_failed_nb_details(nb_dict: Any) -> Tuple[str, int, str]:

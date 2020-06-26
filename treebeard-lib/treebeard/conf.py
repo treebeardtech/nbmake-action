@@ -152,7 +152,7 @@ def get_treebeard_env():
             run_id = f"local-{int(time.time())}"
     os.environ["TREEBEARD_RUN_ID"] = run_id
 
-    repo_short_name = os.getenv("REPO_SHORT_NAME")
+    repo_short_name = os.getenv("TREEBEARD_REPO_SHORT_NAME")
     if not repo_short_name:
         repo_short_name = Path(os.getcwd()).name
 

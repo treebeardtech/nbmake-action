@@ -21,7 +21,7 @@ def run_image(
 
     env: Dict[str, str] = {
         "TREEBEARD_USER_NAME": user_name,
-        "REPO_SHORT_NAME": repo_short_name,
+        "TREEBEARD_REPO_SHORT_NAME": repo_short_name,
         "TREEBEARD_START_TIME": os.environ["TREEBEARD_START_TIME"],
         "TREEBEARD_RUN_ID": os.environ["TREEBEARD_RUN_ID"],
     }

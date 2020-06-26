@@ -81,10 +81,9 @@ def get_time():
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
-def update(status: str):
-    data = {
-        "status": status,
-    }
+def update(status: Optional[str]):
+    data = {}
+    data["status"] = status
 
     # Available at repotime
     workflow = os.getenv("GITHUB_WORKFLOW")
