@@ -80,9 +80,9 @@ jobs:
           path: "./integration-test/virtualenv"
         env:
           TREEBEARD_USER_NAME: "d8a0c5b6c9"
-      - name: Check uploads
-        run: |
-          branch=$(git rev-parse --abbrev-ref HEAD)
-          wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/main.ipynb"
-          wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/another.ipynb"
-          wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/subdir/another.ipynb"
+      # - name: Check uploads
+      #   run: |
+      #     branch=$(git rev-parse --abbrev-ref HEAD)
+      #     wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/main.ipynb"
+      #     wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/another.ipynb"
+      #     wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/subdir/another.ipynb"
