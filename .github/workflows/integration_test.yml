@@ -19,7 +19,7 @@ jobs:
         with:
           docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
-          path: './integration-test/conda'
+          path: "./integration-test/conda"
 
   dagster:
     timeout-minutes: 20
@@ -38,10 +38,10 @@ jobs:
           api-key: ${{ secrets.TREEBEARD_API_KEY }}
           docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
-          path: './integration-test/dagster'
-      - run: |
-          branch=$(git rev-parse --abbrev-ref HEAD)
-          wget "https://api.treebeard.io/d8a0c5b6c9/dagster/$branch/treebeard/container_setup.ipynb"
+          path: "./integration-test/dagster"
+      # - run: |
+      #     branch=$(git rev-parse --abbrev-ref HEAD)
+      #     wget "https://api.treebeard.io/d8a0c5b6c9/dagster/$branch/treebeard/container_setup.ipynb"
 
   failing_build:
     timeout-minutes: 20
@@ -60,7 +60,7 @@ jobs:
         with:
           docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
-          path: './integration-test/failing_build'
+          path: "./integration-test/failing_build"
         continue-on-error: true
       - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
   failing_notebook:
@@ -80,6 +80,6 @@ jobs:
         with:
           docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
-          path: './integration-test/failing_notebook'
+          path: "./integration-test/failing_notebook"
         continue-on-error: true
       - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
