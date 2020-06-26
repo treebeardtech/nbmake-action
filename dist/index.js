@@ -994,9 +994,13 @@ function run() {
             const dockerUsername = core.getInput('docker-username');
             const dockerPassword = core.getInput('docker-password');
             const dockerImageName = core.getInput('docker-image-name');
+            const dockerRegistryPrefix = core.getInput('docker-registry-prefix');
             const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
             const debug = core.getInput('debug').toLowerCase() === 'true';
             const path = core.getInput('path');
+            if (dockerUsername && dockerPassword === '') {
+                throw new Error('Docker username is supplied but password is an empty string, are you missing a secret?');
+            }
             process.chdir(path);
             const script = [];
             core.startGroup('Checking Python is Installed');
@@ -1022,9 +1026,6 @@ function run() {
                     envsToFwd.push(` --env ${key} `);
                 }
             }
-            if (debug) {
-                console.log(`Treebeard submitting env:\n${env}`);
-            }
             if (dockerUsername) {
                 env.DOCKER_USERNAME = dockerUsername;
             }
@@ -1033,6 +1034,9 @@ function run() {
             }
             if (dockerImageName) {
                 env.TREEBEARD_IMAGE_NAME = dockerImageName;
+            }
+            if (dockerRegistryPrefix) {
+                env.DOCKER_REGISTRY_PREFIX = dockerRegistryPrefix;
             }
             let tbRunCommand = `treebeard run --confirm `;
             if (apiKey) {
@@ -1049,6 +1053,9 @@ function run() {
                 tbRunCommand += ' --debug ';
             }
             script.push(tbRunCommand);
+            if (debug) {
+                console.log(`Treebeard submitting env:\n${Object.keys(env)}`);
+            }
             const status = yield exec.exec(`bash -c "${script.join(' && ')}"`, undefined, {
                 ignoreReturnCode: true,
                 env
@@ -1360,7 +1367,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = '43c42dcccf9f0e9418f86bc3feb52347057f98a6';
+exports.treebeardRef = 'a631844d5778b7f52f066958110eaddab1bc1e35';
 
 
 /***/ }),

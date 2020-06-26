@@ -9,9 +9,16 @@ async function run(): Promise<void> {
     const dockerUsername = core.getInput('docker-username')
     const dockerPassword = core.getInput('docker-password')
     const dockerImageName = core.getInput('docker-image-name')
+    const dockerRegistryPrefix = core.getInput('docker-registry-prefix')
     const useDocker = core.getInput('use-docker').toLowerCase() === 'true'
     const debug = core.getInput('debug').toLowerCase() === 'true'
     const path = core.getInput('path')
+
+    if (dockerUsername && dockerPassword === '') {
+      throw new Error(
+        'Docker username is supplied but password is an empty string, are you missing a secret?'
+      )
+    }
 
     process.chdir(path)
 
@@ -55,10 +62,6 @@ async function run(): Promise<void> {
       }
     }
 
-    if (debug) {
-      console.log(`Treebeard submitting env:\n${env}`)
-    }
-
     if (dockerUsername) {
       env.DOCKER_USERNAME = dockerUsername
     }
@@ -67,6 +70,9 @@ async function run(): Promise<void> {
     }
     if (dockerImageName) {
       env.TREEBEARD_IMAGE_NAME = dockerImageName
+    }
+    if (dockerRegistryPrefix) {
+      env.DOCKER_REGISTRY_PREFIX = dockerRegistryPrefix
     }
 
     let tbRunCommand = `treebeard run --confirm `
@@ -89,6 +95,10 @@ async function run(): Promise<void> {
     }
 
     script.push(tbRunCommand)
+
+    if (debug) {
+      console.log(`Treebeard submitting env:\n${Object.keys(env)}`)
+    }
 
     const status = await exec.exec(
       `bash -c "${script.join(' && ')}"`,

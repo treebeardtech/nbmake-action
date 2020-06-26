@@ -1,6 +1,5 @@
-from typing import Any, Dict, Generator, Set, Union, Optional, Type
-
 import pathlib
+from typing import Any, Dict, Generator, Optional, Set, Type, Union
 
 class Required:
     pass
@@ -46,4 +45,3 @@ def validator(
     *fields, pre: bool = False, whole: bool = False, always: bool = False
 ) -> Any: ...
 def conint(*, gt=None, lt=None) -> Type[int]: ...
-

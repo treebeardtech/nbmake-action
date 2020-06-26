@@ -18,6 +18,9 @@ inputs:
   docker-image-name:
     description: "the name of the image built by treebeard"
     required: false
+  docker-registry-prefix:
+    description: "the prefix of your docker image name, use instead of docker-image-name to generate a default image name"
+    required: false
   use-docker:
     description: "run treebeard inside repo2docker"
     required: false

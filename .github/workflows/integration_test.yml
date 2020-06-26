@@ -17,7 +17,7 @@ jobs:
       - run: gcloud auth configure-docker
       - uses: "./"
         with:
-          docker-registry: gcr.io/treebeard-259315/tests
+          docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
           path: './integration-test/conda'
 
@@ -35,7 +35,7 @@ jobs:
       - run: gcloud auth configure-docker
       - uses: "./"
         with:
-          docker-registry: gcr.io/treebeard-259315/tests
+          docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
           path: './integration-test/dagster'
   failing_build:
@@ -53,7 +53,7 @@ jobs:
       - uses: "./"
         id: run
         with:
-          docker-registry: gcr.io/treebeard-259315/tests
+          docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
           path: './integration-test/failing_build'
         continue-on-error: true
@@ -73,7 +73,7 @@ jobs:
       - uses: "./"
         id: run
         with:
-          docker-registry: gcr.io/treebeard-259315/tests
+          docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
           path: './integration-test/failing_notebook'
         continue-on-error: true

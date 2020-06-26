@@ -7,6 +7,7 @@ from typing import Any, List
 import click
 import docker  # type: ignore
 from docker.errors import ImageNotFound, NotFound  # type: ignore
+from repo2docker.utils import is_valid_docker_image_name  # type:ignore
 
 from treebeard.buildtime.helper import (
     create_post_build_script,
@@ -16,6 +17,7 @@ from treebeard.buildtime.helper import (
 from treebeard.conf import get_treebeard_config, run_path
 from treebeard.helper import sanitise_repo_short_name, update
 from treebeard.runtime.run import upload_meta_nbs
+from treebeard.util import fatal_exit
 
 
 def download_archive(unzip_location: str, download_location: str, url: str):
@@ -32,7 +34,7 @@ def fetch_image_for_cache(client: Any, image_name: str):
     try:
         click.echo(f"🐳 Pulling {image_name}")
         client.images.pull(image_name)
-    except:
+    except Exception:
         click.echo(f"Could not pull image for cache, continuing without.")
 
 
@@ -76,16 +78,35 @@ def run_repo(
 
     client: Any = docker.from_env()  # type: ignore
 
-    use_docker_registry = os.getenv("TREEBEARD_IMAGE_NAME")
-    if (
-        os.getenv("DOCKER_USERNAME")
-        and os.getenv("DOCKER_PASSWORD")
-        and use_docker_registry
-    ):
+    default_image_name = f"{sanitise_repo_short_name(user_name)}/{sanitise_repo_short_name(repo_short_name)}"
+    image_name = default_image_name
+    if "TREEBEARD_IMAGE_NAME" in os.environ:
+        image_name = os.environ["TREEBEARD_IMAGE_NAME"]
+    elif "DOCKER_REGISTRY_PREFIX" in os.environ:
+        image_name = f"{os.environ['DOCKER_REGISTRY_PREFIX']}/{default_image_name}"
+
+    assert image_name is not None
+    click.echo(f"🐳 Building {image_name}")
+    use_docker_registry = (
+        "TREEBEARD_IMAGE_NAME" in os.environ
+        or "DOCKER_REGISTRY_PREFIX" in os.environ
+        or (os.getenv("DOCKER_USERNAME") and os.getenv("DOCKER_PASSWORD"))
+    )
+
+    if use_docker_registry and not is_valid_docker_image_name(image_name):
+        fatal_exit(
+            "🐳❌ the docker image name you supplied is invalid. It must be lower case, alphanumeric, with only - and _ special chars."
+        )
+
+    if os.getenv("DOCKER_USERNAME") and os.getenv("DOCKER_PASSWORD"):
+        click.echo(
+            f"🐳 Logging into DockerHub using the username and password you provided"
+        )
         subprocess.check_output(
-            f"printenv DOCKER_PASSWORD | docker login -u {os.getenv('DOCKER_USERNAME')} --password-stdin {os.getenv('TREEBEARD_IMAGE_NAME')}",
+            f"printenv DOCKER_PASSWORD | docker login -u {os.getenv('DOCKER_USERNAME')} --password-stdin",
             shell=True,
         )
+
     try:
         # Create bundle directory
         abs_notebook_dir = f"/tmp/{repo_short_name}"
@@ -118,8 +139,6 @@ def run_repo(
         subprocess.run(["ls", "-la", abs_notebook_dir])
 
     # Pull down images to use in cache
-    default_image_name = f"{sanitise_repo_short_name(user_name)}/{sanitise_repo_short_name(repo_short_name)}"
-    image_name = os.getenv("TREEBEARD_IMAGE_NAME", default_image_name)
 
     # Build image but don't run
     versioned_image_name = f"{image_name}:{build_tag}"
@@ -165,17 +184,7 @@ def run_repo(
                 f"🐳❌ Failed to push image, will try again on success\n{format_exc()}"
             )
     else:
-        click.echo(
-            f"""🐳 Not pushing docker image as no registry is configured. 
-
-Use the following config to enable layer caching.
-
-with:
-  docker-username: "${{ secrets.DOCKER_USERNAME }}"
-  docker-password: "${{ secrets.DOCKER_PASSWORD }}"
-  docker-image-name: docker.io/my-user/my-repo
-"""
-        )
+        click.echo(f"🐳 Not pushing docker image as no registry is configured.")
 
     click.echo(f"Image built successfully, now running.")
     status = run_image(
