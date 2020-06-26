@@ -41,7 +41,7 @@ jobs:
           path: './examples/google_cloud_storage'
           debug: 'true'
         env:
-          TB_GCP_SERVICE_ACCOUNT_KEY: "${{ secrets.GCP_SA_KEY }}"
+          TB_GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SA_KEY }}
 
 
 

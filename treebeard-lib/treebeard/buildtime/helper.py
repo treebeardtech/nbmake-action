@@ -49,7 +49,7 @@ def run_image(
             )
 
     if treebeard_config.debug:
-        click.echo(f"Starting container: {pip_treebeard}\nEnvironment: {env}")
+        click.echo(f"Starting container: {pip_treebeard}\nEnvironment: {env.keys()}")
 
     upload_flag = "--upload" if upload else "--no-upload"
     debug = " --debug " if treebeard_config.debug else " "
