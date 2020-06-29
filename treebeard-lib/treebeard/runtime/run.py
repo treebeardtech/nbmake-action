@@ -2,7 +2,6 @@ import json
 import os
 import subprocess
 import sys
-from concurrent.futures import ThreadPoolExecutor
 from glob import glob
 from traceback import format_exc
 from typing import Dict, List
@@ -39,14 +38,11 @@ notebook_status_descriptions = {
     "⏰": "TIMEOUT",
 }
 
-executor = ThreadPoolExecutor(max_workers=4)
-
 
 def upload_nb(notebook_path: str, nb_status: str, set_as_thumbnail: bool):
     notebook_upload_path = f"{run_path}/{notebook_path}"
 
-    executor.submit(
-        upload_artifact,
+    upload_artifact(
         notebook_path,
         notebook_upload_path,
         nb_status,
@@ -61,9 +57,7 @@ def upload_meta_nbs():
         notebook_upload_path = f"{run_path}/{notebook_path}"
         nb_status = None
 
-        executor.submit(
-            upload_artifact, notebook_path, notebook_upload_path, nb_status,
-        )
+        upload_artifact(notebook_path, notebook_upload_path, nb_status)
 
 
 def upload_outputs():
@@ -72,7 +66,7 @@ def upload_outputs():
             for name in files:
                 full_name = os.path.join(root, name)
                 upload_path = f"{run_path}/{full_name}"
-                executor.submit(upload_artifact, full_name, upload_path, None)
+                upload_artifact(full_name, upload_path, None)
 
 
 def run_notebook(notebook_path: str) -> NotebookResult:
@@ -219,8 +213,6 @@ def start(upload: bool = False):
 
     if upload:
         upload_outputs()
-
-    executor.shutdown(wait=True)
 
     log("🌲 Run Finished. Results:\n")
 
