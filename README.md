@@ -32,9 +32,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: treebeardtech/treebeard@master
-        with:
-          notebook-env: |
-            MY_TOKEN=${{ secrets.MY_TOKEN }}
+        env:
+          TB_MY_TOKEN: "${{ secrets.MY_TOKEN }}" # 'TB_' prefixed variable are passed to notebook runtime
 ```
 
 ### Output Example
