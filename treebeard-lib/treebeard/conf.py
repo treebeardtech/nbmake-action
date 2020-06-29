@@ -161,6 +161,8 @@ def get_treebeard_env():
 
     # .treebeard config is present in CLI in place of env variables
     user_name = "local-user"
+    if "GITHUB_REPOSITORY" in os.environ:
+        user_name = os.environ["GITHUB_REPOSITORY"].split("/")[0]
     if os.path.exists(config_path):
         config = configparser.RawConfigParser()
         config.read(config_path)
