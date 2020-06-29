@@ -64,7 +64,7 @@ def run(
     """
     notebooks = list(notebooks)
     ignore = list(ignore)
-    treebeard_config.debug = True
+    treebeard_config.debug = debug
     validate_notebook_directory(treebeard_env, treebeard_config, upload)
 
     # Apply cli config overrides
