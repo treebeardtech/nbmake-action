@@ -1,7 +1,5 @@
 import {wait} from '../src/wait'
-import * as process from 'process'
 import * as cp from 'child_process'
-import * as path from 'path'
 import {treebeardRef} from '../src/conf'
 import yaml from 'yaml'
 import fs from 'fs'
@@ -28,13 +26,13 @@ test('parse notebook-env', async () => {
   expect(parsed).toStrictEqual({FOO: 'bar', baz: '42'})
 })
 
-// test('ref is correct', async () => {
-//   const sha = cp
-//     .execSync('git rev-parse HEAD')
-//     .toString()
-//     .replace('\n', '')
-//   expect(treebeardRef).toBe(sha)
-// })
+test('ref is correct', async () => {
+  const branch = cp
+    .execSync('git rev-parse --abbrev-ref HEAD')
+    .toString()
+    .replace('\n', '')
+  expect(treebeardRef).toBe(branch)
+})
 
 // shows how the runner will run a javascript action with env / stdout protocol
 // test('test runs', () => {
