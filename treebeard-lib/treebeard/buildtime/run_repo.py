@@ -1,6 +1,5 @@
 import os
 import subprocess
-from pathlib import Path
 from traceback import format_exc
 from typing import Any, List
 
@@ -20,16 +19,6 @@ from treebeard.runtime.run import upload_meta_nbs
 from treebeard.util import fatal_exit
 
 
-def download_archive(unzip_location: str, download_location: str, url: str):
-    subprocess.check_output(
-        [
-            "bash",
-            "-c",
-            f'curl -o {download_location} "{url}" >/dev/null 2>&1 && tar -C {unzip_location} -xvf {download_location} >/dev/null 2>&1',
-        ],
-    )
-
-
 def fetch_image_for_cache(client: Any, image_name: str):
     try:
         click.echo(f"🐳 Pulling {image_name}")
@@ -43,7 +32,7 @@ def run_repo(
     repo_short_name: str,
     run_id: str,
     build_tag: str,
-    repo_url: str,
+    repo_temp_dir: str,
     branch: str,
     envs_to_forward: List[str],
     upload: bool,
@@ -108,13 +97,7 @@ def run_repo(
         )
 
     try:
-        # Create bundle directory
-        abs_notebook_dir = f"/tmp/{repo_short_name}"
-        Path(abs_notebook_dir).mkdir(parents=True, exist_ok=True)
-        os.chdir(abs_notebook_dir)
-
-        # Add repo to bundle
-        download_archive(abs_notebook_dir, f"/tmp/{repo_short_name}_repo.tgz", repo_url)
+        os.chdir(repo_temp_dir)
 
         if os.path.exists("treebeard/container_setup.ipynb"):
             create_start_script()
@@ -136,7 +119,7 @@ def run_repo(
     finally:
         click.echo("Treebeard Bundle Contents:")
         subprocess.run(["pwd"])
-        subprocess.run(["ls", "-la", abs_notebook_dir])
+        subprocess.run(["ls", "-la", repo_temp_dir])
 
     # Pull down images to use in cache
 
@@ -154,7 +137,7 @@ def run_repo(
         --user-id 1000 \
         --image-name {versioned_image_name} \
         --cache-from {latest_image_name} \
-        {abs_notebook_dir}
+        {repo_temp_dir}
     """
 
     try:
@@ -203,5 +186,8 @@ def run_repo(
 
     if use_docker_registry:
         subprocess.check_output(f"docker push {passing_image_name}", shell=True)
+
+    os.chdir(os.environ["HOME"])
+    os.rmdir(repo_temp_dir)
 
     return 0

@@ -86,3 +86,11 @@ jobs:
           wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/main.ipynb"
           wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/another.ipynb"
           wget "https://api.treebeard.io/d8a0c5b6c9/virtualenv/$branch/subdir/another.ipynb"
+
+  pypi_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pip install -e .
+      - run: cd ./integration-test/virtualenv && treebeard run --confirm

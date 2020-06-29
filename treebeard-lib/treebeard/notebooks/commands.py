@@ -1,9 +1,7 @@
-import glob
 import os
 import os.path
 import pprint
 import sys
-import tarfile
 import tempfile
 from distutils.dir_util import copy_tree
 from typing import List
@@ -114,45 +112,14 @@ def run(
     notebooks_files = treebeard_config.get_deglobbed_notebooks()
     click.echo(notebooks_files)
 
-    click.echo("🌲  Compressing Repo")
-
-    with tempfile.NamedTemporaryFile(
-        "wb", suffix=".tar.gz", delete=False
-    ) as src_archive:
-        with tarfile.open(fileobj=src_archive, mode="w:gz") as tar:
-
-            def zip_filter(info: tarfile.TarInfo):
-                if info.name.endswith("treebeard.yaml"):
-                    return None
-
-                for ignored in ignore:
-                    if info.name in glob.glob(ignored, recursive=True):
-                        return None
-
-                if not confirm:
-                    click.echo(f"  Including {info.name}")
-                return info
-
-            tar.add(
-                str(temp_dir), arcname=os.path.basename(os.path.sep), filter=zip_filter,
-            )
-            tar.add(treebeard_yaml_path, arcname="treebeard.yaml")
-
-    if not confirm and not click.confirm(
-        "Confirm source file set is correct?", default=True
-    ):
-        click.echo("Exiting")
-        sys.exit()
-
     build_tag = treebeard_env.run_id
-    repo_url = f"file://{src_archive.name}"
 
     status = run_repo(
         str(user_name),
         str(repo_short_name),
         treebeard_env.run_id,
         build_tag,
-        repo_url,
+        temp_dir,
         envs_to_forward=env,
         upload=upload,
         branch=treebeard_env.branch,
