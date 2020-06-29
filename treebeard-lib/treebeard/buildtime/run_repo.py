@@ -154,7 +154,6 @@ def run_repo(
         --user-id 1000 \
         --image-name {versioned_image_name} \
         --cache-from {latest_image_name} \
-        --target-repo-dir {abs_notebook_dir} \
         {abs_notebook_dir}
     """
 
