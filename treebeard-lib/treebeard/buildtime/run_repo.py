@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 from traceback import format_exc
 from typing import Any, List
@@ -188,6 +189,5 @@ def run_repo(
         subprocess.check_output(f"docker push {passing_image_name}", shell=True)
 
     os.chdir(os.environ["HOME"])
-    os.rmdir(repo_temp_dir)
-
+    shutil.rmtree(repo_temp_dir)
     return 0
