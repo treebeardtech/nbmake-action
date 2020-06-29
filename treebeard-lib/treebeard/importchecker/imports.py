@@ -22,7 +22,6 @@ def get_imported_modules(glob_path: str) -> Set[str]:
     all_imported_modules = set()
     for path in nb_paths:
         try:
-            # click.echo(f"Import checker inspecting {path}")
             [script, _] = se.from_filename(path)
         except Exception as ex:
             capture_exception(ex)
@@ -74,7 +73,8 @@ def is_local_module(module_name: str):
 
 
 def check_imports(glob_path: str = "**/*ipynb"):
-    click.echo(f"🌲 Checking for potentially missing imports...\n")
+    out = ""
+    out += f"🌲 Checking for potentially missing imports...\n\n"
     imported_modules = get_imported_modules(glob_path)
     installed_modules = get_installed_modules(imported_modules)
 
@@ -86,19 +86,16 @@ def check_imports(glob_path: str = "**/*ipynb"):
     )
 
     if len(missing_modules) > 0:
-        click.echo(
-            f"\n❗📦 You *may* be missing project requirements, the following modules are imported from your notebooks but can't be imported from your project root directory\n"
-        )
+        out += f"\n❗📦 You *may* be missing project requirements, the following modules are imported from your notebooks but can't be imported from your project root directory\n\n"
+
         for module in sorted(missing_modules):
-            click.echo(f"  - {module}")
-        return False
+            out += f"  - {module}\n"
+        return False, out
     else:
-        click.echo(
-            "\n✨ All notebook imports appear to be backed by a reproducible dependency file!"
-        )
-        return True
+        out += "\n✨ All notebook imports appear to be backed by a reproducible dependency file!\n"
+        return True, out
 
 
 if __name__ == "__main__":
     glob_path = sys.argv[1] if len(sys.argv) > 1 else "**/*ipynb"
-    check_imports(glob_path)
+    click.echo(check_imports(glob_path))

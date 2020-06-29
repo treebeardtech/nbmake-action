@@ -253,12 +253,12 @@ def start(upload: bool = False):
 
         try:
             if treebeard_config.kernel_name == "python3":
-                result = check_imports()
-
+                imports_ok, import_checker_output = check_imports()
+                results += import_checker_output
                 if treebeard_config.strict_mode:
                     results += f"\nℹ️ If you would like to ignore notebook run failures and only fail on missing dependencies, add `strict_mode: False` to a `treebeard.yaml` file\n"
                 else:
-                    if result:
+                    if imports_ok:
                         results += f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅\n"
                         finish(0, upload, results)
                     else:
