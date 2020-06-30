@@ -5,7 +5,8 @@ from unittest.mock import Mock, patch
 # from treebeard.conf import treebeard_env
 from treebeard.notebooks import commands
 
-# import os
+import os
+
 # import treebeard.conf
 
 T = TypeVar("T")
@@ -18,20 +19,21 @@ class MockValidator(object):
     def __eq__(self, other: T):
         return bool(self.validator(other))
 
-    class ComponentTest(unittest.TestCase):
-        @patch("treebeard.buildtime.build.helper")
-        def test_when_local_docker_name_is_local(self, mock_helper: Mock):
-            mock_helper.run_image.return_value = 0  # type: ignore
-            commands.run_repo(
-                ["test.ipynb"], [], [], True, False, False, True,
-            )
 
-            def validate_run_id(r: str):
-                return r.startswith("local-user/treebeard:local-")
+class ComponentTest(unittest.TestCase):
+    @patch("treebeard.buildtime.build.helper")
+    def test_when_local_docker_name_is_local(self, mock_helper: Mock):
+        mock_helper.run_image.return_value = 0  # type: ignore
+        commands.run_repo(
+            ["tests/treebeard/test.ipynb"], [], [], True, False, False, True,
+        )
 
-            mock_helper.tag_image.assert_called_with(  # type: ignore
-                MockValidator(validate_run_id), "local-user/treebeard:cli"
-            )
+        def validate_run_id(r: str):
+            return r.startswith("local-user/treebeard-lib:local-")
+
+        mock_helper.tag_image.assert_called_with(  # type: ignore
+            MockValidator(validate_run_id), "local-user/treebeard-lib:cli"
+        )
 
     # @patch("treebeard.buildtime.build.helper")
     # def test_when_github_no_registry_name_is_local(self, mock_helper: Mock):
