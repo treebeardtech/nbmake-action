@@ -12,21 +12,16 @@ from repo2docker.utils import is_valid_docker_image_name  # type:ignore
 from treebeard.buildtime.helper import (
     create_post_build_script,
     create_start_script,
+    fetch_image_for_cache,
+    push_image,
     run_image,
     run_repo2docker,
+    tag_image,
 )
 from treebeard.conf import get_treebeard_config, run_path
 from treebeard.helper import sanitise_repo_short_name, update
 from treebeard.runtime.run import upload_meta_nbs
 from treebeard.util import fatal_exit
-
-
-def fetch_image_for_cache(client: Any, image_name: str):
-    try:
-        click.echo(f"🐳 Pulling {image_name}")
-        client.images.pull(image_name)
-    except Exception:
-        click.echo(f"Could not pull image for cache, continuing without.")
 
 
 def build(
@@ -155,11 +150,8 @@ def build(
 
     if use_docker_registry:
         try:
-            click.echo(f"🐳 Pushing {versioned_image_name} and {latest_image_name}\n")
-            subprocess.check_output(f"docker push {versioned_image_name}", shell=True)
-            subprocess.check_output(
-                f"docker push {latest_image_name}", shell=True
-            )  # this tag is necessary for caching
+            push_image(versioned_image_name)
+            push_image(latest_image_name)
         except Exception:
             click.echo(
                 f"🐳❌ Failed to push image, will try again on success\n{format_exc()}"
@@ -180,11 +172,10 @@ def build(
         click.echo(f"Image run failed, not updated {passing_image_name}")
         return status
 
-    subprocess.check_output(["docker", "tag", versioned_image_name, passing_image_name])
-    click.echo(f"🐳 tagged {versioned_image_name} as {passing_image_name}")
+    tag_image(versioned_image_name, passing_image_name)
 
     if use_docker_registry:
-        subprocess.check_output(f"docker push {passing_image_name}", shell=True)
+        push_image(passing_image_name)
 
     os.chdir(os.environ["HOME"])
     shutil.rmtree(repo_temp_dir)

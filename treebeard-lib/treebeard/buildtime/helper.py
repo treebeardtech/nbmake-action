@@ -116,6 +116,24 @@ papermill \\
         post_build.write(script)
 
 
+def fetch_image_for_cache(client: Any, image_name: str):
+    try:
+        click.echo(f"🐳 Pulling {image_name}")
+        client.images.pull(image_name)
+    except Exception:
+        click.echo(f"Could not pull image for cache, continuing without.")
+
+
+def push_image(image_name: str):
+    click.echo(f"🐳 Pushing {image_name}\n")
+    subprocess.check_output(f"docker push {image_name}", shell=True)
+
+
+def tag_image(image_name: str, tagged_name: str):
+    subprocess.check_output(["docker", "tag", image_name, tagged_name])
+    click.echo(f"🐳 tagged {image_name} as {tagged_name}")
+
+
 def run_repo2docker(
     user_name: str,
     r2d_user_id: str,
