@@ -93,7 +93,7 @@ We are keen to know what you would like treebeard to work with.
 
 ## Treebeard Teams
 
-We are a startup and are building a separate product which the library integrates with. Our goal with Teams is to improve the observability of testing/deployment to speed up debugging. Let [laurence](mailto:laurence@treebeard.io) know if you want to try it out.
+We are a startup and are building a separate product which the library integrates with. Our goal with Teams is to improve the observability of testing/deployment to speed up debugging. [Let us know](https://laurencewatson.typeform.com/to/Bgj6hp) if you want to try it out.
 
 <p align="center"><img src="https://storage.googleapis.com/treebeard_image_dump_public/github.png" width="550px" style="margin:'auto'"/></p>
 
