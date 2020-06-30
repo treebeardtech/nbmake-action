@@ -21,7 +21,6 @@ class TreebeardEnv(BaseModel):
     ] = None  # Not present when CLI is not in notebook directory
     user_name: Optional[str] = None  # Not present when initially installing
     run_id: str
-    email: Optional[str] = None  # Not present at build time
     api_key: Optional[str] = None  # Not present at build time
     branch: str = "cli"
 
@@ -156,7 +155,6 @@ def get_treebeard_env():
     if not repo_short_name:
         repo_short_name = Path(os.getcwd()).name
 
-    email = None
     api_key = os.getenv("TREEBEARD_API_KEY")
 
     # .treebeard config is present in CLI in place of env variables
@@ -166,7 +164,6 @@ def get_treebeard_env():
     if os.path.exists(config_path):
         config = configparser.RawConfigParser()
         config.read(config_path)
-        email = config.get("credentials", "email")
         user_name = config.get("credentials", "user_name")
         api_key = config.get("credentials", "api_key")
 
@@ -183,7 +180,6 @@ def get_treebeard_env():
         repo_short_name=repo_short_name,
         user_name=user_name,
         run_id=run_id,
-        email=email,
         api_key=api_key,
         branch=get_branch(),
     )

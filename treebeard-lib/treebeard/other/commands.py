@@ -23,12 +23,11 @@ warnings.filterwarnings(
 
 
 @click.command()
-@click.option("--email")
 @click.option("--api_key")
 @click.option("--user_name")
-def configure(email: str, api_key: str, user_name: str):
+def configure(api_key: str, user_name: str):
     """Register with Treebeard services"""
-    set_credentials(email, api_key, user_name)
+    set_credentials(api_key, user_name)
 
 
 @click.command()

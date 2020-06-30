@@ -23,11 +23,10 @@ from treebeard.version import get_version
 version = get_version()
 
 
-def set_credentials(email: str, key: str, user_name: str):
+def set_credentials(key: str, user_name: str):
     """Create user credentials"""
     config = configparser.RawConfigParser()
     config.add_section("credentials")
-    config.set("credentials", "email", email)
     config.set("credentials", "user_name", user_name)
     config.set("credentials", "api_key", key)
     with open(config_path, "w") as configfile:

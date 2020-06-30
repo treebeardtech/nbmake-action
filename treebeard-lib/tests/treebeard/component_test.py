@@ -5,8 +5,6 @@ from unittest.mock import Mock, patch
 # from treebeard.conf import treebeard_env
 from treebeard.notebooks import commands
 
-import os
-
 # import treebeard.conf
 
 T = TypeVar("T")
@@ -53,7 +51,6 @@ class ComponentTest(unittest.TestCase):
     #     treebeard.conf.treebeard_env.api_key = new_env.api_key
     #     treebeard.conf.treebeard_env.run_id = new_env.run_id
     #     treebeard.conf.treebeard_env.user_name = new_env.user_name
-    #     treebeard.conf.treebeard_env.email = new_env.email
 
     #     def validate_run_id(r: str):
     #         return r.startswith("alex-treebeard/fake-repo:develop-")
