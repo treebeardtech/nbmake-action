@@ -72,6 +72,17 @@ class TreebeardConfig(BaseModel):
         return [nb for nb in deglobbed_notebooks if nb not in ignored_notebooks]
 
 
+class GitHubDetails(BaseModel):
+    sha: str
+    branch: str
+    workflow: str
+    event_name: str
+    event_path: str
+    run_id: str
+    user_name: str
+    repo_short_name: str
+
+
 env = os.getenv("TREEBEARD_ENVIRONMENT", "staging")
 
 if env == "development":
@@ -135,18 +146,17 @@ def get_treebeard_config() -> TreebeardConfig:
             fatal_exit(f"Error parsing treebeard.yaml\n{e.json()}")  # type: ignore
 
 
-def get_treebeard_env():
+def get_treebeard_env(github_details: Optional[GitHubDetails]):
     """Reads variables from a local file, credentials.cfg"""
 
     run_id = os.getenv("TREEBEARD_RUN_ID")  # available at runtime
 
     if not run_id:
-        github_run_id = os.getenv("GITHUB_RUN_ID")  # available at repotime
-        if github_run_id:
+        if github_details:
             time_id = str(int(time.time()))[
                 -3:
             ]  # add time to id to prevent clashes when restarted workflows have the same ID
-            run_id = f"github-{github_run_id}-{time_id}"
+            run_id = f"github-{github_details.run_id}-{time_id}"
         else:
             run_id = f"local-{int(time.time())}"
     os.environ["TREEBEARD_RUN_ID"] = run_id
@@ -159,8 +169,8 @@ def get_treebeard_env():
 
     # .treebeard config is present in CLI in place of env variables
     user_name = "local-user"
-    if "GITHUB_REPOSITORY" in os.environ:
-        user_name = os.environ["GITHUB_REPOSITORY"].split("/")[0]
+    if github_details:
+        user_name = github_details.user_name
     if os.path.exists(config_path):
         config = configparser.RawConfigParser()
         config.read(config_path)
@@ -171,8 +181,8 @@ def get_treebeard_env():
         user_name = os.environ["TREEBEARD_USER_NAME"]
 
     def get_branch():
-        if os.getenv("CI"):
-            return os.environ["GITHUB_REF"].split("/")[-1]
+        if github_details:
+            return github_details.branch
         else:
             return "cli"
 
@@ -187,5 +197,6 @@ def get_treebeard_env():
 
 config_path = get_config_path()
 treebeard_config = get_treebeard_config()
-treebeard_env = get_treebeard_env()
+
+treebeard_env = get_treebeard_env(None)
 run_path = get_run_path(treebeard_env)

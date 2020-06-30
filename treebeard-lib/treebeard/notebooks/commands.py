@@ -1,16 +1,18 @@
+import json
 import os
 import os.path
 import pprint
 import sys
 import tempfile
 from distutils.dir_util import copy_tree
-from typing import List
+from typing import List, Optional
 
 import click
 import yaml
 
 from treebeard.buildtime.build import build
 from treebeard.conf import (
+    GitHubDetails,
     treebeard_config,
     treebeard_env,
     validate_notebook_directory,
@@ -18,6 +20,35 @@ from treebeard.conf import (
 from treebeard.helper import CliContext, get_time, update
 
 pp = pprint.PrettyPrinter(indent=2)
+
+
+def create_github_details(dockerless: bool):
+    run_id = os.getenv("GITHUB_RUN_ID")
+
+    if not run_id:
+        if dockerless and os.getenv("TREEBEARD_GITHUB_DETAILS"):
+            return GitHubDetails(**json.loads(os.environ["TREEBEARD_GITHUB_DETAILS"]))
+        return None
+
+    sha = os.environ["GITHUB_SHA"]
+    ref = os.environ["GITHUB_REF"]
+    ref = os.environ["GITHUB_WORKFLOW"]
+    event_name = os.environ["GITHUB_EVENT_NAME"]
+    event_path = os.environ["GITHUB_EVENT_PATH"]
+
+    branch = ref.split("/")[-1]
+    user_name = os.environ["GITHUB_REPOSITORY"].split("/")[0]
+    repo_short_name = os.environ["GITHUB_REPOSITORY"].split("/")[1]
+
+    return GitHubDetails(
+        run_id=run_id,
+        sha=sha,
+        branch=branch,
+        repo_short_name=repo_short_name,
+        user_name=user_name,
+        event_name=event_name,
+        event_path=event_path,
+    )
 
 
 @click.command()
@@ -56,7 +87,11 @@ def run(
     upload: bool,
     debug: bool,
 ):
-    status = run_repo(notebooks, env, ignore, confirm, dockerless, upload, debug)
+
+    github_details = create_github_details(dockerless)
+    status = run_repo(
+        notebooks, env, ignore, confirm, dockerless, upload, debug, github_details
+    )
     click.echo(f"Build exited with status code {status}")
     sys.exit(status)
 
@@ -69,6 +104,7 @@ def run_repo(
     dockerless: bool,
     upload: bool,
     debug: bool,
+    github_details: Optional[GitHubDetails],
 ) -> int:
     """
     Run a notebook and optionally schedule it to run periodically
@@ -127,6 +163,7 @@ def run_repo(
 
     repo_short_name = treebeard_env.repo_short_name
     user_name = treebeard_env.user_name
+
     return build(
         str(user_name),
         str(repo_short_name),
@@ -136,4 +173,5 @@ def run_repo(
         envs_to_forward=env,
         upload=upload,
         branch=treebeard_env.branch,
+        github_details=github_details,
     )

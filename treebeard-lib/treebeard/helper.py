@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from sentry_sdk import capture_exception, capture_message  # type: ignore
 
 from treebeard.conf import (
+    GitHubDetails,
     api_url,
     config_path,
     treebeard_config,
@@ -80,38 +81,31 @@ def get_time():
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
-def update(status: Optional[str] = None):
+def update(
+    status: Optional[str] = None, github_details: Optional[GitHubDetails] = None
+):
     data = {}
     if status:
         data["status"] = status
 
-    # Available at repotime
-    workflow = os.getenv("GITHUB_WORKFLOW")
-
-    if workflow:
+    if github_details:
         data["workflow"] = (
-            workflow.replace(".yml", "").replace(".yaml", "").split("/")[-1]
+            github_details.workflow.replace(".yml", "")
+            .replace(".yaml", "")
+            .split("/")[-1]
         )
 
-    event_name = os.getenv("GITHUB_EVENT_NAME")
-    event_path = os.getenv("GITHUB_EVENT_PATH")
-
-    if event_name:
-        data["event_name"] = event_name
-        if event_name == "push" and event_path:
-            with open(event_path, "r") as event:
+        data["event_name"] = github_details.event_name
+        if github_details.event_name == "push" and os.path.exists(
+            github_details.event_path
+        ):
+            with open(github_details.event_path, "r") as event:
                 event_json = json.load(event)
                 data["sender"] = event_json["sender"]
                 data["head_commit"] = event_json["head_commit"]
 
-    # Envs below should be available at repo/build/runtime
-    sha = os.getenv("GITHUB_SHA")
-    ref = os.getenv("GITHUB_REF")
-
-    if sha and ref:
-        branch = ref.split("/")[-1]
-        data["sha"] = sha
-        data["branch"] = branch
+        data["sha"] = github_details.sha
+        data["branch"] = github_details.branch
 
     data["start_time"] = os.getenv("TREEBEARD_START_TIME") or get_time()
     if status in ["SUCCESS", "FAILURE"]:

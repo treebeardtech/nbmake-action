@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 from traceback import format_exc
-from typing import Any, List
+from typing import Any, List, Optional
 
 import click
 import docker  # type: ignore
@@ -10,7 +10,7 @@ from docker.errors import ImageNotFound, NotFound  # type: ignore
 from repo2docker.utils import is_valid_docker_image_name  # type:ignore
 
 from treebeard.buildtime import helper
-from treebeard.conf import get_treebeard_config, run_path
+from treebeard.conf import GitHubDetails, get_treebeard_config, run_path
 from treebeard.helper import sanitise_repo_short_name, update
 from treebeard.runtime.run import upload_meta_nbs
 from treebeard.util import fatal_exit
@@ -25,6 +25,7 @@ def build(
     branch: str,
     envs_to_forward: List[str],
     upload: bool,
+    github_details: Optional[GitHubDetails],
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
     click.echo(f"Run path: {run_path}")
@@ -159,6 +160,7 @@ def build(
         versioned_image_name,
         envs_to_forward,
         upload,
+        github_details,
     )
     if status != 0:
         click.echo(f"Image run failed, not updated {passing_image_name}")

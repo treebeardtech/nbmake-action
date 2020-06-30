@@ -1,11 +1,12 @@
+import json
 import os
 import subprocess
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import click
 import docker  # type: ignore
 
-from treebeard.conf import treebeard_config, treebeard_env
+from treebeard.conf import GitHubDetails, treebeard_config, treebeard_env
 
 
 def run_image(
@@ -15,6 +16,7 @@ def run_image(
     image_name: str,
     envs_to_forward: List[str],
     upload: bool,
+    github_details: Optional[GitHubDetails],
 ) -> int:
     client: Any = docker.from_env()  # type: ignore
 
@@ -30,14 +32,9 @@ def run_image(
     if treebeard_env.api_key:
         env["TREEBEARD_API_KEY"] = treebeard_env.api_key
 
-    if "GITHUB_REF" in os.environ:
-        env["GITHUB_REF"] = os.environ["GITHUB_REF"]
-    if "GITHUB_SHA" in os.environ:
-        env["GITHUB_SHA"] = os.environ["GITHUB_SHA"]
-    if "GITHUB_EVENT_NAME" in os.environ:
-        env["GITHUB_EVENT_NAME"] = os.environ["GITHUB_EVENT_NAME"]
-    if "GITHUB_WORKFLOW" in os.environ:
-        env["GITHUB_WORKFLOW"] = os.environ["GITHUB_WORKFLOW"]
+    if github_details:
+        env["TREEBEARD_GITHUB_DETAILS"] = json.dumps(github_details.dict())
+
     if "CI" in os.environ:
         env["CI"] = os.environ["CI"]
 
