@@ -170,7 +170,7 @@ def get_treebeard_env():
         user_name = config.get("credentials", "user_name")
         api_key = config.get("credentials", "api_key")
 
-    if "TREEBEARD_USER_NAME" in os.environ:
+    if "TREEBEARD_USER_NAME" in os.environ:  # runtime
         user_name = os.environ["TREEBEARD_USER_NAME"]
 
     def get_branch():
@@ -193,10 +193,3 @@ config_path = get_config_path()
 treebeard_config = get_treebeard_config()
 treebeard_env = get_treebeard_env()
 run_path = get_run_path(treebeard_env)
-secrets_endpoint = (
-    f"{api_url}/{treebeard_env.user_name}/{treebeard_env.repo_short_name}/secrets"
-)
-runner_endpoint = (
-    f"{api_url}/{treebeard_env.user_name}/{treebeard_env.repo_short_name}/runs"
-)
-service_status_endpoint = f"{api_url}/service_status"

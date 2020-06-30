@@ -19,9 +19,6 @@ from treebeard.helper import CliContext, get_time, update
 
 pp = pprint.PrettyPrinter(indent=2)
 
-repo_short_name = treebeard_env.repo_short_name
-user_name = treebeard_env.user_name
-
 
 @click.command()
 @click.option("-n", "--notebooks", help="Notebooks to be run", multiple=True)
@@ -59,6 +56,20 @@ def run(
     upload: bool,
     debug: bool,
 ):
+    status = run_repo(notebooks, env, ignore, confirm, dockerless, upload, debug)
+    click.echo(f"Build exited with status code {status}")
+    sys.exit(status)
+
+
+def run_repo(
+    notebooks: List[str],
+    env: List[str],
+    ignore: List[str],
+    confirm: bool,
+    dockerless: bool,
+    upload: bool,
+    debug: bool,
+) -> int:
     """
     Run a notebook and optionally schedule it to run periodically
     """
@@ -114,7 +125,9 @@ def run(
 
     build_tag = treebeard_env.run_id
 
-    status = build(
+    repo_short_name = treebeard_env.repo_short_name
+    user_name = treebeard_env.user_name
+    return build(
         str(user_name),
         str(repo_short_name),
         treebeard_env.run_id,
@@ -124,5 +137,3 @@ def run(
         upload=upload,
         branch=treebeard_env.branch,
     )
-    click.echo(f"Build exited with status code {status}")
-    sys.exit(status)

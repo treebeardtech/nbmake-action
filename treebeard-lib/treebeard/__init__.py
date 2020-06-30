@@ -6,14 +6,10 @@ from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
-from treebeard.conf import treebeard_env
 from treebeard.helper import CliContext, check_for_updates
 from treebeard.notebooks.commands import run
 from treebeard.other.commands import config, configure, setup, version
 from treebeard.sentry_setup import setup_sentry
-
-user_name = treebeard_env.user_name
-repo_short_name = treebeard_env.repo_short_name
 
 warnings.filterwarnings(
     "ignore", "Your application has authenticated using end user credentials"

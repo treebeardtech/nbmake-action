@@ -9,15 +9,7 @@ import docker  # type: ignore
 from docker.errors import ImageNotFound, NotFound  # type: ignore
 from repo2docker.utils import is_valid_docker_image_name  # type:ignore
 
-from treebeard.buildtime.helper import (
-    create_post_build_script,
-    create_start_script,
-    fetch_image_for_cache,
-    push_image,
-    run_image,
-    run_repo2docker,
-    tag_image,
-)
+from treebeard.buildtime import helper
 from treebeard.conf import get_treebeard_config, run_path
 from treebeard.helper import sanitise_repo_short_name, update
 from treebeard.runtime.run import upload_meta_nbs
@@ -97,10 +89,10 @@ def build(
         os.chdir(repo_temp_dir)
 
         if os.path.exists("treebeard/container_setup.ipynb"):
-            create_start_script()
+            helper.create_start_script()
 
         if os.path.exists("treebeard/post_install.ipynb"):
-            create_post_build_script()
+            helper.create_post_build_script()
 
         notebook_files = get_treebeard_config().get_deglobbed_notebooks()
         if len(notebook_files) == 0:
@@ -125,11 +117,11 @@ def build(
     passing_image_name = f"{image_name}:{branch}"
     latest_image_name = f"{image_name}:{branch}-latest"
 
-    fetch_image_for_cache(client, latest_image_name)
+    helper.fetch_image_for_cache(client, latest_image_name)
 
     r2d_user_id = "1000"
     try:
-        run_repo2docker(
+        helper.run_repo2docker(
             user_name,
             r2d_user_id,
             versioned_image_name,
@@ -146,12 +138,12 @@ def build(
         else:
             return 1
 
-    subprocess.check_output(["docker", "tag", versioned_image_name, latest_image_name])
+    helper.tag_image(versioned_image_name, latest_image_name)
 
     if use_docker_registry:
         try:
-            push_image(versioned_image_name)
-            push_image(latest_image_name)
+            helper.push_image(versioned_image_name)
+            helper.push_image(latest_image_name)
         except Exception:
             click.echo(
                 f"🐳❌ Failed to push image, will try again on success\n{format_exc()}"
@@ -160,7 +152,7 @@ def build(
         click.echo(f"🐳 Not pushing docker image as no registry is configured.")
 
     click.echo(f"Image built successfully, now running.")
-    status = run_image(
+    status = helper.run_image(
         user_name,
         repo_short_name,
         run_id,
@@ -172,10 +164,10 @@ def build(
         click.echo(f"Image run failed, not updated {passing_image_name}")
         return status
 
-    tag_image(versioned_image_name, passing_image_name)
+    helper.tag_image(versioned_image_name, passing_image_name)
 
     if use_docker_registry:
-        push_image(passing_image_name)
+        helper.push_image(passing_image_name)
 
     os.chdir(os.environ["HOME"])
     shutil.rmtree(repo_temp_dir)
