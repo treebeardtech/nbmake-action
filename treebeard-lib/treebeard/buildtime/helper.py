@@ -1,4 +1,5 @@
 import os
+import subprocess
 from typing import Any, Dict, List
 
 import click
@@ -113,3 +114,22 @@ papermill \\
 
     with open("postBuild", "w") as post_build:
         post_build.write(script)
+
+
+def run_repo2docker(
+    user_name: str,
+    r2d_user_id: str,
+    versioned_image_name: str,
+    latest_image_name: str,
+    repo_temp_dir: str,
+):
+    r2d = f"""
+    repo2docker \
+        --no-run \
+        --user-name {user_name} \
+        --user-id {r2d_user_id} \
+        --image-name {versioned_image_name} \
+        --cache-from {latest_image_name} \
+        {repo_temp_dir}
+    """
+    subprocess.check_output(["bash", "-c", r2d])

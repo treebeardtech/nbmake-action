@@ -13,6 +13,7 @@ from treebeard.buildtime.helper import (
     create_post_build_script,
     create_start_script,
     run_image,
+    run_repo2docker,
 )
 from treebeard.conf import get_treebeard_config, run_path
 from treebeard.helper import sanitise_repo_short_name, update
@@ -28,7 +29,7 @@ def fetch_image_for_cache(client: Any, image_name: str):
         click.echo(f"Could not pull image for cache, continuing without.")
 
 
-def run_repo(
+def build(
     user_name: str,
     repo_short_name: str,
     run_id: str,
@@ -131,18 +132,15 @@ def run_repo(
 
     fetch_image_for_cache(client, latest_image_name)
 
-    r2d = f"""
-    repo2docker \
-        --no-run \
-        --user-name {user_name} \
-        --user-id 1000 \
-        --image-name {versioned_image_name} \
-        --cache-from {latest_image_name} \
-        {repo_temp_dir}
-    """
-
+    r2d_user_id = "1000"
     try:
-        subprocess.check_output(["bash", "-c", r2d])
+        run_repo2docker(
+            user_name,
+            r2d_user_id,
+            versioned_image_name,
+            latest_image_name,
+            repo_temp_dir,
+        )
         click.echo(f"✨  Successfully built {versioned_image_name}")
     except:
         click.echo(f"\n\n❗ Failed to build container from the source repo")

@@ -9,7 +9,7 @@ from typing import List
 import click
 import yaml
 
-from treebeard.buildtime.run_repo import run_repo
+from treebeard.buildtime.build import build
 from treebeard.conf import (
     treebeard_config,
     treebeard_env,
@@ -114,7 +114,7 @@ def run(
 
     build_tag = treebeard_env.run_id
 
-    status = run_repo(
+    status = build(
         str(user_name),
         str(repo_short_name),
         treebeard_env.run_id,
