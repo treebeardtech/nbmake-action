@@ -8,7 +8,7 @@
 <img src="https://github.com/treebeardtech/treebeard/workflows/Integration%20Test/badge.svg" alt="Integration Test">
 <a href="https://gitter.im/treebeardtech/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the Gitter Chat"></a></p>
 
-**Note: This GitHub Action is in Pre-release. Drop us an issue or email [Alex](mailto:alex@treebeard.io) before using as docs are patchy**
+**Note: This GitHub Action is in Pre-release. Drop us an issue or message Alex on [gitter](https://gitter.im/treebeardtech/community) before using as docs are patchy**
 
 ## What is Treebeard?
 
