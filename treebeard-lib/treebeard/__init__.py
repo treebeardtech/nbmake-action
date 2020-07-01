@@ -9,7 +9,6 @@ from timeago import format as timeago_format  # type: ignore
 from treebeard.helper import CliContext, check_for_updates
 from treebeard.notebooks.commands import run
 from treebeard.other.commands import config, configure, setup, version
-from treebeard.sentry_setup import setup_sentry
 
 warnings.filterwarnings(
     "ignore", "Your application has authenticated using end user credentials"
@@ -26,7 +25,6 @@ def cli(ctx: Any, debug: bool):
       
       docs: https://treebeard.readthedocs.io/
     """
-    setup_sentry()
     ctx.obj = CliContext(debug=debug)
     pass
 

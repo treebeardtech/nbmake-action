@@ -13,11 +13,14 @@ import yaml
 from treebeard.buildtime.build import build
 from treebeard.conf import (
     GitHubDetails,
-    treebeard_config,
-    treebeard_env,
+    TreebeardContext,
+    get_config_path,
+    get_treebeard_config,
+    get_treebeard_env,
     validate_notebook_directory,
 )
 from treebeard.helper import CliContext, get_time, update
+from treebeard.sentry_setup import setup_sentry
 
 pp = pprint.PrettyPrinter(indent=2)
 
@@ -111,14 +114,25 @@ def run_repo(
     """
     notebooks = list(notebooks)
     ignore = list(ignore)
+    treebeard_context = TreebeardContext(
+        treebeard_env=get_treebeard_env(github_details),
+        treebeard_config=get_treebeard_config(),
+        config_path=get_config_path(),
+        github_details=github_details,
+    )
+
+    setup_sentry(treebeard_context.treebeard_env)
+    treebeard_config = treebeard_context.treebeard_config
     treebeard_config.debug = debug
-    validate_notebook_directory(treebeard_env, treebeard_config, upload)
+    validate_notebook_directory(
+        treebeard_context.treebeard_env, treebeard_context.treebeard_config, upload
+    )
 
     # Apply cli config overrides
     treebeard_yaml_path: str = tempfile.mktemp()  # type: ignore
     with open(treebeard_yaml_path, "w") as yaml_file:
         if notebooks:
-            treebeard_config.notebooks = notebooks
+            treebeard_context.treebeard_config.notebooks = notebooks
 
         yaml.dump(treebeard_config.dict(), yaml_file)  # type: ignore
 
@@ -127,7 +141,7 @@ def run_repo(
 
     if dockerless:
         if upload:
-            update(status="WORKING")
+            update(treebeard_context, status="WORKING")
         click.echo(
             f"🌲  Running locally without docker using your current python environment"
         )
@@ -140,10 +154,12 @@ def run_repo(
         # Note: import runtime.run causes win/darwin devices missing magic to fail at start
         import treebeard.runtime.run
 
-        treebeard.runtime.run.start(upload=upload)  # will sys.exit
+        nbrun = treebeard.runtime.run.NotebookRun(treebeard_context)
+
+        nbrun.start(upload=upload)  # will sys.exit
 
     if upload:
-        update(status="BUILDING")
+        update(treebeard_context, status="BUILDING")
 
     if treebeard_config:
         ignore += (
@@ -159,19 +175,4 @@ def run_repo(
     notebooks_files = treebeard_config.get_deglobbed_notebooks()
     click.echo(notebooks_files)
 
-    build_tag = treebeard_env.run_id
-
-    repo_short_name = treebeard_env.repo_short_name
-    user_name = treebeard_env.user_name
-
-    return build(
-        str(user_name),
-        str(repo_short_name),
-        treebeard_env.run_id,
-        build_tag,
-        temp_dir,
-        envs_to_forward=env,
-        upload=upload,
-        branch=treebeard_env.branch,
-        github_details=github_details,
-    )
+    return build(treebeard_context, temp_dir, envs_to_forward=env, upload=upload,)

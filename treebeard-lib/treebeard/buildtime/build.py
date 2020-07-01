@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 from traceback import format_exc
-from typing import Any, List, Optional
+from typing import Any, List
 
 import click
 import docker  # type: ignore
@@ -10,25 +10,18 @@ from docker.errors import ImageNotFound, NotFound  # type: ignore
 from repo2docker.utils import is_valid_docker_image_name  # type:ignore
 
 from treebeard.buildtime import helper
-from treebeard.conf import GitHubDetails, get_treebeard_config, run_path
-from treebeard.helper import sanitise_repo_short_name, update
-from treebeard.runtime.run import upload_meta_nbs
+from treebeard.conf import TreebeardContext, get_treebeard_config
+from treebeard.helper import sanitise_repo_short_name, update, upload_meta_nbs
 from treebeard.util import fatal_exit
 
 
 def build(
-    user_name: str,
-    repo_short_name: str,
-    run_id: str,
-    build_tag: str,
+    treebeard_context: TreebeardContext,
     repo_temp_dir: str,
-    branch: str,
     envs_to_forward: List[str],
     upload: bool,
-    github_details: Optional[GitHubDetails],
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
-    click.echo(f"Run path: {run_path}")
 
     click.echo(f" Running repo setup")
     repo_setup_nb = "treebeard/repo_setup.ipynb"
@@ -49,15 +42,15 @@ def build(
             )
         except Exception:
             if upload:
-                upload_meta_nbs()
-                update("FAILURE")
+                upload_meta_nbs(treebeard_context)
+                update(treebeard_context, "FAILURE")
                 return 2
             else:
                 return 1
 
     client: Any = docker.from_env()  # type: ignore
-
-    default_image_name = f"{sanitise_repo_short_name(user_name)}/{sanitise_repo_short_name(repo_short_name)}"
+    treebeard_env = treebeard_context.treebeard_env
+    default_image_name = f"{sanitise_repo_short_name(treebeard_env.user_name)}/{sanitise_repo_short_name(treebeard_env.repo_short_name)}"
     image_name = default_image_name
     if "TREEBEARD_IMAGE_NAME" in os.environ:
         image_name = os.environ["TREEBEARD_IMAGE_NAME"]
@@ -86,14 +79,15 @@ def build(
             shell=True,
         )
 
+    treebeard_config = treebeard_context.treebeard_config
     try:
         os.chdir(repo_temp_dir)
 
         if os.path.exists("treebeard/container_setup.ipynb"):
-            helper.create_start_script()
+            helper.create_start_script(treebeard_config.treebeard_ref)
 
         if os.path.exists("treebeard/post_install.ipynb"):
-            helper.create_post_build_script()
+            helper.create_post_build_script(treebeard_config.treebeard_ref)
 
         notebook_files = get_treebeard_config().get_deglobbed_notebooks()
         if len(notebook_files) == 0:
@@ -114,16 +108,16 @@ def build(
     # Pull down images to use in cache
 
     # Build image but don't run
-    versioned_image_name = f"{image_name}:{build_tag}"
-    passing_image_name = f"{image_name}:{branch}"
-    latest_image_name = f"{image_name}:{branch}-latest"
+    versioned_image_name = f"{image_name}:{treebeard_env.run_id}"
+    passing_image_name = f"{image_name}:{treebeard_env.branch}"
+    latest_image_name = f"{image_name}:{treebeard_env.branch}-latest"
 
     helper.fetch_image_for_cache(client, latest_image_name)
 
     r2d_user_id = "1000"
     try:
         helper.run_repo2docker(
-            user_name,
+            treebeard_env.user_name,
             r2d_user_id,
             versioned_image_name,
             latest_image_name,
@@ -133,8 +127,8 @@ def build(
     except:
         click.echo(f"\n\n❗ Failed to build container from the source repo")
         if upload:
-            upload_meta_nbs()
-            update("FAILURE")
+            upload_meta_nbs(treebeard_context)
+            update(treebeard_context, "FAILURE")
             return 2
         else:
             return 1
@@ -154,13 +148,7 @@ def build(
 
     click.echo(f"Image built successfully, now running.")
     status = helper.run_image(
-        user_name,
-        repo_short_name,
-        run_id,
-        versioned_image_name,
-        envs_to_forward,
-        upload,
-        github_details,
+        versioned_image_name, envs_to_forward, upload, treebeard_context,
     )
     if status != 0:
         click.echo(f"Image run failed, not updated {passing_image_name}")

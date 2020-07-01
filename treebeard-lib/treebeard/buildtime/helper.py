@@ -1,34 +1,34 @@
 import json
 import os
 import subprocess
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import click
 import docker  # type: ignore
 
-from treebeard.conf import GitHubDetails, treebeard_config, treebeard_env
+from treebeard.conf import TreebeardContext
 
 
 def run_image(
-    user_name: str,
-    repo_short_name: str,
-    run_id: str,
     image_name: str,
     envs_to_forward: List[str],
     upload: bool,
-    github_details: Optional[GitHubDetails],
+    treebeard_context: TreebeardContext,
 ) -> int:
     client: Any = docker.from_env()  # type: ignore
 
+    treebeard_config = treebeard_context.treebeard_config
     pip_treebeard = f"pip install -U git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib"
 
+    treebeard_env = treebeard_context.treebeard_env
     env: Dict[str, str] = {
-        "TREEBEARD_USER_NAME": user_name,
-        "TREEBEARD_REPO_SHORT_NAME": repo_short_name,
+        "TREEBEARD_USER_NAME": treebeard_env.user_name,
+        "TREEBEARD_REPO_SHORT_NAME": treebeard_env.repo_short_name,
         "TREEBEARD_START_TIME": os.environ["TREEBEARD_START_TIME"],
         "TREEBEARD_RUN_ID": os.environ["TREEBEARD_RUN_ID"],
     }
 
+    github_details = treebeard_context.github_details
     if treebeard_env.api_key:
         env["TREEBEARD_API_KEY"] = treebeard_env.api_key
 
@@ -66,14 +66,13 @@ def run_image(
     return int(result["StatusCode"])
 
 
-def create_start_script():
-    notebook = "treebeard/container_setup.ipynb"
-    script = f"""
+def create_script(notebook: str, treebeard_ref: str):
+    return f"""
 #!/usr/bin/env bash
 set -xeu
 
 echo Running {notebook}
-pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib" > /dev/null 2>&1
+pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_ref}#subdirectory=treebeard-lib" > /dev/null 2>&1
 
 papermill \\
   --stdout-file /dev/stdout \\
@@ -82,6 +81,13 @@ papermill \\
   --no-progress-bar \\
   {notebook} \\
   {notebook} \\
+"""
+
+
+def create_start_script(treebeard_ref: str):
+    notebook = "treebeard/container_setup.ipynb"
+    script = f"""
+{create_script(notebook, treebeard_ref)}
 
 exec "$@"
 """
@@ -90,27 +96,11 @@ exec "$@"
         start.write(script)
 
 
-def create_post_build_script():
+def create_post_build_script(treebeard_ref: str):
     notebook = "treebeard/post_install.ipynb"
-    script = f"""
-#!/usr/bin/env bash
-set -xeu
-
-echo Running {notebook}
-pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib" > /dev/null 2>&1
-
-papermill \\
-  --stdout-file /dev/stdout \\
-  --stderr-file /dev/stderr \\
-  --kernel python3 \\
-  --no-progress-bar \\
-  {notebook} \\
-  {notebook} \\
-
-"""
 
     with open("postBuild", "w") as post_build:
-        post_build.write(script)
+        post_build.write(create_script(notebook, treebeard_ref))
 
 
 def fetch_image_for_cache(client: Any, image_name: str):

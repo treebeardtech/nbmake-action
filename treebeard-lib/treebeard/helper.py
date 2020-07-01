@@ -4,24 +4,31 @@ import json
 import os
 import subprocess
 import sys
+from glob import glob
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import click
+import magic  # type: ignore
 import requests
-from pydantic import BaseModel
-from sentry_sdk import capture_exception, capture_message  # type: ignore
+from pydantic import BaseModel  # type: ignore
+from requests import Response
+from sentry_sdk import capture_message  # type: ignore
 
 from treebeard.conf import (
-    GitHubDetails,
+    META_NOTEBOOKS,
+    TreebeardContext,
     api_url,
-    config_path,
-    treebeard_config,
-    treebeard_env,
+    get_config_path,
 )
 from treebeard.version import get_version
 
+mime: Any = magic.Magic(mime=True)  # type: ignore
 version = get_version()
+
+
+def log(message: str):
+    print(f'{datetime.datetime.now().strftime("%H:%M:%S")}: {message}')
 
 
 def set_credentials(key: str, user_name: str):
@@ -30,9 +37,9 @@ def set_credentials(key: str, user_name: str):
     config.add_section("credentials")
     config.set("credentials", "user_name", user_name)
     config.set("credentials", "api_key", key)
-    with open(config_path, "w") as configfile:
+    with open(get_config_path(), "w") as configfile:
         config.write(configfile)
-    click.echo(f"🔑  Config saved in {config_path}")
+    click.echo(f"🔑  Config saved in {get_config_path()}")
     return user_name
 
 
@@ -81,13 +88,12 @@ def get_time():
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
-def update(
-    status: Optional[str] = None, github_details: Optional[GitHubDetails] = None
-):
+def update(treebeard_context: TreebeardContext, status: Optional[str] = None):
     data = {}
     if status:
         data["status"] = status
 
+    github_details = treebeard_context.github_details
     if github_details:
         data["workflow"] = (
             github_details.workflow.replace(".yml", "")
@@ -111,11 +117,13 @@ def update(
     if status in ["SUCCESS", "FAILURE"]:
         data["end_time"] = get_time()
 
-    update_url = f"{api_url}/{treebeard_env.user_name}/{treebeard_env.repo_short_name}/{treebeard_env.run_id}/update"
+    treebeard_env = treebeard_context.treebeard_env
+    update_url = f"{api_url}/{treebeard_env.run_path}/update"
     resp = requests.post(  # type:ignore
         update_url, json=data, headers={"api_key": treebeard_env.api_key},
     )
 
+    treebeard_config = treebeard_context.treebeard_config
     if treebeard_config.debug:
         print(f"Updating backend with data\n{data}")
 
@@ -141,3 +149,59 @@ def shell(command: str):
 
     if p.returncode != 0:
         raise subprocess.CalledProcessError(p.returncode, p.args)
+
+
+def upload_artifact(
+    treebeard_context: TreebeardContext,
+    filename: str,
+    upload_path: str,
+    status: Optional[str],
+    set_as_thumbnail: bool = False,
+):
+    log(f"Uploading {filename} to {upload_path}\n")
+    content_type: str = mime.from_file(filename)  # type: ignore
+
+    get_url_params = {"content_type": content_type}
+    put_object_headers = {"Content-Type": content_type}
+    if status:
+        get_url_params["status"] = status
+        put_object_headers["x-goog-meta-status"] = status
+
+    with open(filename, "rb") as data:
+        resp: Response = requests.get(  # type: ignore
+            f"{api_url}/get_upload_url/{upload_path}", params=get_url_params,
+        )
+        if resp.status_code != 200:
+            msg = (
+                f"Get signed url failed for {filename}, {resp.status_code}\n{resp.text}"
+            )
+            capture_message(msg)
+            raise (Exception(msg))
+        signed_url: str = resp.text
+        put_resp = requests.put(signed_url, data, headers=put_object_headers,)  # type: ignore
+        if put_resp.status_code != 200:
+            msg = f"Put object failed for {filename}, {put_resp.status_code}\n{put_resp.text}"
+            capture_message(msg)
+            raise (Exception(msg))
+
+        qs = "set_as_thumbnail=true" if set_as_thumbnail else ""
+        extras_resp = requests.post(f"{api_url}/{upload_path}/create_extras?{qs}")  # type: ignore
+        if put_resp.status_code != 200:
+            msg = f"Extras failed for {filename}, {extras_resp.status_code}\n{extras_resp.text}"
+            capture_message(msg)
+
+    update(treebeard_context)
+
+
+def upload_meta_nbs(treebeard_context: TreebeardContext):
+    notebooks_files = glob(META_NOTEBOOKS, recursive=True)
+
+    for notebook_path in notebooks_files:
+        notebook_upload_path = (
+            f"{treebeard_context.treebeard_env.run_path}/{notebook_path}"
+        )
+        nb_status = None
+
+        upload_artifact(
+            treebeard_context, notebook_path, notebook_upload_path, nb_status
+        )

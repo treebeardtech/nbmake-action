@@ -7,15 +7,13 @@ from halo import Halo  # type: ignore
 from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
-from treebeard.conf import treebeard_env
+from treebeard.conf import get_treebeard_env
 from treebeard.helper import create_example_yaml, set_credentials
 from treebeard.util import fatal_exit
 from treebeard.version import get_version
 
 pp = pprint.PrettyPrinter(indent=2)
 
-
-repo_short_name = treebeard_env.repo_short_name
 
 warnings.filterwarnings(
     "ignore", "Your application has authenticated using end user credentials"
@@ -52,13 +50,13 @@ def config():
 
 @config.command()  # type: ignore
 def list():
-    click.echo(pp.pformat(treebeard_env.dict()))
+    click.echo(pp.pformat(get_treebeard_env(None).dict()))
 
 
 @config.command()  # type: ignore
 @click.argument("key", type=click.STRING)
 def get(key: str):
-    if key in treebeard_env.dict():
-        click.echo(treebeard_env.dict()[key])
+    if key in get_treebeard_env(None).dict():
+        click.echo(get_treebeard_env(None).dict()[key])
     else:
         click.echo(f"There is no value for {key}")

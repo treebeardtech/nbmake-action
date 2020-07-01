@@ -16,13 +16,16 @@ META_NOTEBOOKS = "treebeard/**/*ipynb"
 
 
 class TreebeardEnv(BaseModel):
-    repo_short_name: Optional[
-        str
-    ] = None  # Not present when CLI is not in notebook directory
-    user_name: Optional[str] = None  # Not present when initially installing
+    repo_short_name: str
+
+    user_name: str
     run_id: str
     api_key: Optional[str] = None  # Not present at build time
     branch: str = "cli"
+
+    @property
+    def run_path(self):
+        return f"{self.user_name}/{self.repo_short_name}/{self.run_id}"
 
     def __str__(self) -> str:
         dict_obj = self.dict()
@@ -83,6 +86,12 @@ class GitHubDetails(BaseModel):
     repo_short_name: str
 
 
+class TreebeardContext(BaseModel):
+    treebeard_env: TreebeardEnv
+    treebeard_config: TreebeardConfig
+    github_details: Optional[GitHubDetails] = None
+
+
 env = os.getenv("TREEBEARD_ENVIRONMENT", "staging")
 
 if env == "development":
@@ -92,10 +101,6 @@ if env == "development":
 else:
     api_url = "https://api.treebeard.io"
     treebeard_web_url = "https://treebeard.io"
-
-
-def get_run_path(treebeard_env: TreebeardEnv):
-    return f"{treebeard_env.user_name}/{treebeard_env.repo_short_name}/{treebeard_env.run_id}"
 
 
 def get_time():
@@ -146,7 +151,7 @@ def get_treebeard_config() -> TreebeardConfig:
             fatal_exit(f"Error parsing treebeard.yaml\n{e.json()}")  # type: ignore
 
 
-def get_treebeard_env(github_details: Optional[GitHubDetails]):
+def get_treebeard_env(github_details: Optional[GitHubDetails]) -> TreebeardEnv:
     """Reads variables from a local file, credentials.cfg"""
 
     run_id = os.getenv("TREEBEARD_RUN_ID")  # available at runtime
@@ -169,6 +174,8 @@ def get_treebeard_env(github_details: Optional[GitHubDetails]):
 
     # .treebeard config is present in CLI in place of env variables
     user_name = "local-user"
+    config_path = get_config_path()
+
     if github_details:
         user_name = github_details.user_name
     if os.path.exists(config_path):
@@ -193,10 +200,3 @@ def get_treebeard_env(github_details: Optional[GitHubDetails]):
         api_key=api_key,
         branch=get_branch(),
     )
-
-
-config_path = get_config_path()
-treebeard_config = get_treebeard_config()
-
-treebeard_env = get_treebeard_env(None)
-run_path = get_run_path(treebeard_env)
