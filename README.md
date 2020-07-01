@@ -8,7 +8,7 @@
 <img src="https://github.com/treebeardtech/treebeard/workflows/Integration%20Test/badge.svg" alt="Integration Test">
 <a href="https://gitter.im/treebeardtech/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the Gitter Chat"></a></p>
 
-**Note: This GitHub Action is in Pre-release. Drop us an issue or email [Alex](mailto:alex@treebeard.io) before using as docs are patchy**
+**Note: This GitHub Action is in Pre-release. Drop us an issue or message Alex on [gitter](https://gitter.im/treebeardtech/community) before using as docs are patchy**
 
 ## What is Treebeard?
 
@@ -16,9 +16,9 @@ A low-config continuous integration framework for data science teams using Jupyt
 
 Works either through our pypi package or GitHub Actions.
 
-### GitHub Actions Example
+### Quick start (GitHub Actions)
 
-```
+```yml
 # .github/workflows/test.yml
 on:
   push:
@@ -32,8 +32,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: treebeardtech/treebeard@master
-        env:
-          TB_MY_TOKEN: "${{ secrets.MY_TOKEN }}" # 'TB_' prefixed variable are passed to notebook runtime
 ```
 
 ### Output Example
@@ -93,7 +91,7 @@ We are keen to know what you would like treebeard to work with.
 
 ## Treebeard Teams
 
-We are a startup and are building a separate product which the library integrates with. Our goal with Teams is to improve the observability of testing/deployment to speed up debugging. Let [laurence](mailto:laurence@treebeard.io) know if you want to try it out.
+We are a startup and are building a separate product which the library integrates with. Our goal with Teams is to improve the observability of testing/deployment to speed up debugging. [Let us know](https://laurencewatson.typeform.com/to/Bgj6hp) if you want to try it out.
 
 <p align="center"><img src="https://storage.googleapis.com/treebeard_image_dump_public/github.png" width="550px" style="margin:'auto'"/></p>
 
