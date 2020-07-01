@@ -997,6 +997,7 @@ function run() {
             const dockerRegistryPrefix = core.getInput('docker-registry-prefix');
             const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
             const debug = core.getInput('debug').toLowerCase() === 'true';
+            const usageLogging = core.getInput('usage-logging').toLowerCase() === 'true';
             const path = core.getInput('path');
             if (dockerUsername && dockerPassword === '') {
                 throw new Error('Docker username is supplied but password is an empty string, are you missing a secret?');
@@ -1051,6 +1052,9 @@ function run() {
             }
             if (debug) {
                 tbRunCommand += ' --debug ';
+            }
+            if (!usageLogging) {
+                tbRunCommand += ' --no-usagelogging';
             }
             script.push(tbRunCommand);
             if (debug) {
@@ -1367,7 +1371,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'master';
+exports.treebeardRef = 'update_logging';
 
 
 /***/ }),

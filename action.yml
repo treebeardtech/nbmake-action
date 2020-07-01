@@ -33,7 +33,10 @@ inputs:
     description: "Path of the repo to run"
     required: false
     default: "."
-    
+  usage-logging:
+    description: "Control sending usage statistics to treebeard. We rely on logging usage to improve the product, as Github Actions does not currently provide any. See the readme for further details"
+    required: false
+    default: "true"
 runs:
   using: "node12"
   main: "dist/index.js"

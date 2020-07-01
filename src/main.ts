@@ -12,6 +12,7 @@ async function run(): Promise<void> {
     const dockerRegistryPrefix = core.getInput('docker-registry-prefix')
     const useDocker = core.getInput('use-docker').toLowerCase() === 'true'
     const debug = core.getInput('debug').toLowerCase() === 'true'
+    const usageLogging = core.getInput('usage-logging').toLowerCase() === 'true'
     const path = core.getInput('path')
 
     if (dockerUsername && dockerPassword === '') {
@@ -92,6 +93,10 @@ async function run(): Promise<void> {
 
     if (debug) {
       tbRunCommand += ' --debug '
+    }
+
+    if (!usageLogging) {
+      tbRunCommand += ' --no-usagelogging'
     }
 
     script.push(tbRunCommand)
