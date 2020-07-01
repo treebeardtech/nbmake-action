@@ -88,7 +88,9 @@ def get_time():
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
-def update(treebeard_context: TreebeardContext, status: Optional[str] = None):
+def update(
+    treebeard_context: TreebeardContext, update_url: str, status: Optional[str] = None
+):
     data = {}
     if status:
         data["status"] = status
@@ -118,7 +120,6 @@ def update(treebeard_context: TreebeardContext, status: Optional[str] = None):
         data["end_time"] = get_time()
 
     treebeard_env = treebeard_context.treebeard_env
-    update_url = f"{api_url}/{treebeard_env.run_path}/update"
     resp = requests.post(  # type:ignore
         update_url, json=data, headers={"api_key": treebeard_env.api_key},
     )
@@ -190,7 +191,10 @@ def upload_artifact(
             msg = f"Extras failed for {filename}, {extras_resp.status_code}\n{extras_resp.text}"
             capture_message(msg)
 
-    update(treebeard_context)
+    update(
+        treebeard_context,
+        update_url=f"{api_url}/{treebeard_context.treebeard_env.run_path}/update",
+    )
 
 
 def upload_meta_nbs(treebeard_context: TreebeardContext):

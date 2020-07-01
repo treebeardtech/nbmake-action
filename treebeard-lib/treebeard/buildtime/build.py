@@ -10,7 +10,7 @@ from docker.errors import ImageNotFound, NotFound  # type: ignore
 from repo2docker.utils import is_valid_docker_image_name  # type:ignore
 
 from treebeard.buildtime import helper
-from treebeard.conf import TreebeardContext, get_treebeard_config
+from treebeard.conf import TreebeardContext, api_url, get_treebeard_config
 from treebeard.helper import sanitise_repo_short_name, update, upload_meta_nbs
 from treebeard.util import fatal_exit
 
@@ -20,11 +20,14 @@ def build(
     repo_temp_dir: str,
     envs_to_forward: List[str],
     upload: bool,
+    logging: bool,
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
 
     click.echo(f" Running repo setup")
     repo_setup_nb = "treebeard/repo_setup.ipynb"
+    treebeard_env = treebeard_context.treebeard_env
+
     if os.path.exists(repo_setup_nb):
         try:
             subprocess.check_output(
@@ -41,15 +44,24 @@ def build(
                 shell=True,
             )
         except Exception:
+            if logging:
+                update(
+                    treebeard_context,
+                    update_url=f"{api_url}/{treebeard_env.run_path}/log",
+                    status="FAILURE",
+                )
             if upload:
                 upload_meta_nbs(treebeard_context)
-                update(treebeard_context, "FAILURE")
+                update(
+                    treebeard_context,
+                    update_url=f"{api_url}/{treebeard_env.run_path}/update",
+                    status="FAILURE",
+                )
                 return 2
             else:
                 return 1
 
     client: Any = docker.from_env()  # type: ignore
-    treebeard_env = treebeard_context.treebeard_env
     default_image_name = f"{sanitise_repo_short_name(treebeard_env.user_name)}/{sanitise_repo_short_name(treebeard_env.repo_short_name)}"
     image_name = default_image_name
     if "TREEBEARD_IMAGE_NAME" in os.environ:
@@ -126,9 +138,19 @@ def build(
         click.echo(f"✨  Successfully built {versioned_image_name}")
     except:
         click.echo(f"\n\n❗ Failed to build container from the source repo")
+        if logging:
+            update(
+                treebeard_context,
+                update_url=f"{api_url}/{treebeard_env.run_path}/log",
+                status="FAILURE",
+            )
         if upload:
             upload_meta_nbs(treebeard_context)
-            update(treebeard_context, "FAILURE")
+            update(
+                treebeard_context,
+                update_url=f"{api_url}/{treebeard_env.run_path}/update",
+                status="FAILURE",
+            )
             return 2
         else:
             return 1

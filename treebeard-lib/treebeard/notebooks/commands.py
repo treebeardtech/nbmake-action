@@ -14,6 +14,7 @@ from treebeard.buildtime.build import build
 from treebeard.conf import (
     GitHubDetails,
     TreebeardContext,
+    api_url,
     get_config_path,
     get_treebeard_config,
     get_treebeard_env,
@@ -80,6 +81,11 @@ def create_github_details(dockerless: bool):
 @click.option(
     "--debug/--no-debug", default=False, help="Enable debug logging",
 )
+@click.option(
+    "--usagelogging/--no-usagelogging",
+    default=True,
+    help="Send usage logs to treebeard",
+)
 @click.pass_obj  # type: ignore
 def run(
     cli_context: CliContext,
@@ -90,11 +96,20 @@ def run(
     dockerless: bool,
     upload: bool,
     debug: bool,
+    usagelogging: bool,
 ):
 
     github_details = create_github_details(dockerless)
     status = run_repo(
-        notebooks, env, ignore, confirm, dockerless, upload, debug, github_details
+        notebooks,
+        env,
+        ignore,
+        confirm,
+        dockerless,
+        upload,
+        debug,
+        usagelogging,
+        github_details,
     )
     click.echo(f"Build exited with status code {status}")
     sys.exit(status)
@@ -108,6 +123,7 @@ def run_repo(
     dockerless: bool,
     upload: bool,
     debug: bool,
+    usagelogging: bool,
     github_details: Optional[GitHubDetails],
 ) -> int:
     """
@@ -142,7 +158,11 @@ def run_repo(
 
     if dockerless:
         if upload:
-            update(treebeard_context, status="WORKING")
+            update(
+                treebeard_context,
+                status="WORKING",
+                update_url=f"{api_url}/{treebeard_context.treebeard_env.run_path}/update",
+            )
         click.echo(
             f"🌲  Running locally without docker using your current python environment"
         )
@@ -157,10 +177,14 @@ def run_repo(
 
         nbrun = treebeard.runtime.run.NotebookRun(treebeard_context)
 
-        nbrun.start(upload=upload)  # will sys.exit
+        nbrun.start(upload=upload, logging=usagelogging)  # will sys.exit
 
     if upload:
-        update(treebeard_context, status="BUILDING")
+        update(
+            treebeard_context,
+            status="BUILDING",
+            update_url=f"{api_url}/{treebeard_context.treebeard_env.run_path}/update",
+        )
 
     if treebeard_config:
         ignore += (
@@ -176,4 +200,10 @@ def run_repo(
     notebooks_files = treebeard_config.get_deglobbed_notebooks()
     click.echo(notebooks_files)
 
-    return build(treebeard_context, temp_dir, envs_to_forward=env, upload=upload,)
+    return build(
+        treebeard_context,
+        temp_dir,
+        envs_to_forward=env,
+        upload=upload,
+        logging=usagelogging,
+    )

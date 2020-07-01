@@ -23,7 +23,7 @@ class ComponentTest(unittest.TestCase):
     def test_when_local_docker_name_is_local(self, mock_helper: Mock):
         mock_helper.run_image.return_value = 0  # type: ignore
         commands.run_repo(
-            ["tests/treebeard/test.ipynb"], [], [], True, False, False, True, None
+            ["tests/treebeard/test.ipynb"], [], [], True, False, False, True, True, None
         )
 
         def validate_run_id(r: str):

@@ -9,7 +9,12 @@ import click
 import papermill as pm  # type: ignore
 from sentry_sdk import capture_exception, capture_message  # type: ignore
 
-from treebeard.conf import TreebeardConfig, TreebeardContext, TreebeardEnv
+from treebeard.conf import (
+    TreebeardConfig,
+    TreebeardContext,
+    TreebeardEnv,
+    api_url,
+)
 from treebeard.helper import log, update, upload_artifact, upload_meta_nbs
 from treebeard.importchecker.imports import check_imports
 from treebeard.logs import log as tb_log
@@ -164,7 +169,9 @@ class NotebookRun:
 
         return notebook_results
 
-    def finish(self, status: int, should_upload_outputs: bool, results: str):
+    def finish(
+        self, status: int, should_upload_outputs: bool, results: str, logging: bool,
+    ):
         def get_status_str():
             if status == 0:
                 return "SUCCESS"
@@ -191,13 +198,22 @@ class NotebookRun:
                 f"{self._run_path}/__treebeard__/tb_results.log",
                 None,
             )
-            update(self._treebeard_context, status=get_status_str())
-
+            update(
+                self._treebeard_context,
+                update_url=f"{api_url}/{self._treebeard_context.treebeard_env.run_path}/update",
+                status=get_status_str(),
+            )
+            if logging:
+                update(
+                    self._treebeard_context,
+                    update_url=f"{api_url}/{self._treebeard_context.treebeard_env.run_path}/log",
+                    status="FAILURE",
+                )
             print(f"🌲 View your outputs at https://treebeard.io/admin/{self._run_path}")
 
         sys.exit(status)
 
-    def start(self, upload: bool = False):
+    def start(self, upload: bool = False, logging: bool = True):
         if not self._treebeard_env.repo_short_name:
             raise Exception("No notebook ID at runtime")
         if not self._treebeard_env.user_name:
@@ -265,7 +281,7 @@ class NotebookRun:
                     else:
                         if imports_ok:
                             results += f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅\n"
-                            self.finish(0, upload, results)
+                            self.finish(0, upload, results, logging)
                         else:
                             results += f"\nℹ️ Strict mode is disabled! Fix missing dependencies to get a passing run.\n"
                     results += "\n"
@@ -274,6 +290,6 @@ class NotebookRun:
                 capture_exception(ex)
 
             fail_status = 2 if upload else 1
-            self.finish(fail_status, upload, results)
+            self.finish(fail_status, upload, results, logging)
         else:
-            self.finish(0, upload, results)
+            self.finish(0, upload, results, logging)
