@@ -18,7 +18,7 @@ Works either through our pypi package or GitHub Actions.
 
 ### GitHub Actions Example
 
-```
+```yml
 # .github/workflows/test.yml
 on:
   push:
