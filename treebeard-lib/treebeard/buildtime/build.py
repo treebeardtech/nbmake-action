@@ -11,7 +11,7 @@ from repo2docker.utils import is_valid_docker_image_name  # type:ignore
 
 from treebeard.buildtime import helper
 from treebeard.conf import TreebeardContext, api_url, get_treebeard_config
-from treebeard.helper import sanitise_repo_short_name, update, upload_meta_nbs
+from treebeard import helper as tb_helper
 from treebeard.util import fatal_exit
 
 
@@ -23,7 +23,6 @@ def build(
     logging: bool,
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
-
     click.echo(f" Running repo setup")
     repo_setup_nb = "treebeard/repo_setup.ipynb"
     treebeard_env = treebeard_context.treebeard_env
@@ -45,14 +44,14 @@ def build(
             )
         except Exception:
             if logging:
-                update(
+                tb_helper.update(
                     treebeard_context,
                     update_url=f"{api_url}/{treebeard_env.run_path}/log",
                     status="FAILURE",
                 )
             if upload:
-                upload_meta_nbs(treebeard_context)
-                update(
+                tb_helper.upload_meta_nbs(treebeard_context)
+                tb_helper.update(
                     treebeard_context,
                     update_url=f"{api_url}/{treebeard_env.run_path}/update",
                     status="FAILURE",
@@ -62,7 +61,7 @@ def build(
                 return 1
 
     client: Any = docker.from_env()  # type: ignore
-    default_image_name = f"{sanitise_repo_short_name(treebeard_env.user_name)}/{sanitise_repo_short_name(treebeard_env.repo_short_name)}"
+    default_image_name = f"{tb_helper.sanitise_repo_short_name(treebeard_env.user_name)}/{tb_helper.sanitise_repo_short_name(treebeard_env.repo_short_name)}"
     image_name = default_image_name
     if "TREEBEARD_IMAGE_NAME" in os.environ:
         image_name = os.environ["TREEBEARD_IMAGE_NAME"]
@@ -139,14 +138,14 @@ def build(
     except:
         click.echo(f"\n\n❗ Failed to build container from the source repo")
         if logging:
-            update(
+            tb_helper.update(
                 treebeard_context,
                 update_url=f"{api_url}/{treebeard_env.run_path}/log",
                 status="FAILURE",
             )
         if upload:
-            upload_meta_nbs(treebeard_context)
-            update(
+            tb_helper.upload_meta_nbs(treebeard_context)
+            tb_helper.update(
                 treebeard_context,
                 update_url=f"{api_url}/{treebeard_env.run_path}/update",
                 status="FAILURE",

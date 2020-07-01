@@ -1,9 +1,11 @@
+from treebeard.conf import TreebeardConfig, TreebeardContext
 import unittest
 from typing import Callable, TypeVar
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, DEFAULT, ANY
 
 # from treebeard.conf import treebeard_env
 from treebeard.notebooks import commands
+from treebeard import helper as tb_helper_real
 
 # import treebeard.conf
 
@@ -19,19 +21,41 @@ class MockValidator(object):
 
 
 class ComponentTest(unittest.TestCase):
-    @patch("treebeard.buildtime.build.helper")
-    def test_when_local_docker_name_is_local(self, mock_helper: Mock):
-        mock_helper.run_image.return_value = 0  # type: ignore
+    @patch.multiple("treebeard.buildtime.build", helper=DEFAULT, tb_helper=DEFAULT)
+    def test_when_local_docker_name_is_local(
+        self, helper: Mock = Mock(), tb_helper: Mock = Mock()
+    ):
+        helper.run_image.return_value = 0  # type: ignore
+        tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
+
         commands.run_repo(
             ["tests/treebeard/test.ipynb"], [], [], True, False, False, True, True, None
         )
 
         def validate_run_id(r: str):
+            print(f"Run ID is: {r}")
             return r.startswith("local-user/treebeard-lib:local-")
 
-        mock_helper.tag_image.assert_called_with(  # type: ignore
+        helper.tag_image.assert_called_with(  # type: ignore
             MockValidator(validate_run_id), "local-user/treebeard-lib:cli"
         )
+
+    @patch.multiple("treebeard.buildtime.build", helper=DEFAULT, tb_helper=DEFAULT)
+    def test_update_is_called_when_build_fails(
+        self, helper: Mock = Mock(), tb_helper: Mock = Mock()
+    ):
+        helper.run_repo2docker.side_effect = Exception  # type: ignore
+        tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
+
+        commands.run_repo(
+            ["tests/treebeard/test.ipynb"], [], [], True, False, False, True, True, None
+        )
+
+        def validate_log(url: str):
+            print(f"Log url is {url}")
+            return url.endswith("/log")
+
+        tb_helper.update.assert_called_once_with(ANY, update_url=MockValidator(validate_log), status=ANY)  # type: ignore
 
     # @patch("treebeard.buildtime.build.helper")
     # def test_when_github_no_registry_name_is_local(self, mock_helper: Mock):
