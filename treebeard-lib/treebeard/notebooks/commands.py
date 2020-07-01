@@ -35,7 +35,7 @@ def create_github_details(dockerless: bool):
 
     sha = os.environ["GITHUB_SHA"]
     ref = os.environ["GITHUB_REF"]
-    ref = os.environ["GITHUB_WORKFLOW"]
+    workflow = os.environ["GITHUB_WORKFLOW"]
     event_name = os.environ["GITHUB_EVENT_NAME"]
     event_path = os.environ["GITHUB_EVENT_PATH"]
 
@@ -51,6 +51,7 @@ def create_github_details(dockerless: bool):
         user_name=user_name,
         event_name=event_name,
         event_path=event_path,
+        workflow=workflow,
     )
 
 
