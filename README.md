@@ -16,7 +16,7 @@ A low-config continuous integration framework for data science teams using Jupyt
 
 Works either through our pypi package or GitHub Actions.
 
-### GitHub Actions Example
+### Quick start (GitHub Actions)
 
 ```yml
 # .github/workflows/test.yml
@@ -32,8 +32,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: treebeardtech/treebeard@master
-        env:
-          TB_MY_TOKEN: "${{ secrets.MY_TOKEN }}" # 'TB_' prefixed variable are passed to notebook runtime
 ```
 
 ### Output Example
