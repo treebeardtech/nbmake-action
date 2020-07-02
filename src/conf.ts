@@ -1,2 +1,2 @@
 // Do not edit this generated file
-export const treebeardRef = 'pull-request-support'
+export const treebeardRef = 'master'

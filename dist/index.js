@@ -1023,7 +1023,10 @@ function run() {
                     envsToFwd.push(` --env ${key} `);
                 }
             }
-            if (process.env.GITHUB_EVENT_NAME !== 'pull_request') {
+            if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+                console.log('🐳❌ Not attempting to set up Docker registry as this is a pull request');
+            }
+            else {
                 if (dockerUsername && dockerPassword === '') {
                     throw new Error('Docker username is supplied but password is an empty string, are you missing a secret?');
                 }
@@ -1369,7 +1372,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'pull-request-support';
+exports.treebeardRef = 'master';
 
 
 /***/ }),
