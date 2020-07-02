@@ -14,12 +14,6 @@ async function run(): Promise<void> {
     const debug = core.getInput('debug').toLowerCase() === 'true'
     const path = core.getInput('path')
 
-    if (dockerUsername && dockerPassword === '') {
-      throw new Error(
-        'Docker username is supplied but password is an empty string, are you missing a secret?'
-      )
-    }
-
     process.chdir(path)
 
     const script = []
@@ -62,17 +56,28 @@ async function run(): Promise<void> {
       }
     }
 
-    if (dockerUsername) {
-      env.DOCKER_USERNAME = dockerUsername
-    }
-    if (dockerPassword) {
-      env.DOCKER_PASSWORD = dockerPassword
-    }
-    if (dockerImageName) {
-      env.TREEBEARD_IMAGE_NAME = dockerImageName
-    }
-    if (dockerRegistryPrefix) {
-      env.DOCKER_REGISTRY_PREFIX = dockerRegistryPrefix
+    if (process.env.GITHUB_EVENT_NAME !== 'pull_request') {
+      if (dockerUsername && dockerPassword === '') {
+        throw new Error(
+          'Docker username is supplied but password is an empty string, are you missing a secret?'
+        )
+      }
+
+      if (dockerUsername) {
+        env.DOCKER_USERNAME = dockerUsername
+      }
+
+      if (dockerPassword) {
+        env.DOCKER_PASSWORD = dockerPassword
+      }
+
+      if (dockerRegistryPrefix) {
+        env.DOCKER_REGISTRY_PREFIX = dockerRegistryPrefix
+      }
+
+      if (dockerImageName) {
+        env.TREEBEARD_IMAGE_NAME = dockerImageName
+      }
     }
 
     let tbRunCommand = `treebeard run --confirm `
