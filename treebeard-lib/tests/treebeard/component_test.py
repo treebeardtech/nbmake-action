@@ -27,10 +27,10 @@ class ComponentTest(unittest.TestCase):
         )
 
         def validate_run_id(r: str):
-            return r.startswith("local-user/treebeard-lib:local-")
+            return r.startswith("local-user/")
 
         mock_helper.tag_image.assert_called_with(  # type: ignore
-            MockValidator(validate_run_id), "local-user/treebeard-lib:cli"
+            MockValidator(validate_run_id), MockValidator(validate_run_id),
         )
 
     # @patch("treebeard.buildtime.build.helper")

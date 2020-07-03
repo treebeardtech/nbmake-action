@@ -1,5 +1,3 @@
-notebooks:
-  - main.ipynb
 ignore:
   - venv
   - .vscode

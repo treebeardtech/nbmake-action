@@ -10,7 +10,7 @@ from typing import List, Optional
 import click
 import yaml
 
-from treebeard.buildtime.build import build
+from treebeard.buildtime import build
 from treebeard.conf import (
     GitHubDetails,
     TreebeardContext,
@@ -115,12 +115,18 @@ def run_repo(
     """
     notebooks = list(notebooks)
     ignore = list(ignore)
+
     treebeard_context = TreebeardContext(
         treebeard_env=get_treebeard_env(github_details),
         treebeard_config=get_treebeard_config(),
         config_path=get_config_path(),
         github_details=github_details,
     )
+
+    if debug:
+        click.echo(
+            f"Treebeard context:\n{json.dumps(treebeard_context.dict(), sort_keys=True, indent=4)}"
+        )
 
     setup_sentry(treebeard_context.treebeard_env)
     treebeard_config = treebeard_context.treebeard_config
@@ -130,12 +136,11 @@ def run_repo(
     )
 
     # Apply cli config overrides
-    treebeard_yaml_path: str = tempfile.mktemp()  # type: ignore
-    with open(treebeard_yaml_path, "w") as yaml_file:
-        if notebooks:
-            treebeard_context.treebeard_config.notebooks = notebooks
+    if notebooks:
+        treebeard_config.notebooks = notebooks
 
-        yaml.dump(treebeard_config.dict(), yaml_file)  # type: ignore
+    if ignore:
+        treebeard_config.ignore = ignore
 
     if "TREEBEARD_START_TIME" not in os.environ:
         os.environ["TREEBEARD_START_TIME"] = get_time()
@@ -163,17 +168,19 @@ def run_repo(
         update(treebeard_context, status="BUILDING")
 
     if treebeard_config:
-        ignore += (
-            treebeard_config.ignore
-            + treebeard_config.secret
-            + treebeard_config.output_dirs
-        )
+        ignore += treebeard_config.ignore + treebeard_config.output_dirs
 
     click.echo("🌲  Creating Project bundle")
 
     temp_dir = tempfile.mkdtemp()
+
     copy_tree(os.getcwd(), str(temp_dir), preserve_symlinks=1)
+
+    # Overwrite config with in-memory-modified
+    with open(f"{temp_dir}/treebeard.yaml", "w") as yaml_file:
+        yaml.dump(treebeard_config.dict(), yaml_file)  # type: ignore
+
     notebooks_files = treebeard_config.get_deglobbed_notebooks()
     click.echo(notebooks_files)
 
-    return build(treebeard_context, temp_dir, envs_to_forward=env, upload=upload,)
+    return build.build(treebeard_context, temp_dir, envs_to_forward=env, upload=upload)
