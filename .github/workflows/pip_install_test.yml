@@ -1,6 +1,6 @@
-name: Install test
+name: Pip Install test
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   multi_os_install_local:
