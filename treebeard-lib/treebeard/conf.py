@@ -42,7 +42,6 @@ class TreebeardConfig(BaseModel):
     notebooks: List[str] = ["**/*.ipynb"]
     output_dirs: List[str] = ["output"]
     ignore: List[str] = []
-    secret: List[str] = []
     kernel_name: str = "python3"
     strict_mode: bool = True
     cell_execution_timeout_seconds: int = 300

@@ -21,7 +21,7 @@ jobs:
           debug: "true"
           path: "./integration-test/conda"
 
-  dagster:
+  partially_passing:
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
@@ -38,10 +38,8 @@ jobs:
           api-key: ${{ secrets.TREEBEARD_API_KEY }}
           docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
-          path: "./integration-test/dagster"
-      # - run: |
-      #     branch=$(git rev-parse --abbrev-ref HEAD)
-      #     wget "https://api.treebeard.io/d8a0c5b6c9/dagster/$branch/treebeard/container_setup.ipynb"
+          path: "./integration-test/partially_passing"
+          notebooks: "main.ipynb"
 
   failing_build:
     timeout-minutes: 20

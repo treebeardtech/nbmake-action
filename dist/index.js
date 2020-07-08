@@ -999,9 +999,6 @@ function run() {
             const debug = core.getInput('debug').toLowerCase() === 'true';
             const usageLogging = core.getInput('usage-logging').toLowerCase() === 'true';
             const path = core.getInput('path');
-            if (dockerUsername && dockerPassword === '') {
-                throw new Error('Docker username is supplied but password is an empty string, are you missing a secret?');
-            }
             process.chdir(path);
             const script = [];
             core.startGroup('Checking Python is Installed');
@@ -1027,17 +1024,25 @@ function run() {
                     envsToFwd.push(` --env ${key} `);
                 }
             }
-            if (dockerUsername) {
-                env.DOCKER_USERNAME = dockerUsername;
+            if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+                console.log('🐳❌ Not attempting to set up Docker registry as this is a pull request');
             }
-            if (dockerPassword) {
-                env.DOCKER_PASSWORD = dockerPassword;
-            }
-            if (dockerImageName) {
-                env.TREEBEARD_IMAGE_NAME = dockerImageName;
-            }
-            if (dockerRegistryPrefix) {
-                env.DOCKER_REGISTRY_PREFIX = dockerRegistryPrefix;
+            else {
+                if (dockerUsername && dockerPassword === '') {
+                    throw new Error('Docker username is supplied but password is an empty string, are you missing a secret?');
+                }
+                if (dockerUsername) {
+                    env.DOCKER_USERNAME = dockerUsername;
+                }
+                if (dockerPassword) {
+                    env.DOCKER_PASSWORD = dockerPassword;
+                }
+                if (dockerRegistryPrefix) {
+                    env.DOCKER_REGISTRY_PREFIX = dockerRegistryPrefix;
+                }
+                if (dockerImageName) {
+                    env.TREEBEARD_IMAGE_NAME = dockerImageName;
+                }
             }
             let tbRunCommand = `treebeard run --confirm `;
             if (apiKey) {
