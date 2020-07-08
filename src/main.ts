@@ -33,7 +33,7 @@ async function run(): Promise<void> {
 
     core.startGroup('🌲 Install Treebeard')
     await exec.exec(
-      `pip install git+https://github.com/treebeardtech/treebeard.git@${treebeardRef}#subdirectory=treebeard-lib`
+      `pip install -U git+https://github.com/treebeardtech/treebeard.git@${treebeardRef}#subdirectory=treebeard-lib`
     )
 
     core.endGroup()
