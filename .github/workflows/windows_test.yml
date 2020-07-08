@@ -8,7 +8,7 @@ jobs:
       - uses: actions/setup-python@v2
       - run: pip install -r requirements.txt # Manually install python deps as running dockerless
         working-directory: "./examples/hello_treebeard"
-      - uses: treebeardtech/treebeard@master
+      - uses: ./
         with:
           use-docker: false
           path: ./examples/hello_treebeard
