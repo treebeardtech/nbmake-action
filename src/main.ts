@@ -109,18 +109,15 @@ async function run(): Promise<void> {
       console.log(`Treebeard submitting env:\n${Object.keys(env)}`)
     }
 
-    const status = await exec.exec(script.join(' && '), undefined, {
-      ignoreReturnCode: true,
-      env
-    })
+    for (const cmd of script) {
+      const status = await exec.exec(cmd, undefined, {
+        ignoreReturnCode: true,
+        env
+      })
 
-    // Ignore status code 2 to allow other reporting mechanisms e.g. slack
-    if (status === 2) {
-      console.log(
-        `Treebeard action ignoring Treebeard CLI failure status code ${status} to enable other notifications.\n\n`
-      )
-    } else if (status > 0) {
-      core.setFailed(`Treebeard CLI run failed with status code ${status}`)
+      if (status > 0) {
+        core.setFailed(`Treebeard CLI run failed with status code ${status}`)
+      }
     }
   } catch (error) {
     core.setFailed(error.message)
