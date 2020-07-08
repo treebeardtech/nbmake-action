@@ -16,7 +16,6 @@ async function run(): Promise<void> {
 
     process.chdir(path)
 
-    const script = []
     core.startGroup('Checking Python is Installed')
     const pythonSetupCheck = await exec.exec('python', [
       '-c',
@@ -39,8 +38,8 @@ async function run(): Promise<void> {
     core.endGroup()
 
     if (apiKey) {
-      script.push(
-        `treebeard configure --api_key ${apiKey} --user_name "$GITHUB_REPOSITORY_OWNER"`
+      await exec.exec(
+        `bash -c treebeard configure --api_key ${apiKey} --user_name "$GITHUB_REPOSITORY_OWNER"`
       )
     }
 
@@ -84,7 +83,7 @@ async function run(): Promise<void> {
       }
     }
 
-    let tbRunCommand = `treebeard run --confirm `
+    let tbRunCommand = `bash -c treebeard run --confirm `
     if (apiKey) {
       tbRunCommand += ' --upload '
     }
@@ -92,7 +91,7 @@ async function run(): Promise<void> {
     tbRunCommand += envsToFwd.join(' ')
 
     if (notebooks) {
-      tbRunCommand += ` --notebooks ${notebooks} `
+      tbRunCommand += ` --notebooks '${notebooks}' `
     }
 
     if (!useDocker) {
@@ -103,21 +102,17 @@ async function run(): Promise<void> {
       tbRunCommand += ' --debug '
     }
 
-    script.push(tbRunCommand)
-
     if (debug) {
       console.log(`Treebeard submitting env:\n${Object.keys(env)}`)
     }
 
-    for (const cmd of script) {
-      const status = await exec.exec(cmd, undefined, {
-        ignoreReturnCode: true,
-        env
-      })
+    const status = await exec.exec(tbRunCommand, undefined, {
+      ignoreReturnCode: true,
+      env
+    })
 
-      if (status > 0) {
-        core.setFailed(`Treebeard CLI run failed with status code ${status}`)
-      }
+    if (status > 0) {
+      core.setFailed(`Treebeard CLI run failed with status code ${status}`)
     }
   } catch (error) {
     core.setFailed(error.message)

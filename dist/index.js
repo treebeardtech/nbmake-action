@@ -999,7 +999,6 @@ function run() {
             const debug = core.getInput('debug').toLowerCase() === 'true';
             const path = core.getInput('path');
             process.chdir(path);
-            const script = [];
             core.startGroup('Checking Python is Installed');
             const pythonSetupCheck = yield exec.exec('python', [
                 '-c',
@@ -1014,7 +1013,7 @@ function run() {
             yield exec.exec(`pip install -U git+https://github.com/treebeardtech/treebeard.git@${conf_1.treebeardRef}#subdirectory=treebeard-lib`);
             core.endGroup();
             if (apiKey) {
-                script.push(`treebeard configure --api_key ${apiKey} --user_name "$GITHUB_REPOSITORY_OWNER"`);
+                yield exec.exec(`bash -c treebeard configure --api_key ${apiKey} --user_name "$GITHUB_REPOSITORY_OWNER"`);
             }
             const env = Object.assign({ TREEBEARD_REF: conf_1.treebeardRef }, process.env);
             const envsToFwd = [];
@@ -1043,13 +1042,13 @@ function run() {
                     env.TREEBEARD_IMAGE_NAME = dockerImageName;
                 }
             }
-            let tbRunCommand = `treebeard run --confirm `;
+            let tbRunCommand = `bash -c treebeard run --confirm `;
             if (apiKey) {
                 tbRunCommand += ' --upload ';
             }
             tbRunCommand += envsToFwd.join(' ');
             if (notebooks) {
-                tbRunCommand += ` --notebooks ${notebooks} `;
+                tbRunCommand += ` --notebooks '${notebooks}' `;
             }
             if (!useDocker) {
                 tbRunCommand += ' --dockerless ';
@@ -1057,18 +1056,15 @@ function run() {
             if (debug) {
                 tbRunCommand += ' --debug ';
             }
-            script.push(tbRunCommand);
             if (debug) {
                 console.log(`Treebeard submitting env:\n${Object.keys(env)}`);
             }
-            for (const cmd of script) {
-                const status = yield exec.exec(cmd, undefined, {
-                    ignoreReturnCode: true,
-                    env
-                });
-                if (status > 0) {
-                    core.setFailed(`Treebeard CLI run failed with status code ${status}`);
-                }
+            const status = yield exec.exec(tbRunCommand, undefined, {
+                ignoreReturnCode: true,
+                env
+            });
+            if (status > 0) {
+                core.setFailed(`Treebeard CLI run failed with status code ${status}`);
             }
         }
         catch (error) {
