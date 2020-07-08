@@ -1049,7 +1049,7 @@ function run() {
             }
             tbRunCommand += envsToFwd.join(' ');
             if (notebooks) {
-                tbRunCommand += ` --notebooks '${notebooks}' `;
+                tbRunCommand += ` --notebooks ${notebooks} `;
             }
             if (!useDocker) {
                 tbRunCommand += ' --dockerless ';
