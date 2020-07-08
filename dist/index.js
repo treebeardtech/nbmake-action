@@ -1013,7 +1013,7 @@ function run() {
             yield exec.exec(`pip install -U git+https://github.com/treebeardtech/treebeard.git@${conf_1.treebeardRef}#subdirectory=treebeard-lib`);
             core.endGroup();
             if (apiKey) {
-                yield exec.exec(`bash -c treebeard configure --api_key ${apiKey} --user_name "$GITHUB_REPOSITORY_OWNER"`);
+                yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
             }
             const env = Object.assign({ TREEBEARD_REF: conf_1.treebeardRef }, process.env);
             const envsToFwd = [];
@@ -1042,13 +1042,13 @@ function run() {
                     env.TREEBEARD_IMAGE_NAME = dockerImageName;
                 }
             }
-            let tbRunCommand = `bash -c treebeard run --confirm `;
+            let tbRunCommand = `treebeard run --confirm `;
             if (apiKey) {
                 tbRunCommand += ' --upload ';
             }
             tbRunCommand += envsToFwd.join(' ');
             if (notebooks) {
-                tbRunCommand += ` --notebooks '${notebooks}' `;
+                tbRunCommand += ` --notebooks ${notebooks} `;
             }
             if (!useDocker) {
                 tbRunCommand += ' --dockerless ';

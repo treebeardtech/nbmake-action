@@ -39,7 +39,7 @@ async function run(): Promise<void> {
 
     if (apiKey) {
       await exec.exec(
-        `bash -c treebeard configure --api_key ${apiKey} --user_name "$GITHUB_REPOSITORY_OWNER"`
+        `treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`
       )
     }
 
@@ -83,7 +83,7 @@ async function run(): Promise<void> {
       }
     }
 
-    let tbRunCommand = `bash -c treebeard run --confirm `
+    let tbRunCommand = `treebeard run --confirm `
     if (apiKey) {
       tbRunCommand += ' --upload '
     }
@@ -91,7 +91,7 @@ async function run(): Promise<void> {
     tbRunCommand += envsToFwd.join(' ')
 
     if (notebooks) {
-      tbRunCommand += ` --notebooks '${notebooks}' `
+      tbRunCommand += ` --notebooks ${notebooks} `
     }
 
     if (!useDocker) {
