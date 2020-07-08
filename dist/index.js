@@ -999,7 +999,6 @@ function run() {
             const debug = core.getInput('debug').toLowerCase() === 'true';
             const path = core.getInput('path');
             process.chdir(path);
-            const script = [];
             core.startGroup('Checking Python is Installed');
             const pythonSetupCheck = yield exec.exec('python', [
                 '-c',
@@ -1011,10 +1010,10 @@ function run() {
                 return;
             }
             core.startGroup('🌲 Install Treebeard');
-            yield exec.exec(`pip install git+https://github.com/treebeardtech/treebeard.git@${conf_1.treebeardRef}#subdirectory=treebeard-lib`);
+            yield exec.exec(`pip install -U git+https://github.com/treebeardtech/treebeard.git@${conf_1.treebeardRef}#subdirectory=treebeard-lib`);
             core.endGroup();
             if (apiKey) {
-                script.push(`treebeard configure --api_key ${apiKey} --user_name "$GITHUB_REPOSITORY_OWNER"`);
+                yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
             }
             const env = Object.assign({ TREEBEARD_REF: conf_1.treebeardRef }, process.env);
             const envsToFwd = [];
@@ -1049,7 +1048,7 @@ function run() {
             }
             tbRunCommand += envsToFwd.join(' ');
             if (notebooks) {
-                tbRunCommand += ` --notebooks '${notebooks}' `;
+                tbRunCommand += ` --notebooks ${notebooks} `;
             }
             if (!useDocker) {
                 tbRunCommand += ' --dockerless ';
@@ -1057,19 +1056,14 @@ function run() {
             if (debug) {
                 tbRunCommand += ' --debug ';
             }
-            script.push(tbRunCommand);
             if (debug) {
                 console.log(`Treebeard submitting env:\n${Object.keys(env)}`);
             }
-            const status = yield exec.exec(`bash -c "${script.join(' && ')}"`, undefined, {
+            const status = yield exec.exec(tbRunCommand, undefined, {
                 ignoreReturnCode: true,
                 env
             });
-            // Ignore status code 2 to allow other reporting mechanisms e.g. slack
-            if (status === 2) {
-                console.log(`Treebeard action ignoring Treebeard CLI failure status code ${status} to enable other notifications.\n\n`);
-            }
-            else if (status > 0) {
+            if (status > 0) {
                 core.setFailed(`Treebeard CLI run failed with status code ${status}`);
             }
         }
@@ -1372,7 +1366,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'master';
+exports.treebeardRef = 'nobash';
 
 
 /***/ }),

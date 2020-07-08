@@ -1,5 +1,6 @@
 import glob
 import importlib
+import os
 import re
 import sys
 from typing import Any, Set
@@ -15,7 +16,7 @@ import_regexp = re.compile(r"^import (\w+)")
 def get_imported_modules(glob_path: str) -> Set[str]:
     nb_paths = glob.glob(glob_path, recursive=True)
     if len(nb_paths) == 0:
-        raise Exception(f"No notebooks found with glob {glob_path}")
+        raise Exception(f"No notebooks found with glob {glob_path}, cwd {os.getcwd()}")
 
     se: Any = ScriptExporter()
 

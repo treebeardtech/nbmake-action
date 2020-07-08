@@ -1,3 +1,5 @@
+import treebeard.windows_unicode_fix  # type: ignore isort:skip
+
 import warnings
 from typing import Any
 

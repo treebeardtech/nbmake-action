@@ -1,6 +1,6 @@
-name: Check Action Dist
+name: Action NPM Test
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   npm:

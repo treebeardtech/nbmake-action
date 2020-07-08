@@ -16,7 +16,6 @@ async function run(): Promise<void> {
 
     process.chdir(path)
 
-    const script = []
     core.startGroup('Checking Python is Installed')
     const pythonSetupCheck = await exec.exec('python', [
       '-c',
@@ -33,14 +32,14 @@ async function run(): Promise<void> {
 
     core.startGroup('🌲 Install Treebeard')
     await exec.exec(
-      `pip install git+https://github.com/treebeardtech/treebeard.git@${treebeardRef}#subdirectory=treebeard-lib`
+      `pip install -U git+https://github.com/treebeardtech/treebeard.git@${treebeardRef}#subdirectory=treebeard-lib`
     )
 
     core.endGroup()
 
     if (apiKey) {
-      script.push(
-        `treebeard configure --api_key ${apiKey} --user_name "$GITHUB_REPOSITORY_OWNER"`
+      await exec.exec(
+        `treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`
       )
     }
 
@@ -92,7 +91,7 @@ async function run(): Promise<void> {
     tbRunCommand += envsToFwd.join(' ')
 
     if (notebooks) {
-      tbRunCommand += ` --notebooks '${notebooks}' `
+      tbRunCommand += ` --notebooks ${notebooks} `
     }
 
     if (!useDocker) {
@@ -103,27 +102,16 @@ async function run(): Promise<void> {
       tbRunCommand += ' --debug '
     }
 
-    script.push(tbRunCommand)
-
     if (debug) {
       console.log(`Treebeard submitting env:\n${Object.keys(env)}`)
     }
 
-    const status = await exec.exec(
-      `bash -c "${script.join(' && ')}"`,
-      undefined,
-      {
-        ignoreReturnCode: true,
-        env
-      }
-    )
+    const status = await exec.exec(tbRunCommand, undefined, {
+      ignoreReturnCode: true,
+      env
+    })
 
-    // Ignore status code 2 to allow other reporting mechanisms e.g. slack
-    if (status === 2) {
-      console.log(
-        `Treebeard action ignoring Treebeard CLI failure status code ${status} to enable other notifications.\n\n`
-      )
-    } else if (status > 0) {
+    if (status > 0) {
       core.setFailed(`Treebeard CLI run failed with status code ${status}`)
     }
   } catch (error) {

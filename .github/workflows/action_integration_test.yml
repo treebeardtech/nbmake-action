@@ -1,6 +1,6 @@
-name: Integration Test
+name: Action Integration Test
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   conda:
@@ -81,3 +81,15 @@ jobs:
           path: "./integration-test/failing_notebook"
         continue-on-error: true
       - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
+  windows:
+    runs-on: windows-latest
+    name: Run treebeard
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pip install -r requirements.txt # Manually install python deps as running dockerless
+        working-directory: "./examples/hello_treebeard"
+      - uses: ./
+        with:
+          use-docker: false
+          path: ./examples/hello_treebeard
