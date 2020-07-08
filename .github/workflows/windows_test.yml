@@ -1,0 +1,14 @@
+on: push
+jobs:
+  run:
+    runs-on: windows-latest
+    name: Run treebeard
+    env:
+      working-dir: "./examples/hello_treebeard"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pip install -r requirements.txt # Manually install python deps as running dockerless
+      - uses: treebeardtech/treebeard@master
+        with:
+          use-docker: false

@@ -1061,7 +1061,7 @@ function run() {
             if (debug) {
                 console.log(`Treebeard submitting env:\n${Object.keys(env)}`);
             }
-            const status = yield exec.exec(`bash -c "${script.join(' && ')}"`, undefined, {
+            const status = yield exec.exec(script.join(' && '), undefined, {
                 ignoreReturnCode: true,
                 env
             });
@@ -1372,7 +1372,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'master';
+exports.treebeardRef = 'nobash';
 
 
 /***/ }),

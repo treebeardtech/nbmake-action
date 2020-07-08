@@ -109,14 +109,10 @@ async function run(): Promise<void> {
       console.log(`Treebeard submitting env:\n${Object.keys(env)}`)
     }
 
-    const status = await exec.exec(
-      `bash -c "${script.join(' && ')}"`,
-      undefined,
-      {
-        ignoreReturnCode: true,
-        env
-      }
-    )
+    const status = await exec.exec(script.join(' && '), undefined, {
+      ignoreReturnCode: true,
+      env
+    })
 
     // Ignore status code 2 to allow other reporting mechanisms e.g. slack
     if (status === 2) {
