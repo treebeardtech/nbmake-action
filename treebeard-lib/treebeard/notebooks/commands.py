@@ -10,7 +10,7 @@ from typing import List, Optional
 import click
 import yaml
 
-from treebeard.buildtime import build
+from treebeard.buildtime.build import build
 from treebeard.conf import (
     GitHubDetails,
     TreebeardContext,
@@ -212,5 +212,5 @@ def run_repo(
         temp_dir,
         envs_to_forward=env,
         upload=upload,
-        logging=usagelogging,
+        usagelogging=usagelogging,
     )

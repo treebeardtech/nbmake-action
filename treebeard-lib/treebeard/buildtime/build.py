@@ -20,7 +20,7 @@ def build(
     repo_temp_dir: str,
     envs_to_forward: List[str],
     upload: bool,
-    logging: bool,
+    usagelogging: bool,
 ) -> int:
     click.echo(f"🌲 Treebeard buildtime, building repo")
     click.echo(f" Running repo setup")
@@ -43,7 +43,7 @@ def build(
                 shell=True,
             )
         except Exception:
-            if logging:
+            if usagelogging:
                 tb_helper.update(
                     treebeard_context,
                     update_url=f"{api_url}/{treebeard_env.run_path}/log",
@@ -137,7 +137,7 @@ def build(
         click.echo(f"✨  Successfully built {versioned_image_name}")
     except:
         click.echo(f"\n\n❗ Failed to build container from the source repo")
-        if logging:
+        if usagelogging:
             tb_helper.update(
                 treebeard_context,
                 update_url=f"{api_url}/{treebeard_env.run_path}/log",
