@@ -1,23 +1,13 @@
-from treebeard.conf import TreebeardConfig, TreebeardContext
 import unittest
-from typing import Callable, TypeVar
-from unittest.mock import Mock, patch, DEFAULT, ANY
+from unittest.mock import ANY, DEFAULT, Mock, patch
 
-# from treebeard.conf import treebeard_env
-from treebeard.notebooks import commands
+from tests.treebeard.test_helper import MockValidator
 from treebeard import helper as tb_helper_real
 
+# from treebeard.conf import treebeard_env
+from treebeard.notebooks.commands import run_repo
+
 # import treebeard.conf
-
-T = TypeVar("T")
-
-
-class MockValidator(object):
-    def __init__(self, validator: Callable[[T], bool]):
-        self.validator = validator
-
-    def __eq__(self, other: T):
-        return bool(self.validator(other))
 
 
 class ComponentTest(unittest.TestCase):
@@ -28,7 +18,7 @@ class ComponentTest(unittest.TestCase):
         helper.run_image.return_value = 0  # type: ignore
         tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
 
-        commands.run_repo(
+        run_repo(
             ["tests/treebeard/test.ipynb"], [], [], True, False, False, True, True, None
         )
 
@@ -36,8 +26,11 @@ class ComponentTest(unittest.TestCase):
             print(f"Run ID is: {r}")
             return r.startswith("local-user/treebeard-lib:local-")
 
+        def validate_arg(r: str):
+            return r == "local-user/treebeard-lib:cli"
+
         helper.tag_image.assert_called_with(  # type: ignore
-            MockValidator(validate_run_id), "local-user/treebeard-lib:cli"
+            MockValidator(validate_run_id), MockValidator(validate_arg)
         )
 
     @patch.multiple("treebeard.buildtime.build", helper=DEFAULT, tb_helper=DEFAULT)
@@ -47,7 +40,7 @@ class ComponentTest(unittest.TestCase):
         helper.run_repo2docker.side_effect = Exception  # type: ignore
         tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
 
-        commands.run_repo(
+        run_repo(
             ["tests/treebeard/test.ipynb"], [], [], True, False, False, True, True, None
         )
 
@@ -60,7 +53,7 @@ class ComponentTest(unittest.TestCase):
     # @patch("treebeard.buildtime.build.helper")
     # def test_when_github_no_registry_name_is_local(self, mock_helper: Mock):
     #     mock_helper.run_image.return_value = 0  # type: ignore
-    #     commands.run_repo(
+    #     run_repo(
     #         ["test.ipynb"], [], [], True, False, False, True,
     #     )
 

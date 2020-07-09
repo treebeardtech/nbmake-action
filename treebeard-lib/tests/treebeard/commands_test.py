@@ -23,7 +23,15 @@ class CommandsTest(unittest.TestCase):
     @patch("treebeard.notebooks.commands.build")
     def test_when_config_override_then_yaml_saved(self, mock_build: Mock):
         commands.run_repo(
-            ["tests/treebeard/test.ipynb"], [], [], True, False, False, True, None
+            ["tests/treebeard/test_command.ipynb"],
+            [],
+            [],
+            True,
+            False,
+            False,
+            True,
+            True,
+            None,
         )
 
         print(f"args {mock_build.build.call_args}")  # type: ignore

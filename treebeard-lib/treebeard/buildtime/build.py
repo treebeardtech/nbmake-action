@@ -9,9 +9,9 @@ import docker  # type: ignore
 from docker.errors import ImageNotFound, NotFound  # type: ignore
 from repo2docker.utils import is_valid_docker_image_name  # type:ignore
 
+from treebeard import helper as tb_helper
 from treebeard.buildtime import helper
 from treebeard.conf import TreebeardContext, api_url, get_treebeard_config
-from treebeard import helper as tb_helper
 from treebeard.util import fatal_exit
 
 

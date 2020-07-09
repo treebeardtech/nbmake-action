@@ -1,7 +1,6 @@
 import json
 import os
 import subprocess
-import sys
 from traceback import format_exc
 from typing import Dict, List
 
@@ -9,13 +8,13 @@ import click
 import papermill as pm  # type: ignore
 from sentry_sdk import capture_exception, capture_message  # type: ignore
 
+from treebeard import helper
 from treebeard.conf import (
     TreebeardConfig,
     TreebeardContext,
     TreebeardEnv,
     api_url,
 )
-from treebeard.helper import log, update, upload_artifact, upload_meta_nbs
 from treebeard.importchecker.imports import check_imports
 from treebeard.logs import log as tb_log
 from treebeard.logs.helpers import clean_log_file
@@ -52,7 +51,7 @@ class NotebookRun:
     def upload_nb(self, notebook_path: str, nb_status: str, set_as_thumbnail: bool):
         notebook_upload_path = f"{self._run_path}/{notebook_path}"
 
-        upload_artifact(
+        helper.upload_artifact(
             self._treebeard_context,
             notebook_path,
             notebook_upload_path,
@@ -66,7 +65,7 @@ class NotebookRun:
                 for name in files:
                     full_name = os.path.join(root, name)
                     upload_path = f"{self._run_path}/{full_name}"
-                    upload_artifact(
+                    helper.upload_artifact(
                         self._treebeard_context, full_name, upload_path, None
                     )
 
@@ -77,7 +76,7 @@ class NotebookRun:
 
         try:
             notebook_dir, notebook_name = os.path.split(notebook_path)
-            log(
+            helper.log(
                 f"Executing Notebook {notebook_name} in {'.' if len(notebook_dir) == 0 else notebook_dir}"
             )
             pm.execute_notebook(  # type: ignore
@@ -91,7 +90,7 @@ class NotebookRun:
                 log_output=True,
                 cwd=f"{os.getcwd()}/{notebook_dir}",
             )
-            log(f"✅ Notebook {notebook_path} passed!\n")
+            helper.log(f"✅ Notebook {notebook_path} passed!\n")
             nb_dict = get_nb_dict()
             num_cells = len(nb_dict["cells"])
             return NotebookResult(
@@ -108,7 +107,7 @@ class NotebookRun:
                 nb_dict, self._treebeard_config
             )
 
-            log(
+            helper.log(
                 f"""{status} Notebook {notebook_path} failed!\n  {num_passing_cells}/{num_cells} cells ran.\n\n{tb}"""
             )
 
@@ -127,7 +126,7 @@ class NotebookRun:
         upload: bool,
         notebook_files: List[str],
     ) -> Dict[str, NotebookResult]:
-        log(f"🌲 treebeard runtime: running repo")
+        helper.log(f"🌲 treebeard runtime: running repo")
         subprocess.run(
             [
                 "bash",
@@ -156,7 +155,7 @@ class NotebookRun:
 
         set_as_thumbnail = True
         for i, notebook_path in enumerate(notebook_files):
-            log(f"⏳ Running {i + 1}/{len(notebook_files)}: {notebook_path}")
+            helper.log(f"⏳ Running {i + 1}/{len(notebook_files)}: {notebook_path}")
             result = self.run_notebook(notebook_path)
             notebook_results[notebook_path] = result
             if upload:
@@ -180,9 +179,16 @@ class NotebookRun:
 
         print(results)
 
+        if logging:
+            helper.update(
+                self._treebeard_context,
+                update_url=f"{api_url}/{self._treebeard_context.treebeard_env.run_path}/log",
+                status="FAILURE",
+            )
+
         if should_upload_outputs:
             if os.path.exists("treebeard.log"):
-                upload_artifact(
+                helper.upload_artifact(
                     self._treebeard_context,
                     "treebeard.log",
                     f"{self._run_path}/treebeard.log",
@@ -192,26 +198,20 @@ class NotebookRun:
             with open("tb_results.log", "w") as results_log:
                 results_log.write(results)
 
-            upload_artifact(
+            helper.upload_artifact(
                 self._treebeard_context,
                 "tb_results.log",
                 f"{self._run_path}/__treebeard__/tb_results.log",
                 None,
             )
-            update(
+            helper.update(
                 self._treebeard_context,
                 update_url=f"{api_url}/{self._treebeard_context.treebeard_env.run_path}/update",
                 status=get_status_str(),
             )
-            if logging:
-                update(
-                    self._treebeard_context,
-                    update_url=f"{api_url}/{self._treebeard_context.treebeard_env.run_path}/log",
-                    status="FAILURE",
-                )
             print(f"🌲 View your outputs at https://treebeard.io/admin/{self._run_path}")
 
-        sys.exit(status)
+        return status
 
     def start(self, upload: bool = False, logging: bool = True):
         if not self._treebeard_env.repo_short_name:
@@ -220,7 +220,7 @@ class NotebookRun:
             raise Exception("No project ID at buildtime")
 
         if upload:
-            upload_meta_nbs(self._treebeard_context)
+            helper.upload_meta_nbs(self._treebeard_context)
 
         clean_log_file()
 
@@ -237,7 +237,7 @@ class NotebookRun:
         if upload:
             self.upload_outputs()
 
-        log("🌲 Run Finished. Results:\n")
+        helper.log("🌲 Run Finished. Results:\n")
 
         results = ""
         for notebook in notebook_results.keys():
@@ -281,7 +281,7 @@ class NotebookRun:
                     else:
                         if imports_ok:
                             results += f"\nℹ️ Strict mode is disabled and import checker passed, run is successful! ✅\n"
-                            self.finish(0, upload, results, logging)
+                            return self.finish(0, upload, results, logging)
                         else:
                             results += f"\nℹ️ Strict mode is disabled! Fix missing dependencies to get a passing run.\n"
                     results += "\n"
@@ -290,6 +290,6 @@ class NotebookRun:
                 capture_exception(ex)
 
             fail_status = 2 if upload else 1
-            self.finish(fail_status, upload, results, logging)
+            return self.finish(fail_status, upload, results, logging)
         else:
-            self.finish(0, upload, results, logging)
+            return self.finish(0, upload, results, logging)

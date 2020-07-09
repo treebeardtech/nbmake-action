@@ -182,7 +182,8 @@ def run_repo(
 
         nbrun = treebeard.runtime.run.NotebookRun(treebeard_context)
 
-        nbrun.start(upload=upload, logging=usagelogging)  # will sys.exit
+        status = nbrun.start(upload=upload, logging=usagelogging)
+        sys.exit(status)
 
     if upload:
         update(
