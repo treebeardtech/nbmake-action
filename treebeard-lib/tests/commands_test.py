@@ -3,8 +3,10 @@ import unittest
 from typing import Callable, TypeVar
 from unittest.mock import Mock, patch
 
+from assertpy import assert_that  # type: ignore
+
 from treebeard.conf import get_treebeard_config
-from treebeard.notebooks import commands
+from treebeard.notebooks.commands import run_repo
 
 T = TypeVar("T")
 
@@ -20,8 +22,8 @@ class MockValidator(object):
 class CommandsTest(unittest.TestCase):
     @patch("treebeard.notebooks.commands.build")
     def test_when_config_override_then_yaml_saved(self, mock_build: Mock):
-        commands.run_repo(
-            ["tests/treebeard/test_command.ipynb"],
+        run_repo(
+            ["tests/resources/test_command.ipynb"],
             [],
             [],
             True,
@@ -38,7 +40,9 @@ class CommandsTest(unittest.TestCase):
 
         os.chdir(bundle_dir)
         config = get_treebeard_config()
-        assert config.notebooks == ["tests/treebeard/test.ipynb"]
+        assert_that(config.notebooks).is_equal_to(
+            ["tests/resources/test_command.ipynb"]
+        )
 
 
 if __name__ == "__main__":
