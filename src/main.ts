@@ -116,6 +116,7 @@ async function run(): Promise<void> {
     const usageLogging = await isUsageLoggingEnabled(
       `https://github.com/${process.env.GITHUB_REPOSITORY}`
     )
+    console.log(usageLogging)
 
     if (usageLogging) {
       tbRunCommand += ' --usagelogging'
