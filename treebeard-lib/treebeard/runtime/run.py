@@ -226,6 +226,7 @@ class NotebookRun:
 
         notebook_files = self._treebeard_config.get_deglobbed_notebooks()
 
+        print("RUNNING")
         notebook_results = self._run(
             self._treebeard_env.user_name,
             self._treebeard_env.repo_short_name,

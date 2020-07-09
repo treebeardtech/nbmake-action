@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import ANY, DEFAULT, Mock, patch
 
-from tests.treebeard.test_helper import MockValidator
+from tests.test_helper import MockValidator
 from treebeard import helper as tb_helper_real
 
 # from treebeard.conf import treebeard_env
@@ -19,7 +19,7 @@ class ComponentTest(unittest.TestCase):
         tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
 
         run_repo(
-            ["tests/treebeard/test.ipynb"], [], [], True, False, False, True, True, None
+            ["tests/resources/test.ipynb"], [], [], True, False, False, True, True, None
         )
 
         def validate_run_id(r: str):
@@ -41,7 +41,7 @@ class ComponentTest(unittest.TestCase):
         tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
 
         run_repo(
-            ["tests/treebeard/test.ipynb"], [], [], True, False, False, True, True, None
+            ["tests/resources/test.ipynb"], [], [], True, False, False, True, True, None
         )
 
         def validate_log(url: str):
@@ -54,7 +54,7 @@ class ComponentTest(unittest.TestCase):
     # def test_when_github_no_registry_name_is_local(self, mock_helper: Mock):
     #     mock_helper.run_image.return_value = 0  # type: ignore
     #     run_repo(
-    #         ["test.ipynb"], [], [], True, False, False, True,
+    #         ["tests/resources/test.ipynb"], [], [], True, False, False, True,
     #     )
 
     #     os.environ["GITHUB_REPOSITORY"] = "alex-treebeard/fake-repo"
