@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import ANY, DEFAULT, Mock, patch
 
 from tests.test_helper import MockValidator
-
 # from treebeard.conf import treebeard_env
 # from treebeard import helper as tb_helper_real
 from treebeard.conf import (

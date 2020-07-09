@@ -3,8 +3,9 @@ import unittest
 from typing import Callable, TypeVar
 from unittest.mock import Mock, patch
 
-from treebeard.conf import get_treebeard_config
+from assertpy import assert_that  # type: ignore
 
+from treebeard.conf import get_treebeard_config
 # from treebeard.conf import treebeard_env
 from treebeard.notebooks.commands import run_repo
 
@@ -40,7 +41,9 @@ class CommandsTest(unittest.TestCase):
 
         os.chdir(bundle_dir)
         config = get_treebeard_config()
-        assert config.notebooks == ["tests/test.ipynb"]
+        assert_that(config.notebooks).is_equal_to(
+            ["tests/resources/test_command.ipynb"]
+        )
 
 
 if __name__ == "__main__":

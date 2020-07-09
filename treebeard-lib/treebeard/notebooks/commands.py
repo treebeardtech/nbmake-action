@@ -10,7 +10,7 @@ from typing import List, Optional
 import click
 import yaml
 
-from treebeard.buildtime.build import build
+from treebeard.buildtime import build
 from treebeard.conf import (
     GitHubDetails,
     TreebeardContext,
@@ -205,10 +205,7 @@ def run_repo(
     with open(f"{temp_dir}/treebeard.yaml", "w") as yaml_file:
         yaml.dump(treebeard_config.dict(), yaml_file)  # type: ignore
 
-    notebooks_files = treebeard_config.get_deglobbed_notebooks()
-    click.echo(notebooks_files)
-
-    return build(
+    return build.build(
         treebeard_context,
         temp_dir,
         envs_to_forward=env,

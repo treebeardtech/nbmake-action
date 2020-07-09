@@ -3,7 +3,6 @@ from unittest.mock import ANY, DEFAULT, Mock, patch
 
 from tests.test_helper import MockValidator
 from treebeard import helper as tb_helper_real
-
 # from treebeard.conf import treebeard_env
 from treebeard.notebooks.commands import run_repo
 
@@ -24,13 +23,10 @@ class ComponentTest(unittest.TestCase):
 
         def validate_run_id(r: str):
             print(f"Run ID is: {r}")
-            return r.startswith("local-user/treebeard-lib:local-")
-
-        def validate_arg(r: str):
-            return r == "local-user/treebeard-lib:cli"
+            return r.startswith("local-user")
 
         helper.tag_image.assert_called_with(  # type: ignore
-            MockValidator(validate_run_id), MockValidator(validate_arg)
+            MockValidator(validate_run_id), MockValidator(validate_run_id)
         )
 
     @patch.multiple("treebeard.buildtime.build", helper=DEFAULT, tb_helper=DEFAULT)

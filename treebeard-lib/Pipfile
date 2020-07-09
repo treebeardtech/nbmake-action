@@ -9,6 +9,7 @@ autopep8 = "*"
 pipenv = "*"
 pytest = "*"
 python-magic = "*"
+assertpy = "*"
 
 [packages]
 treebeard = {editable = true,path = "."}
