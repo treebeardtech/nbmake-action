@@ -1,2 +1,2 @@
 // Do not edit this generated file
-export const treebeardRef = 'nobash'
+export const treebeardRef = 'master'
