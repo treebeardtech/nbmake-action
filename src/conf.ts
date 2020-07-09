@@ -1,2 +1,2 @@
 // Do not edit this generated file
-export const treebeardRef = 'pytest-fix'
+export const treebeardRef = 'update_logging'
