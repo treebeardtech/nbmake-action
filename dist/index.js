@@ -1851,6 +1851,7 @@ function run() {
                 tbRunCommand += ' --debug ';
             }
             const usageLogging = yield isUsageLoggingEnabled(`https://github.com/${process.env.GITHUB_REPOSITORY}`);
+            console.log(usageLogging);
             if (usageLogging) {
                 tbRunCommand += ' --usagelogging';
             }
@@ -3219,7 +3220,7 @@ module.exports = defaults;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'update_logging';
+exports.treebeardRef = 'master';
 
 
 /***/ }),
