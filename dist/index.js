@@ -4078,9 +4078,15 @@ module.exports = function httpAdapter(config) {
       options.maxBodyLength = config.maxContentLength;
     }
 
+<<<<<<< HEAD
     // Create the request
     var req = transport.request(options, function handleResponse(res) {
       if (req.aborted) return;
+=======
+Object.defineProperty(exports, "__esModule", { value: true });
+// Do not edit this generated file
+exports.treebeardRef = 'pytest-fix';
+>>>>>>> pytest-fix
 
       // uncompress the response body transparently if required
       var stream = res;

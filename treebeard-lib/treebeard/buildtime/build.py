@@ -91,6 +91,7 @@ def build(
         )
 
     treebeard_config = treebeard_context.treebeard_config
+    workdir = os.getcwd()
     try:
         os.chdir(repo_temp_dir)
 
@@ -115,6 +116,8 @@ def build(
         click.echo("Treebeard Bundle Contents:")
         subprocess.run(["pwd"])
         subprocess.run(["ls", "-la", repo_temp_dir])
+        os.chdir(workdir)
+        shutil.rmtree(repo_temp_dir)
 
     # Pull down images to use in cache
 
@@ -180,6 +183,4 @@ def build(
     if use_docker_registry:
         helper.push_image(passing_image_name)
 
-    os.chdir(os.environ["HOME"])
-    shutil.rmtree(repo_temp_dir)
     return 0
