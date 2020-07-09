@@ -169,7 +169,7 @@ def build(
 
     click.echo(f"Image built successfully, now running.")
     status = helper.run_image(
-        versioned_image_name, envs_to_forward, upload, treebeard_context,
+        versioned_image_name, envs_to_forward, upload, usagelogging, treebeard_context,
     )
     if status != 0:
         click.echo(f"Image run failed, not updated {passing_image_name}")

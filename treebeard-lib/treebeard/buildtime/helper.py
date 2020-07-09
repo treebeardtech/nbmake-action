@@ -13,6 +13,7 @@ def run_image(
     image_name: str,
     envs_to_forward: List[str],
     upload: bool,
+    usagelogging: bool,
     treebeard_context: TreebeardContext,
 ) -> int:
     client: Any = docker.from_env()  # type: ignore
@@ -52,10 +53,11 @@ def run_image(
         click.echo(f"Starting container: {pip_treebeard}\nEnvironment: {env.keys()}")
 
     upload_flag = "--upload" if upload else "--no-upload"
+    usagelogging_flag = " --logging" if usagelogging else "--no-logging"
     debug = " --debug " if treebeard_config.debug else " "
     container = client.containers.run(
         image_name,
-        f"bash -cxeu '({pip_treebeard} > /dev/null 2>&1) && treebeard run {debug} --dockerless {upload_flag} --confirm'",
+        f"bash -cxeu '({pip_treebeard} > /dev/null 2>&1) && treebeard run {debug} --dockerless {upload_flag} {usagelogging_flag} --confirm'",
         environment=env,
         detach=True,
     )

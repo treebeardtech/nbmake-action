@@ -28,6 +28,7 @@
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@actions/exec": "^1.0.4",
+    "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "yaml": "^1.10.0"
   },

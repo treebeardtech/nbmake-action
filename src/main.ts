@@ -1,6 +1,17 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import {treebeardRef} from './conf'
+import axios from 'axios'
+
+async function isUsageLoggingEnabled(repoURL: string): Promise<boolean> {
+  try {
+    // Is repo public?
+    await axios.get(repoURL)
+    return true
+  } catch {
+    return false
+  }
+}
 
 async function run(): Promise<void> {
   try {
@@ -12,7 +23,6 @@ async function run(): Promise<void> {
     const dockerRegistryPrefix = core.getInput('docker-registry-prefix')
     const useDocker = core.getInput('use-docker').toLowerCase() === 'true'
     const debug = core.getInput('debug').toLowerCase() === 'true'
-    const usageLogging = core.getInput('usage-logging').toLowerCase() === 'true'
     const path = core.getInput('path')
 
     process.chdir(path)
@@ -104,8 +114,12 @@ async function run(): Promise<void> {
       tbRunCommand += ' --debug '
     }
 
-    if (!usageLogging) {
-      tbRunCommand += ' --no-usagelogging'
+    const usageLogging = await isUsageLoggingEnabled(
+      `https://github.com/${process.env.GITHUB_REPOSITORY}`
+    )
+
+    if (usageLogging) {
+      tbRunCommand += ' --usagelogging'
     }
 
     script.push(tbRunCommand)

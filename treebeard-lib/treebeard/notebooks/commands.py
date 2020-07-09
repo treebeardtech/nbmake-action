@@ -83,7 +83,7 @@ def create_github_details(dockerless: bool):
 )
 @click.option(
     "--usagelogging/--no-usagelogging",
-    default=True,
+    default=False,
     help="Send usage logs to treebeard",
 )
 @click.pass_obj  # type: ignore
