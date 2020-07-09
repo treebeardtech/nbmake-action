@@ -1,15 +1,15 @@
 import configparser
 import datetime
 import json
+import mimetypes
 import os
 import subprocess
 import sys
 from glob import glob
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 import click
-import magic  # type: ignore
 import requests
 from pydantic import BaseModel  # type: ignore
 from requests import Response
@@ -23,7 +23,6 @@ from treebeard.conf import (
 )
 from treebeard.version import get_version
 
-mime: Any = magic.Magic(mime=True)  # type: ignore
 version = get_version()
 
 
@@ -160,8 +159,7 @@ def upload_artifact(
     set_as_thumbnail: bool = False,
 ):
     log(f"Uploading {filename} to {upload_path}\n")
-    content_type: str = mime.from_file(filename)  # type: ignore
-
+    content_type: str = str(mimetypes.guess_type(filename)[0])
     get_url_params = {"content_type": content_type}
     put_object_headers = {"Content-Type": content_type}
     if status:

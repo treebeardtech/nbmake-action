@@ -103,7 +103,7 @@ def build(
         notebook_files = get_treebeard_config().get_deglobbed_notebooks()
         if len(notebook_files) == 0:
             raise Exception(
-                "No notebooks found to run. If you are using a treebeard.yaml file, check it is correct: https://treebeard.readthedocs.io/en/latest/project_config.html"
+                f"No notebooks found to run (cwd {os.getcwd()}). If you are using a treebeard.yaml file, check it is correct: https://treebeard.readthedocs.io/en/latest/project_config.html"
             )
         try:
             subprocess.check_output(["nbstripout"] + notebook_files)

@@ -4,8 +4,6 @@ from typing import Callable, TypeVar
 from unittest.mock import Mock, patch
 
 from treebeard.conf import get_treebeard_config
-
-# from treebeard.conf import treebeard_env
 from treebeard.notebooks import commands
 
 T = TypeVar("T")

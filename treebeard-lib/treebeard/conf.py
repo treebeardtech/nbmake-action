@@ -64,7 +64,7 @@ class TreebeardConfig(BaseModel):
             deglobbed_notebooks.extend(sorted(glob(pattern, recursive=True)))
         if len(deglobbed_notebooks) == 0:
             raise Exception(
-                f"No notebooks found in project! Searched for {self.notebooks}"
+                f"No notebooks found in project! Searched for {self.notebooks}, cwd {os.getcwd()}"
             )
 
         ignored_notebooks = []
