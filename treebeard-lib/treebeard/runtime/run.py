@@ -183,7 +183,7 @@ class NotebookRun:
             helper.update(
                 self._treebeard_context,
                 update_url=f"{api_url}/{self._treebeard_context.treebeard_env.run_path}/log",
-                status="FAILURE",
+                status=get_status_str(),
             )
 
         if should_upload_outputs:
