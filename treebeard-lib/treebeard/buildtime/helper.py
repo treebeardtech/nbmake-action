@@ -53,7 +53,7 @@ def run_image(
         click.echo(f"Starting container: {pip_treebeard}\nEnvironment: {env.keys()}")
 
     upload_flag = "--upload" if upload else "--no-upload"
-    usagelogging_flag = " --logging" if usagelogging else "--no-logging"
+    usagelogging_flag = " --usagelogging" if usagelogging else "--no-usagelogging"
     debug = " --debug " if treebeard_config.debug else " "
     container = client.containers.run(
         image_name,
