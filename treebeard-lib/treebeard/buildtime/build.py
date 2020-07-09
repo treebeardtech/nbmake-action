@@ -116,10 +116,6 @@ def build(
         click.echo("Treebeard Bundle Contents:")
         subprocess.run(["pwd"])
         subprocess.run(["ls", "-la", repo_temp_dir])
-        os.chdir(workdir)
-        shutil.rmtree(repo_temp_dir)
-
-    # Pull down images to use in cache
 
     # Build image but don't run
     versioned_image_name = f"{image_name}:{treebeard_env.run_id}"
@@ -156,6 +152,9 @@ def build(
             return 2
         else:
             return 1
+    finally:
+        os.chdir(workdir)
+        shutil.rmtree(repo_temp_dir)
 
     helper.tag_image(versioned_image_name, latest_image_name)
 
