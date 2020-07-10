@@ -165,12 +165,16 @@ You can have multiple actions defined in `.yaml` files in your workflows folder.
 
 ## Treebeard Teams
 
-We are a startup and are building a separate product which the library integrates with. Our goal with Teams is to improve the observability of testing/deployment to speed up debugging. [Let us know](https://laurencewatson.typeform.com/to/Bgj6hp) if you want to try it out.
+For even greater observability of testing and deployment to speed up debugging, you could build out your own solution or try our Treebeard Teams platform.  
 
-<p align="center"><img src="https://storage.googleapis.com/treebeard_image_dump_public/github.png" width="550px" style="margin:'auto'"/></p>
+Integrating naturally with this library, the Teams platform serves all notebook outputs and artifacts from a run. This improves collaboration, debugging and deployment, especially for complex projects.
+    
+If you're considering implementing a new CI layer for your data science team, [get in touch](https://laurencewatson.typeform.com/to/Bgj6hp).
+
+<p align="center"><img src="https://storage.googleapis.com/treebeard_image_dump_public/github.png" width="800px" style="margin:'auto'"/></p>
 
 ## More Information
 
 - [Docs](https://treebeard.readthedocs.io/en/latest/)
 - [Website](https://treebeard.io)
-- [Guide to pyton dependency management choices](https://towardsdatascience.com/devops-for-data-science-making-your-python-project-reproducible-f55646e110fa)
+- [Guide to python dependency management choices](https://towardsdatascience.com/devops-for-data-science-making-your-python-project-reproducible-f55646e110fa)
