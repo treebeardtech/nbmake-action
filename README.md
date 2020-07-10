@@ -10,11 +10,19 @@
 
 **Note: This GitHub Action is in Pre-release. Drop us an issue or message Alex on [gitter](https://gitter.im/treebeardtech/community) before using as docs are patchy**
 
+
 ## What is Treebeard?
 
 A low-config continuous integration framework for data science teams using Jupyter Notebooks.
 
-Works either through our pypi package or GitHub Actions.
+The key features are:
+- **Simple:** Easy to set up a powerful testing loop, with straightforward but powerful configuration options.
+- **Jupyter integration:** Just works with your notebooks
+- **Fast feedback:** Catch errors quickly by testing your whole project, and easily create integration tests for your entire workflow
+- **Flexible:** Use as a Github Action, or create your own workflows with the CLI tool
+- **Containers:** Creates docker images from your dependencies file for you, for reproducibility and deployment
+
+Install the CLI with `pip` or use with GitHub Actions.
 
 ### Quick start (GitHub Actions)
 
@@ -89,6 +97,72 @@ For data science this means treating Jupyter Notebooks as first class citizens. 
 
 We are keen to know what you would like treebeard to work with.
 
+## Requirements
+Python 3.5+
+
+Treebeard makes use of two fantastic libraries:
+- [repo2docker](https://github.com/jupyter/repo2docker) to create containers from dependency files, which powers [binder](http://mybinder.org/) 
+- [papermill](https://github.com/nteract/papermill) to execute notebooks
+
+## Installation
+
+### CLI
+Via our pypi package  
+`pip install treebeard`
+
+### Github Action
+[*What is a Github Action?*](https://github.com/features/actions)
+
+**Simple example Action**   
+Commit the following snippet in `.github/workflows/test.yaml` in your repo to enable the action.  
+```yaml
+# .github/workflows/simple_example.yaml        #  <- location of the yaml file in your project  
+on: push                                       #  <- define when the Action will run
+jobs:
+  run:
+    runs-on: ubuntu-latest                     #  <- can be linux, windows, macos
+    name: Run treebeard                        #  <- name your job (there can be multiple)
+    steps:
+      - uses: actions/checkout@v2              #  <- gets your repo code
+      - uses: actions/setup-python@v2          #  <- installs python
+      - uses: treebeardtech/treebeard@master   #  <- runs Treebeard
+```
+
+**Complex example Action**  
+See syntax for more complex triggers [here](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions)  
+
+This example makes use of Github [Secrets](https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets), which are then made available to the Action.  
+*Prefix secrets with `TB_` if they are required inside the container for notebooks and scripts to use*
+```yaml
+# .github/workflows/complex_example.yaml
+on:
+  push:                                                                #  <- every time code is committed
+  schedule:                                                            #  <- and
+    - cron: "0 0 * * 0"                                                #  <- on any schedule you like
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    name: Run treebeard
+    steps:
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master   #  <- connect to Google Cloud account
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}                    #  <- set credentials in ssecrets
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: treebeardtech/treebeard@master
+        with:
+          api-key: ${{ secrets.TREEBEARD_API_KEY }}                    #  <- connect to Treebeard Teams 
+          docker-username: treebeardtech                               #  <- dockerhub username
+          docker-password: "${{ secrets.DOCKER_PASSWORD }}"            #  <- so image is saved in dockerhub
+          docker-image-name: "treebeardtech/example_image"             #  <- for faster builds
+        env:
+          TB_MY_TOKEN: "${{ secrets.MY_TOKEN }}"                       #  <- secret available inside image 
+```
+
+You can have multiple actions defined in `.yaml` files in your workflows folder.
+
 ## Treebeard Teams
 
 We are a startup and are building a separate product which the library integrates with. Our goal with Teams is to improve the observability of testing/deployment to speed up debugging. [Let us know](https://laurencewatson.typeform.com/to/Bgj6hp) if you want to try it out.
@@ -99,4 +173,4 @@ We are a startup and are building a separate product which the library integrate
 
 - [Docs](https://treebeard.readthedocs.io/en/latest/)
 - [Website](https://treebeard.io)
-- [Medium blog on dependency management](https://towardsdatascience.com/devops-for-data-science-making-your-python-project-reproducible-f55646e110fa)
+- [Guide to pyton dependency management choices](https://towardsdatascience.com/devops-for-data-science-making-your-python-project-reproducible-f55646e110fa)
