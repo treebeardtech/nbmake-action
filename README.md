@@ -16,13 +16,15 @@
 A low-config continuous integration framework for data science teams using Jupyter Notebooks.
 
 The key features are:
-- **Simple:** Easy to set up a powerful testing loop, with straightforward but powerful configuration options.
-- **Jupyter integration:** Just works with your notebooks
-- **Fast feedback:** Catch errors quickly by testing your whole project, and easily create integration tests for your entire workflow
-- **Flexible:** Use as a Github Action, or create your own workflows with the CLI tool
-- **Containers:** Creates docker images from your dependencies file for you, for reproducibility and deployment
+* **Simple:** Easy to set up a powerful testing loop, with straightforward but powerful configuration options.  
 
-Install the CLI with `pip` or use with GitHub Actions.
+* **Jupyter integration:** Just works with your notebooks   
+
+* **Fast feedback:** Catch errors quickly by testing your whole project, and easily create integration tests  for your entire workflow   
+
+* **Flexible:** Use as a Github Action, or create your own workflows with the CLI tool   
+
+* **Containers:** Creates docker images from your dependencies file for you, for reproducibility and deployment 
 
 ### Quick start (GitHub Actions)
 
@@ -100,17 +102,22 @@ We are keen to know what you would like treebeard to work with.
 ## Requirements
 Python 3.5+
 
-Treebeard makes use of two fantastic libraries:
+Treebeard makes substantial use of two great libraries:
 - [repo2docker](https://github.com/jupyter/repo2docker) to create containers from dependency files, which powers [binder](http://mybinder.org/) 
 - [papermill](https://github.com/nteract/papermill) to execute notebooks
 
 ## Installation
 
-### CLI
-Via our pypi package  
-`pip install treebeard`
+### Install the CLI from pypi
+<div class="termy">
 
-### Github Action
+```console
+$ pip install treebeard
+```
+
+</div>
+
+### Use as a Github Action
 [*What is a Github Action?*](https://github.com/features/actions)
 
 **Simple example Action**   
