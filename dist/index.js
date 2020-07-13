@@ -1844,9 +1844,7 @@ function run() {
             if (notebooks) {
                 tbRunCommand += ` --notebooks ${notebooks} `;
             }
-            if (!useDocker) {
-                tbRunCommand += ' --dockerless ';
-            }
+            tbRunCommand += useDocker ? ' --use-docker ' : ' --no-use-docker ';
             if (debug) {
                 tbRunCommand += ' --debug ';
             }

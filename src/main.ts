@@ -105,9 +105,7 @@ async function run(): Promise<void> {
       tbRunCommand += ` --notebooks ${notebooks} `
     }
 
-    if (!useDocker) {
-      tbRunCommand += ' --dockerless '
-    }
+    tbRunCommand += useDocker ? ' --use-docker ' : ' --no-use-docker '
 
     if (debug) {
       tbRunCommand += ' --debug '
