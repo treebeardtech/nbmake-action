@@ -12,3 +12,4 @@ jobs:
         with:
           notebooks: "treebeard-lib/run_tests.ipynb" # run: pytest
           api-key: ${{ secrets.TREEBEARD_API_KEY }}
+          use-docker: False
