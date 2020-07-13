@@ -8,10 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - name: Run
-        run: |
-          set -eux
-          python -m pip install --upgrade pip pipenv
-          pushd ./treebeard-lib
-          pipenv install --dev --system --deploy
-          pytest
+      - uses: treebeardtech/treebeard@master
+        with:
+          notebooks: "treebeard-lib/run_tests.ipynb" # run: pytest
+
