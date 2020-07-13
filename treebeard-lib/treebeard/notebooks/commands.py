@@ -176,7 +176,7 @@ def run_repo(
             f"Warning: This will clear the outputs of your notebooks, continue?",
             default=True,
         ):
-            sys.exit(0)
+            sys.exit(1)
 
         # Note: import runtime.run causes win/darwin devices missing magic to fail at start
         import treebeard.runtime.run
@@ -184,7 +184,7 @@ def run_repo(
         nbrun = treebeard.runtime.run.NotebookRun(treebeard_context)
 
         status = nbrun.start(upload=upload, logging=usagelogging)
-        sys.exit(status)
+        return status
 
     if upload:
         update(
