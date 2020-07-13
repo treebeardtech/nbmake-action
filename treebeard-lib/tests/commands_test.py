@@ -27,7 +27,7 @@ class CommandsTest(unittest.TestCase):
             [],
             [],
             True,
-            False,
+            True,
             False,
             True,
             True,

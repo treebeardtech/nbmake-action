@@ -17,7 +17,7 @@ class ComponentTest(unittest.TestCase):
         tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
 
         run_repo(
-            ["tests/resources/test.ipynb"], [], [], True, False, False, True, True, None
+            ["tests/resources/test.ipynb"], [], [], True, True, False, True, True, None
         )
 
         def validate_run_id(r: str):
@@ -36,7 +36,7 @@ class ComponentTest(unittest.TestCase):
         tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
 
         run_repo(
-            ["tests/resources/test.ipynb"], [], [], True, False, False, True, True, None
+            ["tests/resources/test.ipynb"], [], [], True, True, False, True, True, None
         )
 
         def validate_log(url: str):
