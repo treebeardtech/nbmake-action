@@ -169,6 +169,26 @@ jobs:
 
 You can have multiple actions defined in `.yaml` files in your workflows folder.
 
+### Actions API reference
+
+These optional variables can be specified for the Treebeard Action using `with:` as in the examples above. The full Action specification can be seen [here](https://github.com/treebeardtech/treebeard/blob/master/action.yml)  
+`api-key`: treebeard api key,  
+`notebooks`: Filenames of Jupyter notebooks to run. By default a glob pattern will be used ("**/*ipynb")  
+
+
+Automatically generated docker images can be sent to a dockerhub container registry to speed up future builds. Enable this by setting these variables:  
+`docker-username`, <my_dockerhub_username>,  
+`docker-password`, <my_dockerhub_password>  
+`docker-image-name`, <docker_image_name>, the name of the image built by treebeard  
+`docker-registry-prefix`, <docker_image_prefix->, the prefix of your docker image name, use instead of docker-image-name to generate a default image name   
+
+
+Other variables
+`use-docker`, true, Run treebeard inside repo2docker - disable building a docker image with this flag - on by default    
+`debug`, false, Enable debug logging  
+`path`, '<path/to/run_from>', Path of the repo to run from  
+
+
 ## Treebeard Teams
 
 For even greater observability of testing and deployment to speed up debugging, you could build out your own solution or try our Treebeard Teams platform.  
