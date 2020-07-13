@@ -98,14 +98,9 @@ For data science this means treating Jupyter Notebooks as first class citizens. 
 
 We are keen to know what you would like treebeard to work with.
 
-## Requirements
-Python 3.5+
-
-Treebeard makes substantial use of two great libraries:
-- [repo2docker](https://github.com/jupyter/repo2docker) to create containers from dependency files, which powers [binder](http://mybinder.org/) 
-- [papermill](https://github.com/nteract/papermill) to execute notebooks
-
 ## Installation
+**Requirements**
+Python 3.5+
 
 ### Install the CLI from pypi
 <div class="termy">
@@ -115,6 +110,10 @@ $ pip install treebeard
 ```
 
 </div>
+
+Treebeard makes substantial use of two great libraries:
+- [repo2docker](https://github.com/jupyter/repo2docker) to create containers from dependency files, which powers [binder](http://mybinder.org/) 
+- [papermill](https://github.com/nteract/papermill) to execute notebooks
 
 ### Use as a Github Action
 [*What is a Github Action?*](https://github.com/features/actions)
