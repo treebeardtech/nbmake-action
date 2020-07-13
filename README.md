@@ -17,9 +17,18 @@ Treebeard is a project which helps Python Data Science practitioners use the clo
 
 * <img width=18 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/> Runs on GitHub Actions
 
-  * 🐳 Automatically Containerises Repos
+* 🐳 Automatically Containerises Repos
 
-  * <img width=18 src="https://jupyter.org/favicon.ico"> Executes Notebooks   
+* <img width=18 src="https://jupyter.org/favicon.ico"> Executes Notebooks   
+
+## Why Notebook-First?
+
+Notebooks have gained mass-adoption within exploratory data science due to how readable and interactive they are.
+
+We think these properties make them useful in more general scenarios:
+* as entrypoints to larger programs
+* for scheduled tasks
+* as install scripts (think 'interactive READMEs').
 
 ## How can Treebeard help me?
 1. **Automate Daily reports** Create daily reports from a dataset and publish them ([Quicklooks](https://magneticearth.org/pages/quicklooks.html))
@@ -155,21 +164,34 @@ Automatically generated docker images can be sent to a dockerhub container regis
 
 # 🐳  `use-docker` or not?
 
-By default, Treebeard will use repo2docker to containerise the repo before running notebooks.
+By default, Treebeard will use repo2docker to containerise the repo before running the notebooks inside the container.
 
 This is great for simplicity and binder-compatibility but more advanced users may prefer to bypass containerisation because
 1. You prefer to install dependencies yourself (could be as simple as `pip install -r requirements.txt`)
 2. You would like to use GitHub Actions to integrate with GCP, AWS etc without having to pass credentials into a container
 3. You would like to use windows. Repo2docker builds Ubuntu images.
 
+# 🐳  Customising Your Container
+
+Treebeard uses repo2docker to automatically create a docker image from your repo.
+
+By default, repo2docker installs your conda, pipenv, or pip requirements based on files on your repo. It also supports [several other config files]().
+
+
 # 🙌  Contributing
 
+There is a two-person self-funded team behind this project, so we appreciate community contribution of any kind from any member.
 
-Treebeard makes substantial use of two great libraries:
-- [repo2docker](https://github.com/jupyter/repo2docker) to create containers from dependency files, which powers [binder](http://mybinder.org/) 
-- [papermill](https://github.com/nteract/papermill) to execute notebooks
+The most valuable contribution to us is feedback and issues raised via Gitter or Issues.
+
+If you want to hack on the internal treebeard Python package then we encourage you to jump into our interactive tutorial:
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/hello.ipynb)
 
 # <img width=30 src="https://treebeard.io/static/logo-f65d0b1f4c26063572398ee1da01edd7.png"></src> Treebeard Teams
+
+The great thing about notebooks is they provide a readable record of what happened.
+
 
 For even greater observability of testing and deployment to speed up debugging, you could build out your own solution or try our Treebeard Teams platform.  
 
