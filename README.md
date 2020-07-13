@@ -3,8 +3,6 @@
 <h2>A Notebook-First Continuous Integration Framework</h2>
 
 <p>
-<a href="https://badge.fury.io/py/treebeard"><img src="https://badge.fury.io/py/treebeard.svg" alt="PyPI version"></a>
-<a href="https://treebeard.readthedocs.io/"><img src="https://readthedocs.org/projects/treebeard/badge/?version=latest" alt="Docs"> </a>
 <img src="https://github.com/treebeardtech/treebeard/workflows/E2E%20Test/badge.svg" alt="E2E Test">
 <img src="https://github.com/treebeardtech/treebeard/workflows/Integration%20Test/badge.svg" alt="Integration Test">
 <a href="https://gitter.im/treebeardtech/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the Gitter Chat"></a></p>
@@ -13,7 +11,7 @@
 
 ## What is Treebeard?
 
-Treebeard is a project which helps Python Data Science practitioners use the cloud to increase producitivity.
+Treebeard is a library which helps Python Data Science practitioners work more productively with cloud environments.
 
 * <img width=18 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/> Runs on GitHub Actions
 
@@ -162,7 +160,8 @@ Automatically generated docker images can be sent to a dockerhub container regis
 | `path`                     | `<'path/to/run_from'>`            | Path of the repo to run from                                                                             |
 | `api-key`                 | `<my_api_key>`                   | treebeard teams api key                                                                                  |
 
-# 🐳  `use-docker` or not?
+# FAQ
+ ## 🐳 Should I `use-docker` or not?
 
 By default, Treebeard will use repo2docker to containerise the repo before running the notebooks inside the container.
 
@@ -171,12 +170,13 @@ This is great for simplicity and binder-compatibility but more advanced users ma
 2. You would like to use GitHub Actions to integrate with GCP, AWS etc without having to pass credentials into a container
 3. You would like to use windows. Repo2docker builds Ubuntu images.
 
-# 🐳  Customising Your Container
+## How do I pass secrets/variables into the runtime container?
 
-Treebeard uses repo2docker to automatically create a docker image from your repo.
+Any variable beginning with `TB_` will be forwarded into the container at runtime.
+
+## How do I install dependencies that don't work in an `environment.yml`?
 
 By default, repo2docker installs your conda, pipenv, or pip requirements based on files on your repo. It also supports [several other config files]().
-
 
 # 🙌  Contributing
 
@@ -207,5 +207,5 @@ If you're considering implementing a new CI layer for your data science team, [g
 - [Website](https://treebeard.io)
 - [Guide to python dependency management choices](https://towardsdatascience.com/devops-for-data-science-making-your-python-project-reproducible-f55646e110fa)
 
-<p align="center"><a href="https://treebeard.io"><img width=30% alt="Treebeard - continuous integration for data science" src="https://github.com/treebeardtech/treebeard/blob/master/docs/img/treebeard.jpg?raw=true"></a></p>
+<p align="center"><a href="https://treebeard.io"><img width=25% alt="Treebeard - continuous integration for data science" src="https://github.com/treebeardtech/treebeard/blob/master/docs/img/treebeard.jpg?raw=true"></a></p>
 
