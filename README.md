@@ -174,16 +174,18 @@ You can have multiple actions defined in `.yaml` files in your workflows folder.
 These optional variables can be specified for the Treebeard Action using `with:` as in the examples above. The full Action specification can be seen [here](https://github.com/treebeardtech/treebeard/blob/master/action.yml)  
 Automatically generated docker images can be sent to a dockerhub container registry to speed up future builds, if the `docker-` variables are set.  
 
-Action input, example, definition
-`notebooks`, <'my_notebook_to_run.ipynb'>, Filenames of Jupyter notebooks to run. By default a glob pattern will be used ("**/*ipynb")  
-`docker-username`, <my_dockerhub_username>, Dockerhub username
-`docker-password`, <my_dockerhub_password>  Dockerhub password
-`docker-image-name`, <docker_image_name>, the name of the image built by treebeard  
-`docker-registry-prefix`, <docker_image_prefix->, the prefix of your docker image name, use instead of docker-image-name to generate a default image name   
-`use-docker`, true, Run treebeard inside repo2docker - disable building a docker image with this flag - on by default    
-`debug`, false, Enable debug logging  
-`path`, '<path/to/run_from>', Path of the repo to run from  
-`api-key`, <my_key_api>, treebeard teams api key
+| Action input                | example                          | definition                                                                                               |
+|-----------------------------|----------------------------------|----------------------------------------------------------------------------------------------------------|
+| `notebooks`                | `<'my_notebook_to_run.ipynb'>` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used \(""\\\*\*/\*ipynb""\)    |
+| `docker-username`         | `<my_dockerhub_username>`        | Dockerhub username                                                                                       |
+| `docker-password`         | `<my_dockerhub_password>`        | Dockerhub password                                                                                       |
+| `docker-image-name`      | `<docker_image_name>`            | the name of the image built by treebeard                                                                 |
+| `docker-registry-prefix` | `<docker_image_prefix- >`        | the prefix of your docker image name use instead of docker\-image\-name to generate a default image name |
+| `use-docker`              | `true`                             | Run treebeard inside repo2docker \- disable building a docker image with this flag \- on by default      |
+| `debug`                    | `false`                            | Enable debug logging                                                                                     |
+| `path`                     | `<'path/to/run_from'>`            | Path of the repo to run from                                                                             |
+| `api-key`                 | `<my_api_key>`                   | treebeard teams api key                                                                                  |
+
 
 ## Treebeard Teams
 
