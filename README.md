@@ -176,7 +176,7 @@ Automatically generated docker images can be sent to a dockerhub container regis
 
 | Action input                | example                          | definition                                                                                               |
 |-----------------------------|----------------------------------|----------------------------------------------------------------------------------------------------------|
-| `notebooks`                | `<'my_notebook_to_run.ipynb'>` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used \(""\\\*\*/\*ipynb""\)    |
+| `notebooks`                | `<'my_notebook_to_run.ipynb'>` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used (`**/*ipynb`)    |
 | `docker-username`         | `<my_dockerhub_username>`        | Dockerhub username                                                                                       |
 | `docker-password`         | `<my_dockerhub_password>`        | Dockerhub password                                                                                       |
 | `docker-image-name`      | `<docker_image_name>`            | the name of the image built by treebeard                                                                 |
