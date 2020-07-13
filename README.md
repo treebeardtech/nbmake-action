@@ -15,7 +15,6 @@
 
 A low-config continuous integration framework for data science teams using Jupyter Notebooks.
 
-The key features are:
 * **Simple:** Easy to set up a powerful testing loop, with straightforward but powerful configuration options.  
 
 * **Jupyter integration:** Just works with your notebooks   
