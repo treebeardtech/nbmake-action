@@ -9,7 +9,7 @@ from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
 from treebeard.helper import CliContext, check_for_updates
-from treebeard.notebooks.commands import run
+from treebeard.notebooks.commands import run, run_repo
 from treebeard.other.commands import config, configure, setup, version
 
 warnings.filterwarnings(
@@ -41,3 +41,5 @@ cli.add_command(run)  # type: ignore
 cli.add_command(setup)  # type: ignore
 cli.add_command(config)  # type: ignore
 cli.add_command(version)  # type: ignore
+
+run_treebeard: Any = run_repo

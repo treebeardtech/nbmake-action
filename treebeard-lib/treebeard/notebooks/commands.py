@@ -26,11 +26,12 @@ from treebeard.sentry_setup import setup_sentry
 pp = pprint.PrettyPrinter(indent=2)
 
 
-def create_github_details(dockerless: bool):
+def create_github_details(use_docker: bool):
     run_id = os.getenv("GITHUB_RUN_ID")
 
     if not run_id:
-        if dockerless and os.getenv("TREEBEARD_GITHUB_DETAILS"):
+        inside_r2d = not use_docker and os.getenv("TREEBEARD_GITHUB_DETAILS")
+        if inside_r2d:
             return GitHubDetails(**json.loads(os.environ["TREEBEARD_GITHUB_DETAILS"]))
         return None
 
@@ -71,9 +72,9 @@ def create_github_details(dockerless: bool):
     "--confirm/--no-confirm", default=False, help="Confirm all prompt options"
 )
 @click.option(
-    "--dockerless/--no-dockerless",
+    "--use-docker/--no-use-docker",
     default=False,
-    help="Run locally without docker container",
+    help="Run inside a repo2docker container",
 )
 @click.option(
     "--upload/--no-upload", default=False, help="Upload outputs",
@@ -93,19 +94,19 @@ def run(
     env: List[str],
     ignore: List[str],
     confirm: bool,
-    dockerless: bool,
+    use_docker: bool,
     upload: bool,
     debug: bool,
     usagelogging: bool,
 ):
 
-    github_details = create_github_details(dockerless)
+    github_details = create_github_details(use_docker)
     status = run_repo(
         notebooks,
         env,
         ignore,
         confirm,
-        dockerless,
+        use_docker,
         upload,
         debug,
         usagelogging,
@@ -116,15 +117,15 @@ def run(
 
 
 def run_repo(
-    notebooks: List[str],
-    env: List[str],
-    ignore: List[str],
-    confirm: bool,
-    dockerless: bool,
-    upload: bool,
-    debug: bool,
-    usagelogging: bool,
-    github_details: Optional[GitHubDetails],
+    notebooks: List[str] = ["**/*ipynb"],
+    env: List[str] = [],
+    ignore: List[str] = [],
+    confirm: bool = True,
+    use_docker: bool = False,
+    upload: bool = False,
+    debug: bool = False,
+    usagelogging: bool = False,
+    github_details: Optional[GitHubDetails] = None,
 ) -> int:
     """
     Run a notebook and optionally schedule it to run periodically
@@ -161,7 +162,7 @@ def run_repo(
     if "TREEBEARD_START_TIME" not in os.environ:
         os.environ["TREEBEARD_START_TIME"] = get_time()
 
-    if dockerless:
+    if not use_docker:
         if upload:
             update(
                 treebeard_context,

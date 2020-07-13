@@ -88,6 +88,7 @@ class NotebookRun:
                 autosave_cell_every=10,
                 execution_timeout=self._treebeard_config.cell_execution_timeout_seconds,
                 log_output=True,
+                nest_asyncio=True,  #  https://github.com/nteract/papermill/issues/490
                 cwd=f"{os.getcwd()}/{notebook_dir}",
             )
             helper.log(f"✅ Notebook {notebook_path} passed!\n")
