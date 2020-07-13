@@ -32,7 +32,7 @@ jobs:
       - uses: "./"
         with:
           api-key: ${{ secrets.TREEBEARD_API_KEY }}
-          docker-username: "treebeardtech"
+          docker-username: "alextreebeard"
           docker-password: "${{ secrets.DOCKER_PASSWORD }}"
           docker-image-name: "treebeardtech/hello_treebeard"
           path: "./examples/hello_treebeard"
