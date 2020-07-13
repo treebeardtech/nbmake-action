@@ -11,13 +11,15 @@
 
 ## What is Treebeard?
 
-Treebeard is a library which helps Python Data Science practitioners work more productively with cloud environments.
+A library which helps Python Data Science practitioners work more productively with cloud environments.
 
 * <img width=18 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/> Runs on GitHub Actions
 
 * 🐳 Automatically Containerises Repos
 
-* <img width=18 src="https://jupyter.org/favicon.ico"> Executes Notebooks   
+* <img width=18 src="https://jupyter.org/favicon.ico"> Executes Notebooks
+
+* <img width=18 src="https://www.python.org/favicon.ico"> Searches for missing imports 
 
 ## Why Notebook-First?
 
@@ -30,10 +32,9 @@ We think these properties make them useful in more general scenarios:
 
 ## How can Treebeard help me?
 1. **Automate Daily reports** Create daily reports from a dataset and publish them ([Quicklooks](https://magneticearth.org/pages/quicklooks.html))
-2. **Validate Exploratory Analysis** Validate exploratory analysis notebooks ()
-3. **Test Project Examples** Smoke test for complex data science projects ()
-4. **Ensure Project Reproducibility** Ensure project environment is reproducible and binder-ready ()
-5. **Build Binder Environments** Create versioned docker images for deployment anywhere
+3. **Test Project Examples** Smoke test example directories for your tool/library
+4. **Ensure Project Reproducibility** Ensure analytical work runs correctly against project requirements
+5. **Build Binder Environments** Create docker images which can be used as development environments.
 
 
 # <img width=23 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/>  Getting Started via GitHub Actions
@@ -180,22 +181,22 @@ By default, repo2docker installs your conda, pipenv, or pip requirements based o
 
 # 🙌  Contributing
 
-There is a two-person self-funded team behind this project, so we appreciate community contribution of any kind from any member.
-
 The most valuable contribution to us is feedback and issues raised via Gitter or Issues.
 
 If you want to hack on the internal treebeard Python package then we encourage you to jump into our interactive tutorial:
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/hello.ipynb)
 
+chat with us if you want to make changes, we are here to help!
+
 # <img width=30 src="https://treebeard.io/static/logo-f65d0b1f4c26063572398ee1da01edd7.png"></src> Treebeard Teams
 
 The great thing about notebooks is they provide a readable record of what happened.
 
 
-For even greater observability of testing and deployment to speed up debugging, you could build out your own solution or try our Treebeard Teams platform.  
+For greater observability of testing and deployment try our Treebeard Teams platform. It's free for open source usage and beta customers.
 
-Integrating naturally with this library, the Teams platform serves all notebook outputs and artifacts from a run. This improves collaboration, debugging and deployment, especially for complex projects.
+the Teams platform serves all notebook outputs and artifacts from a run. This improves collaboration, debugging and deployment, especially for complex projects.
     
 If you're considering implementing a new CI layer for your data science team, [get in touch](https://laurencewatson.typeform.com/to/Bgj6hp).
 
