@@ -31,9 +31,9 @@ We think these properties make them useful in more general scenarios:
 * as install scripts (think 'interactive READMEs').
 
 ## How can Treebeard help me?
-1. **Automate Daily reports** Create daily reports from a dataset and publish them ([Quicklooks](https://magneticearth.org/pages/quicklooks.html))
-3. **Test Project Examples** Smoke test example directories for your tool/library
-4. **Ensure Project Reproducibility** Ensure analytical work runs correctly against project requirements
+1. **Automate Daily reports** Create daily reports from a dataset and publish them ([Quicklooks](https://github.com/Swarm-DISC/Swarm_quicklooks/blob/master/.github/workflows/main.yml))
+3. **Test Project Examples** Smoke test example directories for your tool/library ([ThinkBayes](https://github.com/Rabscuttler/ThinkBayes2/blob/master/.github/workflows/main.yaml))
+4. **Ensure Project Reproducibility** Ensure analytical work runs correctly against project requirements ([PyPSA](https://github.com/treebeardtech/PyPSA/blob/master/.github/workflows/main.yaml)
 5. **Build Binder Environments** Create docker images which can be used as development environments.
 
 <p align="center">
