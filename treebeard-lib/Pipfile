@@ -10,6 +10,7 @@ pipenv = "*"
 pytest = "*"
 python-magic = "*"
 assertpy = "*"
+atomicwrites = "*"
 
 [packages]
 treebeard = {editable = true,path = "."}
