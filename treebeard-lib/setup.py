@@ -21,12 +21,11 @@ install_requires = [
     "pyyaml",
     "pydantic",
     "docker",
-    "python-magic",
     "nbstripout",
     "docker",
     "requests",
-    "jupyter-client>=6.1.0",  # fix Step #0: ERROR: nbclient 0.2.0 has requirement jupyter-client>=6.1.0, but you'll have jupyter-client 5.3.4 which is incompatible.
     "jupyter-contrib-nbextensions",  # for nbconvert scriptexporter
+    "jupyter-client==6.1.5",  # fix Step #0: ERROR: nbclient 0.2.0 has requirement jupyter-client>=6.1.0, but you'll have jupyter-client 5.3.4 which is incompatible
 ]
 
 with open("README.md", "r") as fh:
@@ -51,13 +50,8 @@ setuptools.setup(  # type: ignore
     ],
     license="Apache-2.0",
     python_requires=">=3.6",
-    package_data={"treebeard": ["version.txt", "example_treebeard.yaml", "r2d/*"]},
-    entry_points={
-        "console_scripts": [
-            "treebeard = treebeard:cli",
-            "treebeard-spaceship = treebeard.version:cli",
-        ]
-    },
+    package_data={"treebeard": ["version.txt"]},
+    entry_points={"console_scripts": ["treebeard = treebeard:cli",]},
     install_requires=install_requires,
     url="https://github.com/treebeardtech/treebeard",
 )

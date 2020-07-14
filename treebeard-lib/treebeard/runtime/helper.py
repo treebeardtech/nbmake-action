@@ -16,7 +16,7 @@ class NotebookResult(BaseModel):
 def get_failed_nb_details(
     nb_dict: Any, treebeard_config: TreebeardConfig
 ) -> Tuple[str, int, str]:
-    status = "💥"
+    status = "FAILURE"
     num_passing_cells: Optional[int] = 0
     err_line = ""
     try:
@@ -40,7 +40,7 @@ def get_failed_nb_details(
                     num_passing_cells -= 1
                     print("timeout")
                     err_line = f"Cell timed out after {treebeard_config.cell_execution_timeout_seconds}s. You can set `cell_execution_timeout_seconds` in treebeard.yaml."
-                    status = "⏰"
+                    status = "TIMEOUT"
                     break
 
                 num_passing_cells += 1
@@ -54,13 +54,15 @@ def get_failed_nb_details(
     return err_line, num_passing_cells, status
 
 
-def get_health_bar(passing: int, total: int, status: str):
+def get_health_bar(
+    passing: int, total: int, status: str, status_emojis: Dict[str, str]
+):
     assert passing <= total
     bar_length = 10
     n_green = int(bar_length * float(passing) / float(total))
     n_red = bar_length - n_green
     if n_green == bar_length:
-        return "🟩" * (bar_length - 1) + "✅"
+        return "🟩" * (bar_length - 1) + status_emojis["SUCCESS"]
     return ("🟩" * n_green) + status + ("⬜" * (n_red - 1))
 
 

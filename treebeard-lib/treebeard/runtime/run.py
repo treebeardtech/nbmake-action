@@ -28,11 +28,11 @@ from treebeard.runtime.helper import (
 bucket_name = "treebeard-notebook-outputs"
 
 
-notebook_status_descriptions = {
-    "✅": "SUCCESS",
-    "⏳": "WORKING",
-    "💥": "FAILURE",
-    "⏰": "TIMEOUT",
+status_emojis = {
+    "SUCCESS": "✅",
+    "WORKING": "⏳",
+    "FAILURE": "💥",
+    "TIMEOUT": "⏰",
 }
 
 
@@ -91,11 +91,11 @@ class NotebookRun:
                 nest_asyncio=True,  #  https://github.com/nteract/papermill/issues/490
                 cwd=f"{os.getcwd()}/{notebook_dir}",
             )
-            helper.log(f"✅ Notebook {notebook_path} passed!\n")
+            helper.log(f"{status_emojis['SUCCESS']} Notebook {notebook_path} passed!\n")
             nb_dict = get_nb_dict()
             num_cells = len(nb_dict["cells"])
             return NotebookResult(
-                status="✅",
+                status="SUCCESS",
                 num_cells=num_cells,
                 num_passing_cells=num_cells,
                 err_line="",
@@ -148,7 +148,7 @@ class NotebookRun:
 
         notebook_results = {
             notebook: NotebookResult(
-                status="⏳", num_cells=1, num_passing_cells=1, err_line=""
+                status="WORKING", num_cells=1, num_passing_cells=1, err_line=""
             )
             for notebook in notebook_files
         }
@@ -158,14 +158,14 @@ class NotebookRun:
 
         set_as_thumbnail = True
         for i, notebook_path in enumerate(notebook_files):
-            helper.log(f"⏳ Running {i + 1}/{len(notebook_files)}: {notebook_path}")
+            helper.log(
+                f"{status_emojis['WORKING']} Running {i + 1}/{len(notebook_files)}: {notebook_path}"
+            )
             result = self.run_notebook(notebook_path)
             notebook_results[notebook_path] = result
             if upload:
                 self.upload_nb(
-                    notebook_path,
-                    notebook_status_descriptions.get(result.status, str(None)),
-                    set_as_thumbnail,
+                    notebook_path, result.status, set_as_thumbnail,
                 )
             set_as_thumbnail = False
 
@@ -246,27 +246,27 @@ class NotebookRun:
         for notebook in notebook_results.keys():
             result = notebook_results[notebook]
             health_bar = get_health_bar(
-                result.num_passing_cells, result.num_cells, result.status
+                result.num_passing_cells, result.num_cells, result.status, status_emojis
             )
 
-            if result.status == "✅":
+            if result.status == "SUCCESS":
                 results += f"{health_bar} {notebook}\n"
                 results += (
                     f"  ran {result.num_passing_cells} of {result.num_cells} cells\n"
                 )
             elif not result.err_line:  # failed to parse notebook properly
-                results += f"{result.status} {notebook}"
+                results += f"{status_emojis[result.status]} {notebook}"
             else:
                 results += f"{health_bar} {notebook}\n"
                 results += (
                     f"  ran {result.num_passing_cells} of {result.num_cells} cells\n"
                 )
-                results += f"  {result.status} {result.err_line}\n"
+                results += f"  {status_emojis[result.status]} {result.err_line}\n"
 
             results += "\n"
 
         n_passed = len(
-            list(filter(lambda v: v.status == "✅", notebook_results.values()))
+            list(filter(lambda v: v.status == "SUCCESS", notebook_results.values()))
         )
 
         total_nbs = len(notebook_results)
