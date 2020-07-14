@@ -34,8 +34,8 @@ If [Netflix](https://netflixtechblog.com/notebook-innovation-591ee3221233) runs 
 
 ## How can Treebeard help me?
 1. **Automate Daily reports** Create daily reports from a dataset and publish them ([Quicklooks](https://github.com/Swarm-DISC/Swarm_quicklooks/blob/master/.github/workflows/main.yml))
-3. **Test Project Examples** Smoke test example directories for your tool/library ([ThinkBayes](https://github.com/Rabscuttler/ThinkBayes2/blob/master/.github/workflows/main.yaml))
-4. **Ensure Project Reproducibility** Ensure analytical work runs correctly against project requirements ([PyPSA](https://github.com/treebeardtech/PyPSA/blob/master/.github/workflows/main.yaml)
+3. **Test Project Examples** Smoke test example directories for your tool/library ([ThinkBayes](https://github.com/Rabscuttler/ThinkBayes2/runs/869047684?check_suite_focus=true))
+4. **Ensure Project Reproducibility** Ensure analytical work runs correctly against project requirements ([PyPSA](https://github.com/treebeardtech/PyPSA/blob/master/.github/workflows/main.yaml))
 5. **Build Binder Environments** Create docker images which can be used as development environments.
 
 <p align="center">
