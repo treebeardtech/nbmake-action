@@ -1,20 +1,22 @@
-# treebeard
+## Development Install
 
-A CLI tool that creates cloud runs for projects containing jupyter notebooks.
+```
+pipenv install
+```
 
-Treebeard creates a docker container from the project directory, builds and runs the project on commit, on a schedule, or at will, and serves rendered notebooks and tagged outputs via an API visible at an admin page.
-
-A user account is needed to use the service at present.
-
-## Development
+## Development against Backend
 
 To run against local services
 
-`export TREEBEARD_ENVIRONMENT=development`
+```
+export TREEBEARD_ENVIRONMENT=development
+```
 
 To run against prod services but with Sentry suppressed
 
-`export TREEBEARD_ENVIRONMENT=staging`
+```
+export TREEBEARD_ENVIRONMENT=staging
+```
 
 ## Code Quality Checks
 
@@ -28,4 +30,6 @@ git clone https://github.com/python/typeshed.git
 pyright && python3.7 -m black --check .
 ```
 
-.
+```
+isort -m 3 -tc -y
+```

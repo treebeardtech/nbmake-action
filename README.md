@@ -30,7 +30,7 @@ This property can make them useful in more general scenarios:
 * for scheduled tasks
 * as install scripts (think 'interactive READMEs').
 
-If [Netflix](https://netflixtechblog.com/notebook-innovation-591ee3221233) runs 100K+ jobs using notebooks maybe it's not a bad idea :)
+If [Netflix](https://netflixtechblog.com/notebook-innovation-591ee3221233) runs 100K+ jobs per day using notebooks maybe it's not a bad idea :)
 
 ## How can Treebeard help me?
 1. **Automate Daily reports** Create daily reports from a dataset and publish them ([Quicklooks](https://github.com/Swarm-DISC/Swarm_quicklooks/blob/master/.github/workflows/main.yml))
