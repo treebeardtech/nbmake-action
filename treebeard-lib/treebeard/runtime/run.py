@@ -165,9 +165,7 @@ class NotebookRun:
             notebook_results[notebook_path] = result
             if upload:
                 self.upload_nb(
-                    notebook_path,
-                    status_emojis.get(result.status, str(None)),
-                    set_as_thumbnail,
+                    notebook_path, result.status, set_as_thumbnail,
                 )
             set_as_thumbnail = False
 
