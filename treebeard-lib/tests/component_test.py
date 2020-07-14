@@ -3,6 +3,7 @@ from unittest.mock import ANY, DEFAULT, Mock, patch
 
 from tests.test_helper import MockValidator
 from treebeard import helper as tb_helper_real
+from treebeard.conf import TreebeardEnv, get_treebeard_config
 from treebeard.notebooks.commands import run_repo
 
 # import treebeard.conf
@@ -16,13 +17,26 @@ class ComponentTest(unittest.TestCase):
         helper.run_image.return_value = 0  # type: ignore
         tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
 
+        tenv: TreebeardEnv = TreebeardEnv(
+            repo_short_name="test", user_name="testuser", run_id="test_run"
+        )
         run_repo(
-            ["tests/resources/test.ipynb"], [], [], True, True, False, True, True, None
+            ["tests/resources/test.ipynb"],
+            [],
+            [],
+            True,
+            True,
+            False,
+            True,
+            True,
+            None,
+            treebeard_env=tenv,
+            treebeard_config=get_treebeard_config(),
         )
 
         def validate_run_id(r: str):
             print(f"Run ID is: {r}")
-            return r.startswith("local-user")
+            return r.startswith("testuser")
 
         helper.tag_image.assert_called_with(  # type: ignore
             MockValidator(validate_run_id), MockValidator(validate_run_id)

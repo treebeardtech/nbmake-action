@@ -13,7 +13,9 @@ import yaml
 from treebeard.buildtime import build
 from treebeard.conf import (
     GitHubDetails,
+    TreebeardConfig,
     TreebeardContext,
+    TreebeardEnv,
     api_url,
     get_config_path,
     get_treebeard_config,
@@ -126,6 +128,8 @@ def run_repo(
     debug: bool = False,
     usagelogging: bool = False,
     github_details: Optional[GitHubDetails] = None,
+    treebeard_env: Optional[TreebeardEnv] = None,
+    treebeard_config: Optional[TreebeardConfig] = None,
 ) -> int:
     """
     Run a notebook and optionally schedule it to run periodically
@@ -133,9 +137,14 @@ def run_repo(
     notebooks = list(notebooks)
     ignore = list(ignore)
 
+    if not treebeard_env:
+        treebeard_env = get_treebeard_env(github_details)
+    if not treebeard_config:
+        treebeard_config = get_treebeard_config()
+
     treebeard_context = TreebeardContext(
-        treebeard_env=get_treebeard_env(github_details),
-        treebeard_config=get_treebeard_config(),
+        treebeard_env=treebeard_env,
+        treebeard_config=treebeard_config,
         config_path=get_config_path(),
         github_details=github_details,
     )
