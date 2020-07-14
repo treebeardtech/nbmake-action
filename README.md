@@ -194,18 +194,15 @@ If you want to hack on the internal treebeard Python package then we encourage y
 
 chat with us if you want to make changes, we are here to help!
 
-# <img width=30 src="https://treebeard.io/static/logo-f65d0b1f4c26063572398ee1da01edd7.png"></src> Treebeard Teams
+# <img width=30 src="https://treebeard.io/static/logo-f65d0b1f4c26063572398ee1da01edd7.png"></src> Treebeard Viewer
 
 The great thing about notebooks is they provide a readable record of what happened.
 
-
-For greater observability of testing and deployment try our Treebeard Teams platform. It's free for open source usage and beta customers.
-
-the Teams platform serves all notebook outputs and artifacts from a run. This improves collaboration, debugging and deployment, especially for complex projects.
+We've built a backend for viewing executed notebooks and their artifacts. It's completely free for open source usage and beta customers.
     
-If you're considering implementing a new CI layer for your data science team, [get in touch](https://laurencewatson.typeform.com/to/Bgj6hp).
+If you are thinking of setting up a more organised CI layer for your notebooks, [let us know](https://laurencewatson.typeform.com/to/Bgj6hp).
 
-<p align="center"><img src="https://storage.googleapis.com/treebeard_image_dump_public/github.png" width="800px" style="margin:'auto'"/></p>
+<p align="center"><img src="https://storage.googleapis.com/treebeard_image_dump_public/ui.gif" width="800px" style="margin:'auto'"/></p>
 
 ## More Information
 
@@ -213,5 +210,5 @@ If you're considering implementing a new CI layer for your data science team, [g
 - [Website](https://treebeard.io)
 - [Guide to python dependency management choices](https://towardsdatascience.com/devops-for-data-science-making-your-python-project-reproducible-f55646e110fa)
 
-<p align="center"><a href="https://treebeard.io"><img width=25% alt="Treebeard - continuous integration for data science" src="https://github.com/treebeardtech/treebeard/blob/master/docs/img/treebeard.jpg?raw=true"></a></p>
+
 

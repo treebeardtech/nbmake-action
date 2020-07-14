@@ -128,15 +128,17 @@ class NotebookRun:
         notebook_files: List[str],
     ) -> Dict[str, NotebookResult]:
         helper.log(f"🌲 treebeard runtime: running repo")
-        subprocess.run(
-            [
-                "bash",
-                "-c",
-                """
-                echo "working directory is $(pwd)\n\n$(ls -la)\n"
-                """,
-            ]
-        )
+
+        if self._treebeard_config.debug:
+            subprocess.run(
+                [
+                    "bash",
+                    "-c",
+                    """
+                    echo "working directory is $(pwd)\n\n$(ls -la)\n"
+                    """,
+                ]
+            )
 
         if self._treebeard_config is None:
             raise Exception("No Treebeard Config Present at runtime!")
@@ -151,7 +153,7 @@ class NotebookRun:
             for notebook in notebook_files
         }
         print(f"Will run the following:")
-        [print(nb) for nb in notebook_files]
+        [print(f" - {nb}") for nb in notebook_files]
         print()
 
         set_as_thumbnail = True
@@ -227,7 +229,6 @@ class NotebookRun:
 
         notebook_files = self._treebeard_config.get_deglobbed_notebooks()
 
-        print("RUNNING")
         notebook_results = self._run(
             self._treebeard_env.user_name,
             self._treebeard_env.repo_short_name,

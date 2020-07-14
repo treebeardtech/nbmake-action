@@ -117,12 +117,12 @@ def validate_notebook_directory(
     if upload and treebeard_env.user_name is None:
         fatal_exit("No account config detected! Please run `treebeard configure`")
 
-    if not Path("treebeard.yaml").is_file():
-        click.secho(  # type: ignore
-            "Warning: treebeard.yaml file not found! `treebeard setup` fetches an example.",
-            fg="yellow",
-        )
-        click.echo("Using defaults: notebooks: - '**/*.ipynb' output_dirs: - 'outputs'")
+    # if not Path("treebeard.yaml").is_file():
+    #     click.secho(  # type: ignore
+    #         "Warning: treebeard.yaml file not found! `treebeard setup` fetches an example.",
+    #         fg="yellow",
+    #     )
+    #     click.echo("Using defaults: notebooks: - '**/*.ipynb' output_dirs: - 'outputs'")
 
     notebook_files = treebeard_config.get_deglobbed_notebooks()
     if not notebook_files:
