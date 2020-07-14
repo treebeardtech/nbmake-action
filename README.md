@@ -204,7 +204,7 @@ We've built a backend for viewing executed notebooks and their artifacts. It's c
     
 If you are thinking of setting up a more organised CI layer for your notebooks, [let us know](https://laurencewatson.typeform.com/to/Bgj6hp).
 
-<p align="center"><img src="https://storage.googleapis.com/treebeard_image_dump_public/ui.gif" width="800px" style="margin:'auto'"/></p>
+<p align="center"><img src="https://storage.googleapis.com/treebeard_image_dump_public/ui.gif" width="600" style="margin:'auto'"/></p>
 
 ## More Information
 
