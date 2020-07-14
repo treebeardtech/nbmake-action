@@ -196,7 +196,7 @@ class NotebookRun:
                     None,
                 )
 
-            with open("tb_results.log", "w", encoding="utf8") as results_log:
+            with open("tb_results.log", "w", encoding="utf-8") as results_log:
                 results_log.write(results)
 
             helper.upload_artifact(
