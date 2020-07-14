@@ -23,12 +23,14 @@ A library which helps Python Data Science practitioners work more productively w
 
 ## Why Notebook-First?
 
-Notebooks have gained mass-adoption within exploratory data science due to how readable and interactive they are.
+Notebooks have gained mass-adoption within exploratory data science due to how readable they are after execution.
 
-We think these properties make them useful in more general scenarios:
+This property can make them useful in more general scenarios:
 * as entrypoints to larger programs
 * for scheduled tasks
 * as install scripts (think 'interactive READMEs').
+
+If [Netflix](https://netflixtechblog.com/notebook-innovation-591ee3221233) runs 100K+ jobs using notebooks maybe it's not a bad idea :)
 
 ## How can Treebeard help me?
 1. **Automate Daily reports** Create daily reports from a dataset and publish them ([Quicklooks](https://github.com/Swarm-DISC/Swarm_quicklooks/blob/master/.github/workflows/main.yml))
@@ -38,7 +40,7 @@ We think these properties make them useful in more general scenarios:
 
 <p align="center">
   <br>
-  <img width=800 src="https://github.com/treebeardtech/treebeard/blob/docker-binder/docs/img/usecases.png"/>
+  <img width=800 src="https://storage.googleapis.com/treebeard_image_dump_public/usecases.png"/>
 </p>
 
 
