@@ -3218,7 +3218,7 @@ module.exports = defaults;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'docker-binder';
+exports.treebeardRef = 'master';
 
 
 /***/ }),

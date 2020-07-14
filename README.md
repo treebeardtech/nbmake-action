@@ -192,7 +192,7 @@ The most valuable contribution to us is feedback and issues raised via Gitter or
 
 If you want to hack on the internal treebeard Python package then we encourage you to jump into our interactive tutorial:
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/hello.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/tutorial.ipynb)
 
 chat with us if you want to make changes, we are here to help!
 
