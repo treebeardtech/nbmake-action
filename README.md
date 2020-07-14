@@ -36,6 +36,11 @@ We think these properties make them useful in more general scenarios:
 4. **Ensure Project Reproducibility** Ensure analytical work runs correctly against project requirements
 5. **Build Binder Environments** Create docker images which can be used as development environments.
 
+<p align="center">
+  <br>
+  <img width=800 src="https://github.com/treebeardtech/treebeard/blob/docker-binder/docs/img/usecases.png"/>
+</p>
+
 
 # <img width=23 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/>  Getting Started via GitHub Actions
 [*What is a Github Action?*](https://github.com/features/actions)
