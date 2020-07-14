@@ -255,13 +255,13 @@ class NotebookRun:
                     f"  ran {result.num_passing_cells} of {result.num_cells} cells\n"
                 )
             elif not result.err_line:  # failed to parse notebook properly
-                results += f"{result.status} {notebook}"
+                results += f"{status_emojis[result.status]} {notebook}"
             else:
                 results += f"{health_bar} {notebook}\n"
                 results += (
                     f"  ran {result.num_passing_cells} of {result.num_cells} cells\n"
                 )
-                results += f"  {result.status} {result.err_line}\n"
+                results += f"  {status_emojis[result.status]} {result.err_line}\n"
 
             results += "\n"
 
