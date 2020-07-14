@@ -15,7 +15,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - uses: dschep/install-pipenv-action@v1
-      - uses: treebeardtech/treebeard@master
+      - uses: ./
         with:
           notebooks: "treebeard-lib/run_tests.ipynb" # run: pytest
           api-key: ${{ secrets.TREEBEARD_API_KEY }}
