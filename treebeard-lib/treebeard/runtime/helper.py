@@ -63,7 +63,7 @@ def get_health_bar(
     n_red = bar_length - n_green
     if n_green == bar_length:
         return "🟩" * (bar_length - 1) + status_emojis["SUCCESS"]
-    return ("🟩" * n_green) + status + ("⬜" * (n_red - 1))
+    return ("🟩" * n_green) + status_emojis[status] + ("⬜" * (n_red - 1))
 
 
 def get_summary(
