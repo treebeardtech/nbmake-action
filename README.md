@@ -35,7 +35,7 @@ If [Netflix](https://netflixtechblog.com/notebook-innovation-591ee3221233) runs 
 ## How can Treebeard help me?
 1. **Automate Daily reports** Create daily reports from a dataset and publish them ([Quicklooks](https://github.com/Swarm-DISC/Swarm_quicklooks/blob/master/.github/workflows/main.yml))
 2. **Test Project Examples** Smoke test example directories for your tool/library ([ThinkBayes](https://github.com/Rabscuttler/ThinkBayes2/runs/869047684?check_suite_focus=true))
-3. **Ensure Project Reproducibility** Validate project requirements, ensure and binder compatibility build docker images ([PyPSA](https://github.com/treebeardtech/PyPSA/blob/master/.github/workflows/main.yaml))
+3. **Ensure Project Reproducibility** Validate project requirements and build docker images ([PyPSA](https://github.com/treebeardtech/PyPSA/blob/master/.github/workflows/main.yaml))
 
 <p align="center">
   <br>
@@ -143,8 +143,8 @@ jobs:
           TB_MY_TOKEN: "${{ secrets.MY_TOKEN }}"                       #  <- secret available inside image 
 ```
 
-**Connecting to other services**
-In this workflow, the runtime environment connects to Google Cloud Platform. This allows the use of the GCP command line, but the credentials are not passed into the docker image, so the `use-docker` flag is set to false, and dependencies are installed manually.
+**Connecting to other services**  
+In this workflow, the runtime environment connects to Google Cloud Platform. This allows notebooks and scripts to authenticate with GCP. Note that credentials would not be passed into the docker image - so it is not used - the `use-docker` flag is set to false and dependencies are installed manually.
 
 ```yaml
 # .github/workflows/connect_to_services.yaml
