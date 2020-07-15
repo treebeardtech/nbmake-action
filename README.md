@@ -115,13 +115,13 @@ jobs:
         notebooks: "EDA/*ipynb"
 ```
 
-**Complex example Action**  
+**Additional variables**  
 See syntax for more complex triggers [here](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions)  
 
 This example makes use of Github [Secrets](https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets), which are then made available to the Action.  
 *Prefix secrets with `TB_` if they are required inside the container for notebooks and scripts to use*
 ```yaml
-# .github/workflows/complex_example.yaml
+# .github/workflows/additional_variables.yaml
 on:
   push:                                                                #  <- every time code is committed
   schedule:                                                            #  <- and
@@ -131,11 +131,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Run treebeard
     steps:
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master   #  <- connect to Google Cloud account
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}                    #  <- set credentials in secrets
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: treebeardtech/treebeard@master
@@ -148,6 +143,31 @@ jobs:
           TB_MY_TOKEN: "${{ secrets.MY_TOKEN }}"                       #  <- secret available inside image 
 ```
 
+**Connecting to other services**
+In this workflow, the runtime environment connects to Google Cloud Platform. This allows the use of the GCP command line, but the credentials are not passed into the docker image, so the `use-docker` flag is set to false, and dependencies are installed manually.
+
+```yaml
+# .github/workflows/connect_to_services.yaml
+on: push
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    name: Run treebeard
+    steps:
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pip install -r requirements.txt # Manually install python deps as running dockerless
+      - uses: treebeardtech/treebeard@master
+        with:
+          api-key: ${{ secrets.TREEBEARD_API_KEY }}
+          use-docker: false
+```
+
 You can have multiple actions defined in `.yaml` files in your workflows folder.
 
 # Treebeard Action API reference
@@ -157,14 +177,14 @@ Automatically generated docker images can be sent to a dockerhub container regis
 
 | Action input                | example                          | definition                                                                                               |
 |-----------------------------|----------------------------------|----------------------------------------------------------------------------------------------------------|
-| `notebooks`                | `<'my_notebook_to_run.ipynb'>` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used (`**/*ipynb`)    |
-| `docker-username`         | `<my_dockerhub_username>`        | Dockerhub username                                                                                       |
+| `notebooks`                | `'my_notebook_to_run.ipynb'` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used (`**/*ipynb`)    |
+| `docker-username`         | `treebeardtech`        | Dockerhub username                                                                                       |
 | `docker-password`         | `<my_dockerhub_password>`        | Dockerhub password                                                                                       |
-| `docker-image-name`      | `<docker_image_name>`            | the name of the image built by treebeard                                                                 |
-| `docker-registry-prefix` | `<docker_image_prefix- >`        | the prefix of your docker image name use instead of docker\-image\-name to generate a default image name |
+| `docker-image-name`      | `project_docker_image`            | the name of the image built by treebeard                                                                 |
+| `docker-registry-prefix` | `my_docker_image_prefix-`        | the prefix of your docker image name use instead of docker\-image\-name to generate a default image name |
 | `use-docker`              | `true`                             | Run treebeard inside repo2docker \- disable building a docker image with this flag \- on by default      |
 | `debug`                    | `false`                            | Enable debug logging                                                                                     |
-| `path`                     | `<'path/to/run_from'>`            | Path of the repo to run from                                                                             |
+| `path`                     | `examples/notebooks/`            | Path of the repo to run from                                                                             |
 | `api-key`                 | `<my_api_key>`                   | treebeard teams api key                                                                                  |
 
 # FAQ
