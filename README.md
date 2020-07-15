@@ -135,8 +135,8 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: treebeardtech/treebeard@master
         with:
-          api-key: ${{ secrets.TREEBEARD_API_KEY }}                    #  <- connect to Treebeard Teams 
-          docker-username: treebeardtech                               #  <- dockerhub username
+          api-key: "${{ secrets.TREEBEARD_API_KEY }}"                    #  <- connect to Treebeard Teams 
+          docker-username: "treebeardtech"                               #  <- dockerhub username
           docker-password: "${{ secrets.DOCKER_PASSWORD }}"            #  <- so image is saved in dockerhub
           docker-image-name: "treebeardtech/example_image"             #  <- for faster builds
         env:
@@ -156,15 +156,15 @@ jobs:
     steps:
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: "${{ secrets.GCP_PROJECT_ID }}"
+          service_account_key: "${{ secrets.GCP_SA_KEY }}"
           export_default_credentials: true
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - run: pip install -r requirements.txt # Manually install python deps as running dockerless
       - uses: treebeardtech/treebeard@master
         with:
-          api-key: ${{ secrets.TREEBEARD_API_KEY }}
+          api-key: "${{ secrets.TREEBEARD_API_KEY }}"
           use-docker: false
 ```
 
@@ -177,15 +177,15 @@ Automatically generated docker images can be sent to a dockerhub container regis
 
 | Action input                | example                          | definition                                                                                               |
 |-----------------------------|----------------------------------|----------------------------------------------------------------------------------------------------------|
-| `notebooks`                | `'my_notebook_to_run.ipynb'` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used (`**/*ipynb`)    |
-| `docker-username`         | `treebeardtech`        | Dockerhub username                                                                                       |
-| `docker-password`         | `<my_dockerhub_password>`        | Dockerhub password                                                                                       |
-| `docker-image-name`      | `project_docker_image`            | the name of the image built by treebeard                                                                 |
-| `docker-registry-prefix` | `my_docker_image_prefix-`        | the prefix of your docker image name use instead of docker\-image\-name to generate a default image name |
+| `notebooks`                | `"my_notebook_to_run.ipynb"` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used (`**/*ipynb`)    |
+| `docker-username`         | `"treebeardtech"`        | Dockerhub username                                                                                       |
+| `docker-password`         | `"${{ secrets.DOCKER_PASSWORD }}"`        | Dockerhub password                                                                                       |
+| `docker-image-name`      | `"project_docker_image"`            | the name of the image built by treebeard                                                                 |
+| `docker-registry-prefix` | `"my_docker_image_prefix-"`        | the prefix of your docker image name use instead of docker\-image\-name to generate a default image name |
 | `use-docker`              | `true`                             | Run treebeard inside repo2docker \- disable building a docker image with this flag \- on by default      |
 | `debug`                    | `false`                            | Enable debug logging                                                                                     |
-| `path`                     | `examples/notebooks/`            | Path of the repo to run from                                                                             |
-| `api-key`                 | `<my_api_key>`                   | treebeard teams api key                                                                                  |
+| `path`                     | `"examples/notebooks/"`            | Path of the repo to run from                                                                             |
+| `api-key`                 | `"${{ secrets.TREEBEARD_API_KEY }}"`                   | treebeard teams api key                                                                                  |
 
 # FAQ
  ## 🐳 Should I `use-docker` or not?
