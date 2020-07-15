@@ -29,9 +29,8 @@ If [Netflix](https://netflixtechblog.com/notebook-innovation-591ee3221233) runs 
 
 ## How can Treebeard help me?
 1. **Automate Daily reports** Create daily reports from a dataset and publish them ([Quicklooks](https://github.com/Swarm-DISC/Swarm_quicklooks/blob/master/.github/workflows/main.yml))
-3. **Test Project Examples** Smoke test example directories for your tool/library ([ThinkBayes](https://github.com/Rabscuttler/ThinkBayes2/runs/869047684?check_suite_focus=true))
-4. **Ensure Project Reproducibility** Ensure analytical work runs correctly against project requirements ([PyPSA](https://github.com/treebeardtech/PyPSA/blob/master/.github/workflows/main.yaml))
-5. **Build Binder Environments** Create docker images which can be used as development environments.
+2. **Test Project Examples** Smoke test example directories for your tool/library ([ThinkBayes](https://github.com/Rabscuttler/ThinkBayes2/runs/869047684?check_suite_focus=true))
+3. **Ensure Project Reproducibility** Validate project requirements and build docker images ([PyPSA](https://github.com/treebeardtech/PyPSA/blob/master/.github/workflows/main.yaml))
 
 <p align="center">
   <br>
@@ -111,13 +110,13 @@ jobs:
         notebooks: "EDA/*ipynb"
 ```
 
-**Complex example Action**  
+**Additional variables**  
 See syntax for more complex triggers [here](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions)  
 
 This example makes use of Github [Secrets](https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets), which are then made available to the Action.  
 *Prefix secrets with `TB_` if they are required inside the container for notebooks and scripts to use*
 ```yaml
-# .github/workflows/complex_example.yaml
+# .github/workflows/additional_variables.yaml
 on:
   push:                                                                #  <- every time code is committed
   schedule:                                                            #  <- and
@@ -127,21 +126,41 @@ jobs:
     runs-on: ubuntu-latest
     name: Run treebeard
     steps:
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master   #  <- connect to Google Cloud account
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}                    #  <- set credentials in secrets
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: treebeardtech/treebeard@master
         with:
-          api-key: ${{ secrets.TREEBEARD_API_KEY }}                    #  <- connect to Treebeard Teams 
-          docker-username: treebeardtech                               #  <- dockerhub username
+          api-key: "${{ secrets.TREEBEARD_API_KEY }}"                    #  <- connect to Treebeard Teams 
+          docker-username: "treebeardtech"                               #  <- dockerhub username
           docker-password: "${{ secrets.DOCKER_PASSWORD }}"            #  <- so image is saved in dockerhub
           docker-image-name: "treebeardtech/example_image"             #  <- for faster builds
         env:
           TB_MY_TOKEN: "${{ secrets.MY_TOKEN }}"                       #  <- secret available inside image 
+```
+
+**Connecting to other services**  
+In this workflow, the runtime environment connects to Google Cloud Platform. This allows notebooks and scripts to authenticate with GCP. Note that credentials would not be passed into the docker image - so it is not used - the `use-docker` flag is set to false and dependencies are installed manually.
+
+```yaml
+# .github/workflows/connect_to_services.yaml
+on: push
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    name: Run treebeard
+    steps:
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: "${{ secrets.GCP_PROJECT_ID }}"
+          service_account_key: "${{ secrets.GCP_SA_KEY }}"
+          export_default_credentials: true
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pip install -r requirements.txt # Manually install python deps as running dockerless
+      - uses: treebeardtech/treebeard@master
+        with:
+          api-key: "${{ secrets.TREEBEARD_API_KEY }}"
+          use-docker: false
 ```
 
 You can have multiple actions defined in `.yaml` files in your workflows folder.
@@ -152,16 +171,16 @@ These optional variables can be specified for the Treebeard Action using `with:`
 Automatically generated docker images can be sent to a dockerhub container registry to speed up future builds, if the `docker-` variables are set.  
 
 | Action input                | example                          | definition                                                                                               |
-|-----------------------------|----------------------------------|----------------------------------------------------------------------------------------------------------|
-| `notebooks`                | `<'my_notebook_to_run.ipynb'>` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used (`**/*ipynb`)    |
-| `docker-username`         | `<my_dockerhub_username>`        | Dockerhub username                                                                                       |
-| `docker-password`         | `<my_dockerhub_password>`        | Dockerhub password                                                                                       |
-| `docker-image-name`      | `<docker_image_name>`            | the name of the image built by treebeard                                                                 |
-| `docker-registry-prefix` | `<docker_image_prefix- >`        | the prefix of your docker image name use instead of docker\-image\-name to generate a default image name |
+|-----------------------------|------------------------------------------------------------|------------------------------------------------------------------------------------|
+| `notebooks`                | `"my_notebook_to_run.ipynb"` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used (`**/*ipynb`)    |
+| `docker-username`         | `"treebeardtech"`        | Dockerhub username                                                                                       |
+| `docker-password`         | `"${{ secrets.DOCKER_PASSWORD }}"`        | Dockerhub password                                                                                       |
+| `docker-image-name`      | `"project_docker_image"`            | the name of the image built by treebeard                                                                 |
+| `docker-registry-prefix` | `"my_docker_image_prefix-"`        | the prefix of your docker image name use instead of docker\-image\-name to generate a default image name |
 | `use-docker`              | `true`                             | Run treebeard inside repo2docker \- disable building a docker image with this flag \- on by default      |
 | `debug`                    | `false`                            | Enable debug logging                                                                                     |
-| `path`                     | `<'path/to/run_from'>`            | Path of the repo to run from                                                                             |
-| `api-key`                 | `<my_api_key>`                   | treebeard teams api key                                                                                  |
+| `path`                     | `"examples/notebooks/"`            | Path of the repo to run from                                                                             |
+| `api-key`                 | `"${{ secrets.TREEBEARD_API_KEY }}"`                   | treebeard teams api key                                                                                  |
 
 # FAQ
  ## 🐳 Should I `use-docker` or not?
@@ -203,9 +222,5 @@ If you are thinking of setting up a more organised CI layer for your notebooks, 
 
 ## More Information
 
-- [Docs](https://treebeard.readthedocs.io/en/latest/)
 - [Website](https://treebeard.io)
 - [Guide to python dependency management choices](https://towardsdatascience.com/devops-for-data-science-making-your-python-project-reproducible-f55646e110fa)
-
-
-
