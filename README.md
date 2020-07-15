@@ -1,6 +1,6 @@
 # 🌲 Treebeard
 
-<h2>A Notebook-First Continuous Integration Framework</h2>
+A Notebook-First Continuous Integration Framework
 
 <p>
 <img src="https://github.com/treebeardtech/treebeard/workflows/E2E%20Test/badge.svg" alt="E2E Test">
@@ -185,6 +185,12 @@ Any variable beginning with `TB_` will be forwarded into the container at runtim
 ## How do I install dependencies that don't work in an `environment.yml`?
 
 By default, repo2docker installs your conda, pipenv, or pip requirements based on files on your repo. It also supports [several other config files]().
+
+# Coming Soon...
+
+1. Improving notebook code using `black` and `isort`
+2. Run against custom docker images
+3. Only re-run changed notebooks
 
 # 🙌  Contributing
 
