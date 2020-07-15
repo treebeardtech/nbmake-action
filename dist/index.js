@@ -1810,12 +1810,6 @@ function run() {
                 yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
             }
             const env = Object.assign({ TREEBEARD_REF: conf_1.treebeardRef }, process.env);
-            const envsToFwd = [];
-            for (const key of Object.keys(env)) {
-                if (key.startsWith('TB_')) {
-                    envsToFwd.push(` --env ${key} `);
-                }
-            }
             if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
                 console.log('🐳❌ Not attempting to set up Docker registry as this is a pull request');
             }
@@ -1836,27 +1830,31 @@ function run() {
                     env.TREEBEARD_IMAGE_NAME = dockerImageName;
                 }
             }
-            let tbRunCommand = `treebeard run --confirm `;
+            const tbArgs = ['run', '--confirm'];
             if (apiKey) {
-                tbRunCommand += ' --upload ';
+                tbArgs.push('--upload');
             }
-            tbRunCommand += envsToFwd.join(' ');
+            for (const key of Object.keys(env)) {
+                if (key.startsWith('TB_')) {
+                    tbArgs.push('--env', key);
+                }
+            }
             if (notebooks) {
-                tbRunCommand += ` --notebooks ${notebooks} `;
+                tbArgs.push('--notebooks', notebooks);
             }
-            tbRunCommand += useDocker ? ' --use-docker ' : ' --no-use-docker ';
+            tbArgs.push(useDocker ? '--use-docker' : '--no-use-docker');
             if (debug) {
-                tbRunCommand += ' --debug ';
+                tbArgs.push('--debug');
             }
             const usageLogging = yield isUsageLoggingEnabled(`https://github.com/${process.env.GITHUB_REPOSITORY}`);
             console.log(usageLogging);
             if (usageLogging) {
-                tbRunCommand += ' --usagelogging';
+                tbArgs.push('--usagelogging');
             }
             if (debug) {
                 console.log(`Treebeard submitting env:\n${Object.keys(env)}`);
             }
-            const status = yield exec.exec(tbRunCommand, undefined, {
+            const status = yield exec.exec('treebeard', tbArgs, {
                 ignoreReturnCode: true,
                 env
             });
@@ -3218,7 +3216,7 @@ module.exports = defaults;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'master';
+exports.treebeardRef = 'readme-roadmap';
 
 
 /***/ }),

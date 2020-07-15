@@ -200,6 +200,12 @@ Any variable beginning with `TB_` will be forwarded into the container at runtim
 
 By default, repo2docker installs your conda, pipenv, or pip requirements based on files on your repo. It also supports [several other config files]().
 
+# Coming Soon...
+
+1. Improving notebook code using `black` and `isort`
+2. Run against custom docker images
+3. Only re-run changed notebooks
+
 # 🙌  Contributing
 
 The most valuable contribution to us is feedback and issues raised via Gitter or Issues.
