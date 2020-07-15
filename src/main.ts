@@ -59,13 +59,6 @@ async function run(): Promise<void> {
       ...process.env
     }
 
-    const envsToFwd = []
-    for (const key of Object.keys(env)) {
-      if (key.startsWith('TB_')) {
-        envsToFwd.push(` --env ${key} `)
-      }
-    }
-
     if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
       console.log(
         '🐳❌ Not attempting to set up Docker registry as this is a pull request'
@@ -94,21 +87,25 @@ async function run(): Promise<void> {
       }
     }
 
-    let tbRunCommand = `treebeard run --confirm `
+    const tbArgs = ['run', '--confirm']
     if (apiKey) {
-      tbRunCommand += ' --upload '
+      tbArgs.push('--upload')
     }
 
-    tbRunCommand += envsToFwd.join(' ')
+    for (const key of Object.keys(env)) {
+      if (key.startsWith('TB_')) {
+        tbArgs.push('--env', key)
+      }
+    }
 
     if (notebooks) {
-      tbRunCommand += ` --notebooks "${notebooks}" `
+      tbArgs.push('--notebooks', notebooks)
     }
 
-    tbRunCommand += useDocker ? ' --use-docker ' : ' --no-use-docker '
+    tbArgs.push(useDocker ? '--use-docker' : '--no-use-docker')
 
     if (debug) {
-      tbRunCommand += ' --debug '
+      tbArgs.push('--debug')
     }
 
     const usageLogging = await isUsageLoggingEnabled(
@@ -117,14 +114,14 @@ async function run(): Promise<void> {
     console.log(usageLogging)
 
     if (usageLogging) {
-      tbRunCommand += ' --usagelogging'
+      tbArgs.push('--usagelogging')
     }
 
     if (debug) {
       console.log(`Treebeard submitting env:\n${Object.keys(env)}`)
     }
 
-    const status = await exec.exec(tbRunCommand, undefined, {
+    const status = await exec.exec('treebeard', tbArgs, {
       ignoreReturnCode: true,
       env
     })
