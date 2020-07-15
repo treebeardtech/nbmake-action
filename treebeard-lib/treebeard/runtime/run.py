@@ -109,7 +109,7 @@ class NotebookRun:
             )
 
             helper.log(
-                f"""{status} Notebook {notebook_path} failed!\n  {num_passing_cells}/{num_cells} cells ran.\n\n{tb}"""
+                f"""{status_emojis[status]} Notebook {notebook_path} failed!\n  {num_passing_cells}/{num_cells} cells ran.\n\n{tb}"""
             )
 
             return NotebookResult(
