@@ -176,7 +176,7 @@ These optional variables can be specified for the Treebeard Action using `with:`
 Automatically generated docker images can be sent to a dockerhub container registry to speed up future builds, if the `docker-` variables are set.  
 
 | Action input                | example                          | definition                                                                                               |
-|-----------------------------|----------------------------------|----------------------------------------------------------------------------------------------------------|
+|-----------------------------|------------------------------------------------------------|------------------------------------------------------------------------------------|
 | `notebooks`                | `"my_notebook_to_run.ipynb"` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used (`**/*ipynb`)    |
 | `docker-username`         | `"treebeardtech"`        | Dockerhub username                                                                                       |
 | `docker-password`         | `"${{ secrets.DOCKER_PASSWORD }}"`        | Dockerhub password                                                                                       |
