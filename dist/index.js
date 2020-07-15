@@ -1842,7 +1842,7 @@ function run() {
             }
             tbRunCommand += envsToFwd.join(' ');
             if (notebooks) {
-                tbRunCommand += ` --notebooks ${notebooks} `;
+                tbRunCommand += ` --notebooks '${notebooks}' `;
             }
             tbRunCommand += useDocker ? ' --use-docker ' : ' --no-use-docker ';
             if (debug) {
@@ -3218,7 +3218,7 @@ module.exports = defaults;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'master';
+exports.treebeardRef = 'readme-roadmap';
 
 
 /***/ }),

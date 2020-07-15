@@ -102,7 +102,7 @@ async function run(): Promise<void> {
     tbRunCommand += envsToFwd.join(' ')
 
     if (notebooks) {
-      tbRunCommand += ` --notebooks ${notebooks} `
+      tbRunCommand += ` --notebooks '${notebooks}' `
     }
 
     tbRunCommand += useDocker ? ' --use-docker ' : ' --no-use-docker '
