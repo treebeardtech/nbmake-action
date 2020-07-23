@@ -1,2 +1,2 @@
 // Do not edit this generated file
-export const treebeardRef = 'tag-test'
+export const treebeardRef = 'master'
