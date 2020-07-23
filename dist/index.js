@@ -1847,7 +1847,6 @@ function run() {
                 tbArgs.push('--debug');
             }
             const usageLogging = yield isUsageLoggingEnabled(`https://github.com/${process.env.GITHUB_REPOSITORY}`);
-            console.log(usageLogging);
             if (usageLogging) {
                 tbArgs.push('--usagelogging');
             }
