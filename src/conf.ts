@@ -1,2 +1,2 @@
 // Do not edit this generated file
-export const treebeardRef = 'master'
+export const treebeardRef = 'v0.1.0'
