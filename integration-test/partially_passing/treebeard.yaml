@@ -3,3 +3,5 @@ ignore:
   - .vscode
   - .ipynb_checkpoints
   - .pytest_cache
+notebooks:
+  - main.ipynb

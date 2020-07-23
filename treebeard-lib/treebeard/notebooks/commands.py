@@ -164,7 +164,7 @@ def run_repo(
         treebeard_config.notebooks = notebooks
 
     if ignore:
-        treebeard_config.ignore = ignore
+        treebeard_config.ignore = ignore + treebeard_config.output_dirs
 
     if "TREEBEARD_START_TIME" not in os.environ:
         os.environ["TREEBEARD_START_TIME"] = get_time()
@@ -200,13 +200,8 @@ def run_repo(
             update_url=f"{api_url}/{treebeard_context.treebeard_env.run_path}/update",
         )
 
-    if treebeard_config:
-        ignore += treebeard_config.ignore + treebeard_config.output_dirs
-
     click.echo("🌲  Creating Project bundle")
-
     temp_dir = tempfile.mkdtemp()
-
     copy_tree(os.getcwd(), str(temp_dir), preserve_symlinks=1)
 
     # Overwrite config with in-memory-modified
