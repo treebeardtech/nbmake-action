@@ -1,4 +1,4 @@
-name: "treebeard CI"
+name: "Treebeard Jupyter Notebook CI"
 author: "treebeardtech"
 description: "Automatically containerise and run notebooks"
 inputs:
