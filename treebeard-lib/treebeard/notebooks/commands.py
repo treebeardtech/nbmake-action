@@ -10,6 +10,7 @@ from typing import List, Optional
 import click
 import yaml
 
+from treebeard import conf
 from treebeard.buildtime import build
 from treebeard.conf import (
     GitHubDetails,
@@ -17,9 +18,6 @@ from treebeard.conf import (
     TreebeardContext,
     TreebeardEnv,
     api_url,
-    get_config_path,
-    get_treebeard_config,
-    get_treebeard_env,
     validate_notebook_directory,
 )
 from treebeard.helper import CliContext, get_time, update
@@ -119,7 +117,7 @@ def run(
 
 
 def run_repo(
-    notebooks: List[str] = ["**/*ipynb"],
+    notebooks: List[str] = [],
     env: List[str] = [],
     ignore: List[str] = [],
     confirm: bool = True,
@@ -138,14 +136,14 @@ def run_repo(
     ignore = list(ignore)
 
     if not treebeard_env:
-        treebeard_env = get_treebeard_env(github_details)
+        treebeard_env = conf.get_treebeard_env(github_details)
     if not treebeard_config:
-        treebeard_config = get_treebeard_config()
+        treebeard_config = conf.get_treebeard_config()
 
     treebeard_context = TreebeardContext(
         treebeard_env=treebeard_env,
         treebeard_config=treebeard_config,
-        config_path=get_config_path(),
+        config_path=conf.get_config_path(),
         github_details=github_details,
     )
 
