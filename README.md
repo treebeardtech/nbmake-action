@@ -4,9 +4,7 @@ A Notebook-First Continuous Integration Framework
 
 ![Action Integration Test](https://github.com/treebeardtech/treebeard/workflows/Action%20Integration%20Test/badge.svg) ![Teams Integration Test](https://github.com/treebeardtech/treebeard/workflows/Teams%20Integration%20Test/badge.svg) ![Pytest](https://github.com/treebeardtech/treebeard/workflows/Pytest/badge.svg) <a href="https://gitter.im/treebeardtech/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the Gitter Chat"></a> [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/tutorial.ipynb)
 
-## What is Treebeard?
-
-A library which helps Python Data Science practitioners work more productively with cloud environments.
+## What Does Treebeard Do?
 
 * <img width=18 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/> Runs on GitHub Actions
 
@@ -200,12 +198,6 @@ Any variable beginning with `TB_` will be forwarded into the container at runtim
 
 By default, repo2docker installs your conda, pipenv, or pip requirements based on files on your repo. It also supports [several other config files]().
 
-# Coming Soon...
-
-1. Improving notebook code using `black` and `isort`
-2. Run against custom docker images
-3. Only re-run changed notebooks
-
 # 🙌  Contributing
 
 The most valuable contribution to us is feedback and issues raised via Gitter or Issues.
@@ -220,7 +212,7 @@ chat with us if you want to make changes, we are here to help!
 
 The great thing about notebooks is they provide a readable record of what happened.
 
-We've built a backend for viewing executed notebooks and their artifacts. It's completely free for open source usage and beta customers.
+We've built a backend for viewing executed notebooks and their artifacts. It's completely free for open source usage.
     
 If you are thinking of setting up a more organised CI layer for your notebooks, [let us know](https://laurencewatson.typeform.com/to/Bgj6hp).
 
