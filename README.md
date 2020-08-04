@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - uses: treebeardtech/treebeard@master
+      - uses: treebeardtech/treebeard@v0.1.1
 ```
 
 ### Output Example
@@ -104,7 +104,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2              #  <- gets your repo code
       - uses: actions/setup-python@v2          #  <- installs python
-      - uses: treebeardtech/treebeard@master   #  <- runs Treebeard
+      - uses: treebeardtech/treebeard@v0.1.1   #  <- runs Treebeard
         notebooks: "EDA/*ipynb"
 ```
 
@@ -126,7 +126,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - uses: treebeardtech/treebeard@master
+      - uses: treebeardtech/treebeard@v0.1.1
         with:
           api-key: "${{ secrets.TREEBEARD_API_KEY }}"                    #  <- connect to Treebeard Teams 
           docker-username: "treebeardtech"                               #  <- dockerhub username
@@ -155,7 +155,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - run: pip install -r requirements.txt # Manually install python deps as running dockerless
-      - uses: treebeardtech/treebeard@master
+      - uses: treebeardtech/treebeard@v0.1.1
         with:
           api-key: "${{ secrets.TREEBEARD_API_KEY }}"
           use-docker: false
