@@ -29,15 +29,6 @@ def configure(api_key: str, user_name: str):
 
 
 @click.command()
-def setup():
-    """Creates examples treebeard.yaml configuration file"""
-    if Path("treebeard.yaml").is_file():
-        fatal_exit("📁 found existing treebeard.yaml file here")
-    create_example_yaml()
-    click.echo("📁 created example treebeard.yaml, please update it for your project")
-
-
-@click.command()
 def version():
     """Shows treebeard package version"""
     click.echo(get_version())

@@ -76,13 +76,6 @@ def sanitise_repo_short_name(repo_short_name: str) -> str:
     return out.lower()
 
 
-def create_example_yaml():
-    dirname = os.path.split(os.path.abspath(__file__))[0]
-    with open(Path(f"{dirname}/example_treebeard.yaml"), "rb") as f:
-        open("treebeard.yaml", "wb").write(f.read())
-    return
-
-
 def get_time():
     return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 

@@ -117,13 +117,6 @@ def validate_notebook_directory(
     if upload and treebeard_env.user_name is None:
         fatal_exit("No account config detected! Please run `treebeard configure`")
 
-    # if not Path("treebeard.yaml").is_file():
-    #     click.secho(  # type: ignore
-    #         "Warning: treebeard.yaml file not found! `treebeard setup` fetches an example.",
-    #         fg="yellow",
-    #     )
-    #     click.echo("Using defaults: notebooks: - '**/*.ipynb' output_dirs: - 'outputs'")
-
     notebook_files = treebeard_config.get_deglobbed_notebooks()
     if not notebook_files:
         fatal_exit("No notebooks found in project! Treebeard expects at least one.")
@@ -135,8 +128,12 @@ def validate_notebook_directory(
             )
 
 
+def get_config_file_name() -> str:
+    return "treebeard.yaml"
+
+
 def get_treebeard_config() -> TreebeardConfig:
-    notebook_config = "treebeard.yaml"
+    notebook_config = get_config_file_name()
     if not os.path.exists(notebook_config):
         return TreebeardConfig()
 
@@ -147,7 +144,7 @@ def get_treebeard_config() -> TreebeardConfig:
         try:
             return TreebeardConfig(**conf)
         except ValidationError as e:  # type: ignore
-            fatal_exit(f"Error parsing treebeard.yaml\n{e.json()}")  # type: ignore
+            fatal_exit(f"Error parsing {notebook_config}\n{e.json()}")  # type: ignore
 
 
 def get_treebeard_env(github_details: Optional[GitHubDetails]) -> TreebeardEnv:
