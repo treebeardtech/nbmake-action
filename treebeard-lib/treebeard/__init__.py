@@ -10,7 +10,7 @@ from timeago import format as timeago_format  # type: ignore
 
 from treebeard.helper import CliContext, check_for_updates
 from treebeard.notebooks.commands import run, run_repo
-from treebeard.other.commands import config, configure, setup, version
+from treebeard.other.commands import config, configure, version
 
 warnings.filterwarnings(
     "ignore", "Your application has authenticated using end user credentials"
@@ -38,7 +38,6 @@ def process_result(*args: Any, **kwargs: Any):
 
 cli.add_command(configure)  # type: ignore
 cli.add_command(run)  # type: ignore
-cli.add_command(setup)  # type: ignore
 cli.add_command(config)  # type: ignore
 cli.add_command(version)  # type: ignore
 

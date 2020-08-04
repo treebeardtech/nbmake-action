@@ -1,6 +1,5 @@
 import pprint
 import warnings
-from pathlib import Path
 
 import click
 from halo import Halo  # type: ignore
@@ -8,8 +7,7 @@ from humanfriendly import format_size, parse_size  # type: ignore
 from timeago import format as timeago_format  # type: ignore
 
 from treebeard.conf import get_treebeard_env
-from treebeard.helper import create_example_yaml, set_credentials
-from treebeard.util import fatal_exit
+from treebeard.helper import set_credentials
 from treebeard.version import get_version
 
 pp = pprint.PrettyPrinter(indent=2)

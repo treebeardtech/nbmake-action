@@ -6,7 +6,6 @@ import os
 import subprocess
 import sys
 from glob import glob
-from pathlib import Path
 from typing import Optional
 
 import click
