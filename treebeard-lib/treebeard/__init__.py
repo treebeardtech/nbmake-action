@@ -12,6 +12,9 @@ from treebeard.helper import CliContext, check_for_updates
 from treebeard.notebooks.commands import run, run_repo
 from treebeard.other.commands import config, configure, version, setup
 from treebeard.connect import connect, discuss
+from typing import List, Any
+
+__all__: List[Any] = [connect, discuss]
 
 warnings.filterwarnings(
     "ignore", "Your application has authenticated using end user credentials"

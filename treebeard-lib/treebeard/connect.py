@@ -1,10 +1,10 @@
 import sys
 import traceback
-import IPython
-from IPython.display import display, HTML
+import IPython  # type: ignore
+from IPython.display import display, HTML  # type: ignore
 
 
-def showtraceback(self):
+def showtraceback():
     traceback_lines = traceback.format_exception(*sys.exc_info())  # type: ignore
     del traceback_lines[1]
     message = "".join(traceback_lines)
@@ -26,4 +26,3 @@ def connect(repo: str):
 
 def discuss(prompt: str):
     pass
-
