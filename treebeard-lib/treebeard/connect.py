@@ -2,7 +2,7 @@ import sys
 import traceback
 import IPython  # type: ignore
 from IPython.display import display, HTML  # type: ignore
-from typing import Any, Callable, Optional
+from typing import Callable, Optional
 
 
 def custom_showtraceback():
@@ -17,8 +17,8 @@ def custom_showtraceback():
     )
 
 
-ORIGINAL_SHOWTRACEBACK = IPython.core.interactiveshell.InteractiveShell.showtraceback
-ip: IPython.InteractiveShell = IPython.get_ipython()
+ORIGINAL_SHOWTRACEBACK: Callable = IPython.core.interactiveshell.InteractiveShell.showtraceback
+ip: IPython.InteractiveShell = IPython.get_ipython()  # type: ignore
 
 
 def set_tb(showtraceback: Callable):
@@ -40,7 +40,7 @@ EVENT_NAME = "pre_run_cell"
 
 def add_hook():
 
-    if len(ip.events.callbacks[EVENT_NAME]) > 0:
+    if len(ip.events.callbacks[EVENT_NAME]) > 0:  # type: ignore
         ip.events.callbacks[EVENT_NAME] = []
     ip.events.register(EVENT_NAME, p)
 
