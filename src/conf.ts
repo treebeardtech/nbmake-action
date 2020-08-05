@@ -1,2 +1,2 @@
 // Do not edit this generated file
-export const treebeardRef = 'master'
+export const treebeardRef = 'connect-poc'

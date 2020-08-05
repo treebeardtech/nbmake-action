@@ -3215,7 +3215,7 @@ module.exports = defaults;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'master';
+exports.treebeardRef = 'connect-poc';
 
 
 /***/ }),
