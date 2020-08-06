@@ -52,7 +52,7 @@ class Connect:
         display(
             HTML(
                 f"""<div style='width:100%;flex-direction:row-reverse;color:gray;display:flex;font-size:10px'>
-                       <a style='opacity:0.5;margin-left:auto' target='_blank' href='{issue_url}'>💬 <span>comment</span></a>
+                       <a style='opacity:0.5;margin-left:auto' target='_blank' href='{issue_url}'>💬 <span>cmd-click to comment</span></a>
                     </div>"""
             )
         )
