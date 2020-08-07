@@ -32,6 +32,10 @@ inputs:
     description: "Path of the repo to run"
     required: false
     default: "."
+  usage-logging:
+    required: false
+    description: "provide usage metadata to inform project roadmap"
+    default: "true"
 runs:
   using: "node12"
   main: "dist/index.js"
