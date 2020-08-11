@@ -1017,11 +1017,12 @@ function run() {
                 yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
             }
             const env = Object.assign({ TREEBEARD_REF: conf_1.treebeardRef }, process.env);
-            if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
-                console.log('🐳❌ Not attempting to set up Docker registry as this is a pull request');
-            }
-            else {
+            function setupDockerCreds() {
                 if (dockerUsername && dockerPassword === '') {
+                    if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+                        console.log('🐳❌ Not attempting to set up Docker registry as password is missing and this is a pull request');
+                        return;
+                    }
                     throw new Error('Docker username is supplied but password is an empty string, are you missing a secret?');
                 }
                 if (dockerUsername) {
@@ -1036,7 +1037,9 @@ function run() {
                 if (dockerImageName) {
                     env.TREEBEARD_IMAGE_NAME = dockerImageName;
                 }
+                return;
             }
+            setupDockerCreds();
             const tbArgs = ['run', '--confirm'];
             if (apiKey) {
                 tbArgs.push('--upload');
@@ -1366,7 +1369,7 @@ exports.getState = getState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Do not edit this generated file
-exports.treebeardRef = 'master';
+exports.treebeardRef = 'pr-bugfix';
 
 
 /***/ }),
