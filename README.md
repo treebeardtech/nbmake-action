@@ -1,6 +1,6 @@
 # 🌲 Treebeard
 
-A Notebook-First Continuous Integration Framework
+**A Notebook-First Continuous Integration Framework**
 
 ![Action Integration Test](https://github.com/treebeardtech/treebeard/workflows/Action%20Integration%20Test/badge.svg) ![Teams Integration Test](https://github.com/treebeardtech/treebeard/workflows/Teams%20Integration%20Test/badge.svg) ![Pytest](https://github.com/treebeardtech/treebeard/workflows/Pytest/badge.svg) <a href="https://gitter.im/treebeardtech/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the Gitter Chat"></a> [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/tutorial.ipynb)
 
@@ -14,21 +14,10 @@ A Notebook-First Continuous Integration Framework
 
 * <img width=18 src="https://www.python.org/favicon.ico"> Searches for missing imports 
 
-## Why Notebook-First?
-
-Notebooks have gained mass-adoption within exploratory data science due to how readable they are after execution.
-
-This property can make them useful in more general scenarios:
-* as entrypoints to larger programs
-* for scheduled tasks
-* as install scripts (think 'interactive READMEs').
-
-If [Netflix](https://netflixtechblog.com/notebook-innovation-591ee3221233) runs 100K+ jobs per day using notebooks maybe it's not a bad idea :)
-
 ## How can Treebeard help me?
-1. **Automate Daily reports** Create daily reports from a dataset and publish them ([Quicklooks](https://github.com/Swarm-DISC/Swarm_quicklooks/blob/master/.github/workflows/main.yml))
-2. **Test Project Examples** Smoke test example directories for your tool/library ([ThinkBayes](https://github.com/Rabscuttler/ThinkBayes2/runs/869047684?check_suite_focus=true))
-3. **Ensure Project Reproducibility** Validate project requirements and build docker images ([PyPSA](https://github.com/treebeardtech/PyPSA/blob/master/.github/workflows/main.yaml))
+1. **Automate Daily reports** Create daily reports from a dataset and publish them
+2. **Test Project Examples** Smoke test example directories for your tool/library
+3. **Ensure Project Reproducibility** Validate project requirements and build docker images
 
 <p align="center">
   <br>
