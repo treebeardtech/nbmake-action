@@ -2,31 +2,31 @@
 
 **A Notebook-First Continuous Integration Framework**
 
-![Action Integration Test](https://github.com/treebeardtech/treebeard/workflows/Action%20Integration%20Test/badge.svg) ![Teams Integration Test](https://github.com/treebeardtech/treebeard/workflows/Teams%20Integration%20Test/badge.svg) ![Pytest](https://github.com/treebeardtech/treebeard/workflows/Pytest/badge.svg) <a href="https://gitter.im/treebeardtech/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the Gitter Chat"></a> [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/tutorial.ipynb)
+![Action Integration Test](https://github.com/treebeardtech/treebeard/workflows/Action%20Integration%20Test/badge.svg) ![Teams Integration Test](https://github.com/treebeardtech/treebeard/workflows/Teams%20Integration%20Test/badge.svg) ![Pytest](https://github.com/treebeardtech/treebeard/workflows/Pytest/badge.svg) <a href="https://gitter.im/treebeardtech/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the Gitter Chat"></a> [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/tutorial.ipynb) [![Twitter](https://img.shields.io/twitter/follow/treebeardtech?style=social)](https://twitter.com/treebeardtech)
+
+Treebeard is the simplest way to automate notebook testing in Python projects.
 
 ## What Does Treebeard Do?
 
-* <img width=18 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/> Runs on GitHub Actions
+1. Runs on GitHub Actions
 
-* 🐳 Automatically Containerises Repos
+2. Automatically containerises your repo
 
-* <img width=18 src="https://jupyter.org/favicon.ico"> Executes Notebooks
+3. Runs all Jupyter notebooks, flagging errors
 
-* <img width=18 src="https://www.python.org/favicon.ico"> Searches for missing imports 
+4. On failure, provides a list of missing Python dependencies
 
-## How can Treebeard help me?
-1. **Automate Daily reports** Create daily reports from a dataset and publish them
-2. **Test Project Examples** Smoke test example directories for your tool/library
-3. **Ensure Project Reproducibility** Validate project requirements and build docker images
+Beyond testing, Treebeard's containerise and execute behaviour can support more general automation.
 
 <p align="center">
   <br>
-  <img width=800 src="https://storage.googleapis.com/treebeard_image_dump_public/usecases.png"/>
+  <img width=650 src="https://storage.googleapis.com/treebeard_image_dump_public/usecases.png"/>
 </p>
 
 
 # <img width=23 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/>  Getting Started via GitHub Actions
-[*What is a Github Action?*](https://github.com/features/actions)
+
+If you haven't used GitHub actions before, it is a GitHub feature which lets you trigger jobs in response to events on your repo. See the following example.
 
 ## Minimal Quickstart
 
