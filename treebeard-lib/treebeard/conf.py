@@ -129,6 +129,8 @@ def validate_notebook_directory(
 
 
 def get_config_file_name() -> str:
+    if os.path.exists("treebeard.yml"):
+        return "treebeard.yml"
     return "treebeard.yaml"
 
 
