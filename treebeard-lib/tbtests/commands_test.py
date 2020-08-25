@@ -28,7 +28,7 @@ class CommandsTest(unittest.TestCase):
     @patch("treebeard.notebooks.commands.build")
     def test_when_config_override_then_yaml_saved(self, mock_build: Mock):
         run_repo(
-            ["tests/resources/test_command.ipynb"],
+            ["tbtests/resources/test_command.ipynb"],
             [],
             [],
             True,
@@ -46,7 +46,7 @@ class CommandsTest(unittest.TestCase):
         os.chdir(bundle_dir)
         config = get_treebeard_config()
         assert_that(config.notebooks).is_equal_to(
-            ["tests/resources/test_command.ipynb"]
+            ["tbtests/resources/test_command.ipynb"]
         )
 
     @patch.multiple("treebeard.notebooks.commands", build=DEFAULT, conf=DEFAULT)
@@ -54,7 +54,7 @@ class CommandsTest(unittest.TestCase):
         self, build: Mock, conf: Mock
     ):
 
-        default_nbs = ["tests/resources/test_command.ipynb"]
+        default_nbs = ["tbtests/resources/test_command.ipynb"]
         conf.get_treebeard_config.return_value = TreebeardConfig(notebooks=default_nbs)
         conf.get_treebeard_env.return_value = TreebeardEnv(
             repo_short_name="", run_id="", user_name=""

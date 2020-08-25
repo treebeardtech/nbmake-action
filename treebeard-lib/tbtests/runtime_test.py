@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import ANY, DEFAULT, Mock, patch
 
-from tests.test_helper import MockValidator
+from tbtests.test_helper import MockValidator
 from treebeard.conf import (
     TreebeardContext,
     get_treebeard_config,
@@ -10,7 +10,7 @@ from treebeard.conf import (
 from treebeard.runtime.run import NotebookRun
 
 config = get_treebeard_config()
-config.notebooks = ["tests/resources/test_runtime.ipynb"]
+config.notebooks = ["tbtests/resources/test_runtime.ipynb"]
 treebeard_env = get_treebeard_env(None)
 
 #  runtime should always log unless usagelogging flag is False

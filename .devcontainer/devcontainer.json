@@ -1,0 +1,9 @@
+{
+  "image": "treebeardtech/hello_treebeard:master",
+  "extensions": [
+    "LittleFoxTeam.vscode-python-test-adapter",
+  ],
+  "forwardPorts": [
+    9999
+  ]
+}

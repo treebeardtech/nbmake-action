@@ -1,10 +1,27 @@
+# Development Guide
+
 ## Development Install
 
-```bash
-pipenv install
+This directory (`treebeard-lib`) contains the python package which runs notebooks and finds missing imports.
+
+Before getting into python, ensure you have installed `node` and `pyright` installed which lets us use Python type-checking.
+
+## Validate GitHub action NPM config
+
+Run the following from **repo root** to ensure the github action typescript code is pointed at your current branch's Python code.
+
+```npm run all```
+
+## Install Python Packages in `treebeard-lib`
+
+Run from **treebeard-lib**
+```
+pipenv install --dev
 ```
 
 ## Development against Backend
+
+You probable won't need this section as most of the code doesn't use the back end...
 
 To run against local services
 
@@ -20,16 +37,18 @@ export TREEBEARD_ENVIRONMENT=staging
 
 ## Code Quality Checks
 
-Clone typeshed into the **repo root**
+Clone typeshed into the **repo root** so that Pyright knows about common Python pkgs.
 
 ```bash
 git clone https://github.com/python/typeshed.git
 ```
 
-```bash
-pyright && python3.7 -m black --check .
+Check types and then formatting
+```
+pyright && black --check .
 ```
 
-```bash
+Organise imports!
+```
 isort -m 3 -tc -y
 ```

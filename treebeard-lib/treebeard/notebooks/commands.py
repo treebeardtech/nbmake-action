@@ -18,6 +18,7 @@ from treebeard.conf import (
     TreebeardContext,
     TreebeardEnv,
     api_url,
+    get_config_file_name,
     validate_notebook_directory,
 )
 from treebeard.helper import CliContext, get_time, update
@@ -205,7 +206,7 @@ def run_repo(
     copy_tree(os.getcwd(), str(temp_dir), preserve_symlinks=1)
 
     # Overwrite config with in-memory-modified
-    with open(f"{temp_dir}/treebeard.yaml", "w") as yaml_file:
+    with open(f"{temp_dir}/{get_config_file_name()}", "w") as yaml_file:
         yaml.dump(treebeard_config.dict(), yaml_file)  # type: ignore
 
     return build.build(
