@@ -1,2 +1,2 @@
 // Do not edit this generated file
-export const treebeardRef = 'yml-vs-yaml'
+export const treebeardRef = 'master'
