@@ -64,15 +64,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      # - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-      #   with:
-      #     project_id: ${{ secrets.GCP_PROJECT_ID }}
-      #     service_account_key: ${{ secrets.GCP_SA_KEY }}
-      #     export_default_credentials: true
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
       - run: gcloud auth configure-docker
       - uses: "./"
         with:
-          # api-key: ${{ secrets.TREEBEARD_API_KEY }}
+          api-key: ${{ secrets.TREEBEARD_API_KEY }}
           docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
           path: "./integration-test/partially_passing"
