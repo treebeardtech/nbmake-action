@@ -197,15 +197,9 @@ If you want to hack on the internal treebeard Python package then we encourage y
 
 chat with us if you want to make changes, we are here to help!
 
-# <img width=30 src="https://treebeard.io/static/logo-f65d0b1f4c26063572398ee1da01edd7.png"></src> Treebeard Viewer
+# <img width=30 src="https://treebeard.io/static/logo-f65d0b1f4c26063572398ee1da01edd7.png"></src> Hire Treebeard
 
-The great thing about notebooks is they provide a readable record of what happened.
-
-We've built a backend for viewing executed notebooks and their artifacts. It's completely free for open source usage.
-    
-If you are thinking of setting up a more organised CI layer for your notebooks, [let us know](https://laurencewatson.typeform.com/to/Bgj6hp).
-
-<p align="center"><img src="https://storage.googleapis.com/treebeard_image_dump_public/ui.gif" width="600" style="margin:'auto'"/></p>
+Need help with data engineering or devops? Drop us a message at alex@treebeard.io
 
 ## More Information
 
