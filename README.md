@@ -49,6 +49,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+        with:
+          version: 3.8
       - uses: treebeardtech/treebeard@master
 ```
 
@@ -92,7 +94,9 @@ jobs:
     name: Run treebeard                        #  <- name your job (there can be multiple)
     steps:
       - uses: actions/checkout@v2              #  <- gets your repo code
-      - uses: actions/setup-python@v2          #  <- installs python
+      - uses: actions/setup-python@v2
+        with:
+          version: 3.8          #  <- installs python
       - uses: treebeardtech/treebeard@master   #  <- runs Treebeard
         notebooks: "EDA/*ipynb"
 ```
@@ -115,6 +119,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+        with:
+          version: 3.8
       - uses: treebeardtech/treebeard@master
         with:
           api-key: "${{ secrets.TREEBEARD_API_KEY }}"                    #  <- connect to Treebeard Teams 
@@ -136,13 +142,15 @@ jobs:
     runs-on: ubuntu-latest
     name: Run treebeard
     steps:
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@e276ca1
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
         with:
           project_id: "${{ secrets.GCP_PROJECT_ID }}"
           service_account_key: "${{ secrets.GCP_SA_KEY }}"
           export_default_credentials: true
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+        with:
+          version: 3.8
       - run: pip install -r requirements.txt # Manually install python deps as running dockerless
       - uses: treebeardtech/treebeard@master
         with:
