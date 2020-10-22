@@ -136,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Run treebeard
     steps:
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
         with:
           project_id: "${{ secrets.GCP_PROJECT_ID }}"
           service_account_key: "${{ secrets.GCP_SA_KEY }}"
