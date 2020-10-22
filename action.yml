@@ -32,6 +32,9 @@ inputs:
     description: "Path of the repo to run"
     required: false
     default: "."
+  req-file-path:
+    description: "Location of the requirements file (e.g. './test/environment.yml'), relative to the repo path"
+    required: false
   usage-logging:
     required: false
     description: "provide usage metadata to inform project roadmap"

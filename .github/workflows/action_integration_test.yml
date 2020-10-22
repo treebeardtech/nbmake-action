@@ -37,6 +37,18 @@ jobs:
           docker-registry-prefix: gcr.io/treebeard-259315/tests
           debug: "true"
           path: "./integration-test/conda"
+          
+  different_req_file:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: "./"
+        with:
+          debug: "true"
+          path: "./integration-test/different_req_file"
+          req-file-path: "req_file_dir/requirements.txt"
 
   partially_passing:
     timeout-minutes: 20
