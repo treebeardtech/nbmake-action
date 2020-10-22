@@ -21,15 +21,16 @@ class ComponentTest(unittest.TestCase):
             repo_short_name="test", user_name="testuser", run_id="test_run"
         )
         run_repo(
-            ["tbtests/resources/test.ipynb"],
-            [],
-            [],
-            True,
-            True,
-            False,
-            True,
-            True,
-            None,
+            notebooks=["tbtests/resources/test.ipynb"],
+            env=[],
+            ignore=[],
+            confirm=True,
+            use_docker=True,
+            upload=False,
+            debug=True,
+            req_file_path=None,
+            usagelogging=True,
+            github_details=None,
             treebeard_env=tenv,
             treebeard_config=get_treebeard_config(),
         )
@@ -50,15 +51,16 @@ class ComponentTest(unittest.TestCase):
         tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
 
         run_repo(
-            ["tbtests/resources/test.ipynb"],
-            [],
-            [],
-            True,
-            True,
-            False,
-            True,
-            True,
-            None,
+            notebooks=["tbtests/resources/test.ipynb"],
+            env=[],
+            ignore=[],
+            confirm=True,
+            use_docker=True,
+            upload=False,
+            debug=True,
+            req_file_path=None,
+            usagelogging=True,
+            github_details=None,
         )
 
         def validate_log(url: str):

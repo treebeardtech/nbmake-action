@@ -29,14 +29,15 @@ class CommandsTest(unittest.TestCase):
     def test_when_config_override_then_yaml_saved(self, mock_build: Mock):
         run_repo(
             ["tbtests/resources/test_command.ipynb"],
-            [],
-            [],
-            True,
-            True,
-            False,
-            True,
-            True,
-            None,
+            env=[],
+            ignore=[],
+            confirm=True,
+            use_docker=True,
+            upload=False,
+            debug=True,
+            req_file_path=None,
+            usagelogging=True,
+            github_details=None,
         )
 
         print(f"args {mock_build.build.call_args}")  # type: ignore
