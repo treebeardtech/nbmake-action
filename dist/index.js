@@ -998,6 +998,7 @@ function run() {
             const useDocker = core.getInput('use-docker').toLowerCase() === 'true';
             const debug = core.getInput('debug').toLowerCase() === 'true';
             const path = core.getInput('path');
+            const reqFilePath = core.getInput('req-file-path');
             const usageLogging = core.getInput('usage-logging') !== 'false';
             process.chdir(path);
             core.startGroup('Checking Python is Installed');
@@ -1055,6 +1056,9 @@ function run() {
             }
             if (usageLogging) {
                 tbArgs.push('--usagelogging');
+            }
+            if (reqFilePath) {
+                tbArgs.push(`--req-file-path ${reqFilePath}`);
             }
             if (debug) {
                 console.log(`Treebeard submitting env:\n${Object.keys(env)}`);
