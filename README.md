@@ -50,7 +50,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          version: 3.8
+          python-version: 3.8
       - uses: treebeardtech/treebeard@master
 ```
 
@@ -96,7 +96,7 @@ jobs:
       - uses: actions/checkout@v2              #  <- gets your repo code
       - uses: actions/setup-python@v2
         with:
-          version: 3.8          #  <- installs python
+          python-version: 3.8          #  <- installs python
       - uses: treebeardtech/treebeard@master   #  <- runs Treebeard
         notebooks: "EDA/*ipynb"
 ```
@@ -120,7 +120,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          version: 3.8
+          python-version: 3.8
       - uses: treebeardtech/treebeard@master
         with:
           api-key: "${{ secrets.TREEBEARD_API_KEY }}"                    #  <- connect to Treebeard Teams 
@@ -150,7 +150,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          version: 3.8
+          python-version: 3.8
       - run: pip install -r requirements.txt # Manually install python deps as running dockerless
       - uses: treebeardtech/treebeard@master
         with:
