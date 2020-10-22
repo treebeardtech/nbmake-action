@@ -1058,7 +1058,7 @@ function run() {
                 tbArgs.push('--usagelogging');
             }
             if (reqFilePath) {
-                tbArgs.push(`--req-file-path ${reqFilePath}`);
+                tbArgs.push('--req-file-path', reqFilePath);
             }
             if (debug) {
                 console.log(`Treebeard submitting env:\n${Object.keys(env)}`);

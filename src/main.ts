@@ -104,7 +104,7 @@ async function run(): Promise<void> {
     }
 
     if (reqFilePath) {
-      tbArgs.push(`--req-file-path ${reqFilePath}`)
+      tbArgs.push('--req-file-path', reqFilePath)
     }
 
     if (debug) {
