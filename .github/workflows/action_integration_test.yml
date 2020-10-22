@@ -58,6 +58,7 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@e276ca1
         with:
+          version: 312.0.0
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
