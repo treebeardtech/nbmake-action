@@ -9,6 +9,8 @@ from typing import List, Optional
 
 import click
 import yaml
+from shutil import copyfile
+from os.path import basename
 
 from treebeard import conf
 from treebeard.buildtime import build
@@ -84,6 +86,10 @@ def create_github_details(use_docker: bool):
     "--debug/--no-debug", default=False, help="Enable debug logging",
 )
 @click.option(
+    "--req-file-path",
+    help="Location of a requirements file to user (e.g. environment.yml)",
+)
+@click.option(
     "--usagelogging/--no-usagelogging",
     default=False,
     help="Send usage logs to treebeard",
@@ -98,6 +104,7 @@ def run(
     use_docker: bool,
     upload: bool,
     debug: bool,
+    req_file_path: Optional[str],
     usagelogging: bool,
 ):
 
@@ -110,6 +117,7 @@ def run(
         use_docker,
         upload,
         debug,
+        req_file_path,
         usagelogging,
         github_details,
     )
@@ -125,6 +133,7 @@ def run_repo(
     use_docker: bool = False,
     upload: bool = False,
     debug: bool = False,
+    req_file_path: Optional[str] = None,
     usagelogging: bool = False,
     github_details: Optional[GitHubDetails] = None,
     treebeard_env: Optional[TreebeardEnv] = None,
@@ -204,6 +213,22 @@ def run_repo(
     click.echo("🌲  Creating Project bundle")
     temp_dir = tempfile.mkdtemp()
     copy_tree(os.getcwd(), str(temp_dir), preserve_symlinks=1)
+
+    if req_file_path:
+        try:
+            dest = basename(req_file_path)
+            if req_file_path.endswith("ml"):
+                dest = "environment.yml"
+            elif req_file_path.endswith("txt"):
+                dest = "requirements.txt"
+
+            copyfile(req_file_path, f"{temp_dir}/{dest}")
+            click.echo(f"req-file-path: Copied {req_file_path} to {dest}")
+        except Exception as ex:
+            click.echo(
+                f"Error occurred locating your req-file using req-file-path {req_file_path}:\n{ex}"
+            )
+            raise ex
 
     # Overwrite config with in-memory-modified
     with open(f"{temp_dir}/{get_config_file_name()}", "w") as yaml_file:
