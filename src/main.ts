@@ -69,12 +69,14 @@ async function run(): Promise<void> {
       ...process.env
     }
 
-    if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
-      console.log(
-        '🐳❌ Not attempting to set up Docker registry as this is a pull request'
-      )
-    } else {
+    function setupDockerCreds(): void {
       if (dockerUsername && dockerPassword === '') {
+        if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+          console.log(
+            '🐳❌ Not attempting to set up Docker registry as password is missing and this is a pull request'
+          )
+          return
+        }
         throw new Error(
           'Docker username is supplied but password is an empty string, are you missing a secret?'
         )
@@ -95,7 +97,11 @@ async function run(): Promise<void> {
       if (dockerImageName) {
         env.TREEBEARD_IMAGE_NAME = dockerImageName
       }
+
+      return
     }
+
+    setupDockerCreds()
 
     const tbArgs = ['run', '--confirm']
     if (apiKey) {
