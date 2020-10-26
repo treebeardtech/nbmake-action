@@ -1,6 +1,6 @@
-name: "Treebeard Jupyter Notebook CI"
+name: "Test Jupyter Notebook"
 author: "treebeardtech"
-description: "Automatically containerise and run notebooks"
+description: "Dockerise and test Python notebooks"
 inputs:
   api-key:
     description: "treebeard api key"
