@@ -1,6 +1,26 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import {treebeardRef} from './conf'
+import axios from 'axios'
+
+async function isUsageLoggingEnabled(): Promise<boolean> {
+  const loggingFlag = core.getInput('usage-logging')
+  if (loggingFlag === 'false') {
+    return false
+  }
+
+  if (loggingFlag === 'true') {
+    return true
+  }
+
+  try {
+    // Is repo public?
+    await axios.get(`https://github.com/${process.env.GITHUB_REPOSITORY}`)
+    return true
+  } catch {
+    return false
+  }
+}
 
 async function run(): Promise<void> {
   try {
@@ -14,7 +34,6 @@ async function run(): Promise<void> {
     const debug = core.getInput('debug').toLowerCase() === 'true'
     const path = core.getInput('path')
     const reqFilePath = core.getInput('req-file-path')
-    const usageLogging = core.getInput('usage-logging') !== 'false'
 
     process.chdir(path)
 
@@ -98,6 +117,8 @@ async function run(): Promise<void> {
     if (debug) {
       tbArgs.push('--debug')
     }
+
+    const usageLogging = await isUsageLoggingEnabled()
 
     if (usageLogging) {
       tbArgs.push('--usagelogging')
