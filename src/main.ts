@@ -23,6 +23,7 @@ async function isUsageLoggingEnabled(): Promise<boolean> {
 }
 
 async function run(): Promise<void> {
+  await exec.exec(`ls -la ${__dirname}`)
   try {
     const apiKey = core.getInput('api-key')
     const notebooks = core.getInput('notebooks')
