@@ -5,6 +5,5 @@ repos:
         name: test
         entry: npm
         language: system
-        types: [python]
         stages: [push]
         args: ["run", "test"]
