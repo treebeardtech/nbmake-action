@@ -16,14 +16,6 @@ Treebeard is the simplest way to automate notebook testing in Python projects.
 
 4. On failure, provides a list of missing Python dependencies
 
-Beyond testing, Treebeard's containerise and execute behaviour can support more general automation.
-
-<p align="center">
-  <br>
-  <img width=650 src="https://storage.googleapis.com/treebeard_image_dump_public/usecases.png"/>
-</p>
-
-
 # <img width=23 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/>  Getting Started via GitHub Actions
 
 If you haven't used GitHub actions before, it is a GitHub feature which lets you trigger jobs in response to events on your repo. See the following example.
