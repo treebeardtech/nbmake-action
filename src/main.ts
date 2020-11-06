@@ -23,7 +23,6 @@ async function isUsageLoggingEnabled(): Promise<boolean> {
 }
 
 async function run(): Promise<void> {
-  await exec.exec(`ls -la ${__dirname}`)
   try {
     const apiKey = core.getInput('api-key')
     const notebooks = core.getInput('notebooks')
@@ -53,9 +52,7 @@ async function run(): Promise<void> {
     }
 
     core.startGroup('🌲 Install Treebeard')
-    await exec.exec(
-      `pip install -U git+https://github.com/treebeardtech/treebeard.git@${treebeardRef}#subdirectory=treebeard-lib`
-    )
+    await exec.exec(`pip install -U ${__dirname}/treebeard-lib.tgz`)
 
     core.endGroup()
 
