@@ -3,7 +3,6 @@ repos:
     hooks:
       - id: test
         name: test
-        entry: npm
+        entry: npm run test
         language: system
         stages: [push]
-        args: ["run", "test"]
