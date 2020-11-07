@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-
+import * as fs from 'fs'
 import axios from 'axios'
 
 async function isUsageLoggingEnabled(): Promise<boolean> {
@@ -20,6 +20,17 @@ async function isUsageLoggingEnabled(): Promise<boolean> {
   } catch {
     return false
   }
+}
+
+function getTbRef(): string {
+  if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+    const ev = JSON.parse(
+      fs.readFileSync(process.env.GITHUB_EVENT_PATH as string).toString()
+    )
+    console.log(`ev file: ${ev}`)
+    return `refs/pull/${ev.number}/merge`
+  }
+  return process.env.GITHUB_SHA as string
 }
 
 async function run(): Promise<void> {
@@ -64,7 +75,7 @@ async function run(): Promise<void> {
       )
     }
 
-    const TREEBEARD_REF = process.env.GITHUB_SHA as string
+    const TREEBEARD_REF = getTbRef()
 
     console.log(`TBREF: ${TREEBEARD_REF}`)
     const env: {[key: string]: string} = {

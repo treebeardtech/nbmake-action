@@ -1766,6 +1766,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
+const fs = __importStar(__webpack_require__(747));
 const axios_1 = __importDefault(__webpack_require__(53));
 function isUsageLoggingEnabled() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -1785,6 +1786,14 @@ function isUsageLoggingEnabled() {
             return false;
         }
     });
+}
+function getTbRef() {
+    if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+        const ev = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH).toString());
+        console.log(`ev file: ${ev}`);
+        return `refs/pull/${ev.number}/merge`;
+    }
+    return process.env.GITHUB_SHA;
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -1817,7 +1826,7 @@ function run() {
             if (apiKey) {
                 yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
             }
-            const TREEBEARD_REF = process.env.GITHUB_SHA;
+            const TREEBEARD_REF = getTbRef();
             console.log(`TBREF: ${TREEBEARD_REF}`);
             const env = Object.assign({ TREEBEARD_REF }, process.env);
             function setupDockerCreds() {
