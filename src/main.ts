@@ -63,8 +63,8 @@ async function run(): Promise<void> {
       )
     }
 
-    const env: {[key: string]: string | undefined} = {
-      ...process.env
+    const env: {[key: string]: string} = {
+      ...(process.env as {[key: string]: string})
     }
 
     function setupDockerCreds(): void {

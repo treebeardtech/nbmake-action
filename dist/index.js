@@ -1766,8 +1766,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
-const conf_1 = __webpack_require__(540);
 const axios_1 = __importDefault(__webpack_require__(53));
+const TREEBEARD_TGZ = `${__dirname}/treebeard-lib.tgz`;
 function isUsageLoggingEnabled() {
     return __awaiter(this, void 0, void 0, function* () {
         const loggingFlag = core.getInput('usage-logging');
@@ -1812,12 +1812,12 @@ function run() {
                 return;
             }
             core.startGroup('🌲 Install Treebeard');
-            yield exec.exec(`pip install -U ${__dirname}/treebeard-lib.tgz`);
+            yield exec.exec(`pip install -U ${TREEBEARD_TGZ}`);
             core.endGroup();
             if (apiKey) {
                 yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
             }
-            const env = Object.assign({ TREEBEARD_REF: conf_1.treebeardRef }, process.env);
+            const env = Object.assign({}, process.env);
             function setupDockerCreds() {
                 if (dockerUsername && dockerPassword === '') {
                     if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
@@ -3218,18 +3218,6 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 });
 
 module.exports = defaults;
-
-
-/***/ }),
-
-/***/ 540:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-// Do not edit this generated file
-exports.treebeardRef = 'pre-commit';
 
 
 /***/ }),
