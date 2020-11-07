@@ -220,7 +220,9 @@ def run_repo(
     click.echo("🌲  Creating Project bundle")
     temp_dir = tempfile.mkdtemp()
 
-    pkg_root = os.path.abspath(f"{__file__}/../../..")
+    pkg_root = os.path.abspath(f"{os.path.dirname(__file__)}/../..")
+    if debug:
+        click.echo(f"Creating source dist of treebeard in {pkg_root}")
     subprocess.check_output("python setup.py sdist", cwd=pkg_root, shell=True)
     tb_source = "treebeard-lib.tgz"
     shutil.copy(f"{pkg_root}/dist/treebeard-{get_version()}.tar.gz", tb_source)

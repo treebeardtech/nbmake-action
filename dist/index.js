@@ -1767,7 +1767,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
 const axios_1 = __importDefault(__webpack_require__(53));
-const TREEBEARD_TGZ = `${__dirname}/treebeard-lib.tgz`;
 function isUsageLoggingEnabled() {
     return __awaiter(this, void 0, void 0, function* () {
         const loggingFlag = core.getInput('usage-logging');
@@ -1813,7 +1812,7 @@ function run() {
                 return;
             }
             core.startGroup('🌲 Install Treebeard');
-            yield exec.exec(`pip install -U ${TREEBEARD_TGZ}`);
+            yield exec.exec('pip install -U ../treebeard-lib');
             core.endGroup();
             if (apiKey) {
                 yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);

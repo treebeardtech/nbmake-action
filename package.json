@@ -9,11 +9,9 @@
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
-    "python-dist": "bash -c 'cd treebeard-lib && python setup.py sdist && cp dist/treebeard*gz ../dist/treebeard-lib.tgz'",
-    "pack": "ncc build && npm run python-dist",
+    "pack": "ncc build",
     "test": "jest",
-    "create-conf": "echo \"// Do not edit this generated file\nexport const treebeardRef = '$(git rev-parse --abbrev-ref HEAD)'\" > src/conf.ts",
-    "all": "npm run create-conf && npm run build && npm run format && npm run lint && npm run pack && npm test"
+    "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
   },
   "repository": {
     "type": "git",

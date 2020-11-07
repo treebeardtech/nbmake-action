@@ -2,8 +2,6 @@ import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import axios from 'axios'
 
-const TREEBEARD_TGZ = `${__dirname}/treebeard-lib.tgz`
-
 async function isUsageLoggingEnabled(): Promise<boolean> {
   const loggingFlag = core.getInput('usage-logging')
   if (loggingFlag === 'false') {
@@ -55,7 +53,7 @@ async function run(): Promise<void> {
     }
 
     core.startGroup('🌲 Install Treebeard')
-    await exec.exec(`pip install -U ${TREEBEARD_TGZ}`)
+    await exec.exec('pip install -U ../treebeard-lib')
 
     core.endGroup()
 
