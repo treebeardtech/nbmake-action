@@ -8,11 +8,11 @@ import click
 import docker  # type: ignore
 from docker.errors import ImageNotFound, NotFound  # type: ignore
 from repo2docker.utils import is_valid_docker_image_name  # type:ignore
-
-from treebeard import helper as tb_helper
 from treebeard.buildtime import helper
 from treebeard.conf import TreebeardContext, api_url, get_treebeard_config
 from treebeard.util import fatal_exit
+
+from treebeard import helper as tb_helper
 
 
 def build(
@@ -113,6 +113,7 @@ def build(
                 f"❗Failed to nbstripout a notebook! Do you have an invalid .ipynb?\nNotebooks: {notebook_files}"
             )
     finally:
+
         click.echo("Treebeard Bundle Contents:")
         subprocess.run(["pwd"])
         subprocess.run(["ls", "-la", repo_temp_dir])
@@ -171,7 +172,11 @@ def build(
 
     click.echo(f"Image built successfully, now running.")
     status = helper.run_image(
-        versioned_image_name, envs_to_forward, upload, usagelogging, treebeard_context,
+        versioned_image_name,
+        envs_to_forward,
+        upload,
+        usagelogging,
+        treebeard_context,
     )
     if status != 0:
         click.echo(f"Image run failed, not updated {passing_image_name}")

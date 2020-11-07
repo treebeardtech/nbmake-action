@@ -1,10 +1,10 @@
 repos:
-  - repo: local
+  - repo: https://github.com/ambv/black
+    rev: stable
     hooks:
-      - id: test
-        name: test
-        entry: npm run test
-        language: system
-        always_run: true
-        exclude: ".*"
-        stages: [push]
+    - id: black
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.6.4
+    hooks:
+      - id: isort
+        args: ["-m", "3", "--tc"]
