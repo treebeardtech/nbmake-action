@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import * as fs from 'fs'
 import axios from 'axios'
+import {DONT_FORWARD} from './envs_to_not_forward'
 
 async function isUsageLoggingEnabled(): Promise<boolean> {
   const loggingFlag = core.getInput('usage-logging')
@@ -33,8 +34,6 @@ function getTbRef(): string {
 }
 
 async function run(): Promise<void> {
-  console.log(Object.keys(process.env))
-
   try {
     const apiKey = core.getInput('api-key')
     const notebooks = core.getInput('notebooks')
@@ -121,7 +120,7 @@ async function run(): Promise<void> {
     }
 
     for (const key of Object.keys(env)) {
-      if (key.startsWith('TB_')) {
+      if (DONT_FORWARD.includes(key)) {
         tbArgs.push('--env', key)
       }
     }
