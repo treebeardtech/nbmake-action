@@ -1812,7 +1812,7 @@ function run() {
                 return;
             }
             core.startGroup('🌲 Install Treebeard');
-            yield exec.exec('pip install -U ../treebeard-lib');
+            yield exec.exec(`pip install -U ${__dirname}/treebeard-lib`);
             core.endGroup();
             if (apiKey) {
                 yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
