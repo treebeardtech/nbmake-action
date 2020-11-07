@@ -1789,6 +1789,7 @@ function isUsageLoggingEnabled() {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        yield exec.exec(`ls -al ${__dirname}/..`);
         try {
             const apiKey = core.getInput('api-key');
             const notebooks = core.getInput('notebooks');
