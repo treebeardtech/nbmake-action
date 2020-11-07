@@ -1,0 +1,10 @@
+repos:
+  - repo: https://github.com/ambv/black
+    rev: stable
+    hooks:
+    - id: black
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.6.4
+    hooks:
+      - id: isort
+        args: ["-m", "3", "--tc"]

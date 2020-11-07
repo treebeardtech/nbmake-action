@@ -5,7 +5,6 @@ from typing import Any, Dict, List
 
 import click
 import docker  # type: ignore
-
 from treebeard.conf import TreebeardContext
 
 

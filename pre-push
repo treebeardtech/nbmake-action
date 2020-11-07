@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-set -eux
-
-# Check that the GitHub action is pointed at the correct ./treebeard-lib branch
-npm run test

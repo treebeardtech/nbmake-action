@@ -9,7 +9,6 @@ from typing import List, Optional
 import click
 import yaml
 from pydantic import BaseModel, ValidationError, validator  # type: ignore
-
 from treebeard.util import fatal_exit
 
 META_NOTEBOOKS = "treebeard/**/*ipynb"

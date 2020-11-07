@@ -11,8 +11,7 @@
     "lint": "eslint src/**/*.ts",
     "pack": "ncc build",
     "test": "jest",
-    "create-conf": "echo \"// Do not edit this generated file\nexport const treebeardRef = '$(git rev-parse --abbrev-ref HEAD)'\" > src/conf.ts",
-    "all": "npm run create-conf && npm run build && npm run format && npm run lint && npm run pack && npm test"
+    "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
   },
   "repository": {
     "type": "git",

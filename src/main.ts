@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import {treebeardRef} from './conf'
+import * as fs from 'fs'
 import axios from 'axios'
 
 async function isUsageLoggingEnabled(): Promise<boolean> {
@@ -22,7 +22,19 @@ async function isUsageLoggingEnabled(): Promise<boolean> {
   }
 }
 
+function getTbRef(): string {
+  if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+    const ev = JSON.parse(
+      fs.readFileSync(process.env.GITHUB_EVENT_PATH as string).toString()
+    )
+    return `refs/pull/${ev.number}/merge`
+  }
+  return process.env.GITHUB_SHA as string
+}
+
 async function run(): Promise<void> {
+  await exec.exec(`ls -al ${__dirname}/..`)
+
   try {
     const apiKey = core.getInput('api-key')
     const notebooks = core.getInput('notebooks')
@@ -52,9 +64,7 @@ async function run(): Promise<void> {
     }
 
     core.startGroup('🌲 Install Treebeard')
-    await exec.exec(
-      `pip install -U git+https://github.com/treebeardtech/treebeard.git@${treebeardRef}#subdirectory=treebeard-lib`
-    )
+    await exec.exec(`pip install -U ${__dirname}/../treebeard-lib`)
 
     core.endGroup()
 
@@ -64,9 +74,11 @@ async function run(): Promise<void> {
       )
     }
 
+    const TREEBEARD_REF = getTbRef()
+
     const env: {[key: string]: string} = {
-      TREEBEARD_REF: treebeardRef,
-      ...process.env
+      TREEBEARD_REF,
+      ...(process.env as {[key: string]: string})
     }
 
     function setupDockerCreds(): void {
