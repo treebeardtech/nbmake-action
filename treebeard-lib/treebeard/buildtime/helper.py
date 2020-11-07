@@ -73,7 +73,7 @@ def create_script(notebook: str, treebeard_ref: str):
 set -xeu
 
 echo Running {notebook}
-pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_ref}#subdirectory=treebeard-lib > /dev/null 2>&1
+pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_ref}#subdirectory=treebeard-lib" > /dev/null 2>&1
 
 papermill \\
   --stdout-file /dev/stdout \\
