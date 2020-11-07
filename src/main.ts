@@ -121,8 +121,9 @@ async function run(): Promise<void> {
 
     for (const key of Object.keys(env)) {
       if (DONT_FORWARD.includes(key)) {
-        tbArgs.push('--env', key)
+        continue
       }
+      tbArgs.push('--env', key)
     }
 
     if (notebooks) {

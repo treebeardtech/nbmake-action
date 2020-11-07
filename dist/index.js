@@ -1943,8 +1943,9 @@ function run() {
             }
             for (const key of Object.keys(env)) {
                 if (envs_to_not_forward_1.DONT_FORWARD.includes(key)) {
-                    tbArgs.push('--env', key);
+                    continue;
                 }
+                tbArgs.push('--env', key);
             }
             if (notebooks) {
                 tbArgs.push('--notebooks', notebooks);
