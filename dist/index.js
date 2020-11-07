@@ -1766,7 +1766,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
-const child_process_1 = __webpack_require__(129);
 const axios_1 = __importDefault(__webpack_require__(53));
 function isUsageLoggingEnabled() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -1818,9 +1817,7 @@ function run() {
             if (apiKey) {
                 yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
             }
-            const TREEBEARD_REF = child_process_1.execSync('git rev-parse HEAD')
-                .toString()
-                .trim();
+            const TREEBEARD_REF = process.env.GITHUB_SHA;
             console.log(`TBREF: ${TREEBEARD_REF}`);
             const env = Object.assign({ TREEBEARD_REF }, process.env);
             function setupDockerCreds() {

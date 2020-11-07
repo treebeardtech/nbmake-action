@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import {execSync} from 'child_process'
 
 import axios from 'axios'
 
@@ -65,9 +64,7 @@ async function run(): Promise<void> {
       )
     }
 
-    const TREEBEARD_REF = execSync('git rev-parse HEAD')
-      .toString()
-      .trim()
+    const TREEBEARD_REF = process.env.GITHUB_SHA as string
 
     console.log(`TBREF: ${TREEBEARD_REF}`)
     const env: {[key: string]: string} = {
