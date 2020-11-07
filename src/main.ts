@@ -27,7 +27,6 @@ function getTbRef(): string {
     const ev = JSON.parse(
       fs.readFileSync(process.env.GITHUB_EVENT_PATH as string).toString()
     )
-    console.log(`ev file: ${ev}`)
     return `refs/pull/${ev.number}/merge`
   }
   return process.env.GITHUB_SHA as string
@@ -77,7 +76,6 @@ async function run(): Promise<void> {
 
     const TREEBEARD_REF = getTbRef()
 
-    console.log(`TBREF: ${TREEBEARD_REF}`)
     const env: {[key: string]: string} = {
       TREEBEARD_REF,
       ...(process.env as {[key: string]: string})

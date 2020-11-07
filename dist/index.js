@@ -1790,7 +1790,6 @@ function isUsageLoggingEnabled() {
 function getTbRef() {
     if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
         const ev = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH).toString());
-        console.log(`ev file: ${ev}`);
         return `refs/pull/${ev.number}/merge`;
     }
     return process.env.GITHUB_SHA;
@@ -1827,7 +1826,6 @@ function run() {
                 yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
             }
             const TREEBEARD_REF = getTbRef();
-            console.log(`TBREF: ${TREEBEARD_REF}`);
             const env = Object.assign({ TREEBEARD_REF }, process.env);
             function setupDockerCreds() {
                 if (dockerUsername && dockerPassword === '') {
