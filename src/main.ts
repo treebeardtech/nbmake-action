@@ -1,5 +1,7 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
+import {execSync} from 'child_process'
+
 import axios from 'axios'
 
 async function isUsageLoggingEnabled(): Promise<boolean> {
@@ -63,7 +65,13 @@ async function run(): Promise<void> {
       )
     }
 
+    const TREEBEARD_REF = execSync('git rev-parse HEAD')
+      .toString()
+      .trim()
+
+    console.log(`TBREF: ${TREEBEARD_REF}`)
     const env: {[key: string]: string} = {
+      TREEBEARD_REF,
       ...(process.env as {[key: string]: string})
     }
 

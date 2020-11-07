@@ -90,15 +90,16 @@ def build(
             shell=True,
         )
 
+    treebeard_config = treebeard_context.treebeard_config
     workdir = os.getcwd()
     try:
         os.chdir(repo_temp_dir)
 
         if os.path.exists("treebeard/container_setup.ipynb"):
-            helper.create_start_script()
+            helper.create_start_script(treebeard_config.treebeard_ref)
 
         if os.path.exists("treebeard/post_install.ipynb"):
-            helper.create_post_build_script()
+            helper.create_post_build_script(treebeard_config.treebeard_ref)
 
         notebook_files = get_treebeard_config().get_deglobbed_notebooks()
         if len(notebook_files) == 0:
