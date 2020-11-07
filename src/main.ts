@@ -33,7 +33,7 @@ function getTbRef(): string {
 }
 
 async function run(): Promise<void> {
-  await exec.exec(`ls -al ${__dirname}/..`)
+  console.log(Object.keys(process.env))
 
   try {
     const apiKey = core.getInput('api-key')
