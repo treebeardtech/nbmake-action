@@ -4,7 +4,6 @@ from typing import Callable, TypeVar
 from unittest.mock import DEFAULT, Mock, patch
 
 from assertpy import assert_that  # type: ignore
-
 from treebeard.conf import (
     TreebeardConfig,
     TreebeardContext,

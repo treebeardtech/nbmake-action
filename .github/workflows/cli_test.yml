@@ -13,5 +13,4 @@ jobs:
       - run: pip install -e ./treebeard-lib
       - run: |
           set -eux
-          export TREEBEARD_REF=$(git rev-parse --abbrev-ref HEAD)
           cd ./integration-test/virtualenv && treebeard run --confirm

@@ -9,7 +9,6 @@ from typing import List, Optional
 import click
 import yaml
 from pydantic import BaseModel, ValidationError, validator  # type: ignore
-
 from treebeard.util import fatal_exit
 
 META_NOTEBOOKS = "treebeard/**/*ipynb"
@@ -47,7 +46,6 @@ class TreebeardConfig(BaseModel):
     cell_execution_timeout_seconds: int = 300
     schedule: Optional[str] = None
     debug: bool = False
-    treebeard_ref: str = os.getenv("TREEBEARD_REF", "master")
 
     @validator("schedule")
     def schedule_valdiator(cls, v: Optional[str]):

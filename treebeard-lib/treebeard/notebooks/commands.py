@@ -2,17 +2,17 @@ import json
 import os
 import os.path
 import pprint
+import shutil
+import subprocess
 import sys
 import tempfile
 from distutils.dir_util import copy_tree
+from os.path import basename
+from shutil import copyfile
 from typing import List, Optional
 
 import click
 import yaml
-from shutil import copyfile
-from os.path import basename
-
-from treebeard import conf
 from treebeard.buildtime import build
 from treebeard.conf import (
     GitHubDetails,
@@ -25,6 +25,9 @@ from treebeard.conf import (
 )
 from treebeard.helper import CliContext, get_time, update
 from treebeard.sentry_setup import setup_sentry
+from treebeard.version import get_version
+
+from treebeard import conf
 
 pp = pprint.PrettyPrinter(indent=2)
 
@@ -80,10 +83,14 @@ def create_github_details(use_docker: bool):
     help="Run inside a repo2docker container",
 )
 @click.option(
-    "--upload/--no-upload", default=False, help="Upload outputs",
+    "--upload/--no-upload",
+    default=False,
+    help="Upload outputs",
 )
 @click.option(
-    "--debug/--no-debug", default=False, help="Enable debug logging",
+    "--debug/--no-debug",
+    default=False,
+    help="Enable debug logging",
 )
 @click.option(
     "--req-file-path",
@@ -212,6 +219,12 @@ def run_repo(
 
     click.echo("🌲  Creating Project bundle")
     temp_dir = tempfile.mkdtemp()
+
+    pkg_root = os.path.abspath(f"{__file__}/../../..")
+    subprocess.check_output("python setup.py sdist", cwd=pkg_root, shell=True)
+    tb_source = "treebeard-lib.tgz"
+    shutil.copy(f"{pkg_root}/dist/treebeard-{get_version()}.tar.gz", tb_source)
+
     copy_tree(os.getcwd(), str(temp_dir), preserve_symlinks=1)
 
     if req_file_path:

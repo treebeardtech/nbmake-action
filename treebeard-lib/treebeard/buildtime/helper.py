@@ -5,7 +5,6 @@ from typing import Any, Dict, List
 
 import click
 import docker  # type: ignore
-
 from treebeard.conf import TreebeardContext
 
 
@@ -19,7 +18,7 @@ def run_image(
     client: Any = docker.from_env()  # type: ignore
 
     treebeard_config = treebeard_context.treebeard_config
-    pip_treebeard = f"pip install -U git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib"
+    pip_treebeard = f"pip install -U ./treebeard-lib.tgz"
 
     treebeard_env = treebeard_context.treebeard_env
     env: Dict[str, str] = {
@@ -68,13 +67,13 @@ def run_image(
     return int(result["StatusCode"])
 
 
-def create_script(notebook: str, treebeard_ref: str):
+def create_script(notebook: str):
     return f"""
 #!/usr/bin/env bash
 set -xeu
 
 echo Running {notebook}
-pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_ref}#subdirectory=treebeard-lib" > /dev/null 2>&1
+pip install -U "./treebeard-lib.tgz > /dev/null 2>&1
 
 papermill \\
   --stdout-file /dev/stdout \\
@@ -86,10 +85,10 @@ papermill \\
 """
 
 
-def create_start_script(treebeard_ref: str):
+def create_start_script():
     notebook = "treebeard/container_setup.ipynb"
     script = f"""
-{create_script(notebook, treebeard_ref)}
+{create_script(notebook)}
 
 exec "$@"
 """
@@ -98,11 +97,11 @@ exec "$@"
         start.write(script)
 
 
-def create_post_build_script(treebeard_ref: str):
+def create_post_build_script():
     notebook = "treebeard/post_install.ipynb"
 
     with open("postBuild", "w") as post_build:
-        post_build.write(create_script(notebook, treebeard_ref))
+        post_build.write(create_script(notebook))
 
 
 def fetch_image_for_cache(client: Any, image_name: str):
