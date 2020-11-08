@@ -1892,8 +1892,8 @@ function getTbRef() {
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         yield exec.exec(`ls -l ${__dirname}`);
-        yield exec.exec(`ls -l ../${__dirname}`);
-        yield exec.exec(`ls -l ../../${__dirname}`);
+        yield exec.exec(`ls -l ${__dirname}/..`);
+        yield exec.exec(`ls -l ${__dirname}/../..`);
         try {
             const apiKey = core.getInput('api-key');
             const notebooks = core.getInput('notebooks');
