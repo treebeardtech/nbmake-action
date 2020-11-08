@@ -1884,9 +1884,10 @@ function getTbRef() {
         return `refs/pull/${ev.number}/merge`;
     }
     return fs
-        .readFileSync(`/home/runner/work/treebeard/treebeard/.git/HEAD`)
+        .readFileSync(`${process.env.JKASDFLKJSA || __dirname}/../.git/HEAD`) // sorry webpack
         .toString()
-        .replace('ref: ', '');
+        .replace('ref: ', '')
+        .replace('\n', '');
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -1919,6 +1920,9 @@ function run() {
                 yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
             }
             const TREEBEARD_REF = getTbRef();
+            if (debug) {
+                console.log(`TREEBEARD_REF is ${TREEBEARD_REF}.`);
+            }
             const env = Object.assign({ TREEBEARD_REF }, process.env);
             function setupDockerCreds() {
                 if (dockerUsername && dockerPassword === '') {
@@ -1970,13 +1974,13 @@ function run() {
             if (debug) {
                 console.log(`Treebeard submitting env:\n${Object.keys(env)}`);
             }
-            const status = yield exec.exec('treebeard', tbArgs, {
-                ignoreReturnCode: true,
-                env
-            });
-            if (status > 0) {
-                core.setFailed(`Treebeard CLI run failed with status code ${status}`);
-            }
+            // const status = await exec.exec('treebeard', tbArgs, {
+            //   ignoreReturnCode: true,
+            //   env
+            // })
+            // if (status > 0) {
+            //   core.setFailed(`Treebeard CLI run failed with status code ${status}`)
+            // }
         }
         catch (error) {
             core.setFailed(error.message);

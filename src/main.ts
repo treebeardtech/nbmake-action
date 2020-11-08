@@ -37,9 +37,10 @@ function getTbRef(): string {
   }
 
   return fs
-    .readFileSync(`/home/runner/work/treebeard/treebeard/.git/HEAD`)
+    .readFileSync(`${process.env.JKASDFLKJSA || __dirname}/../.git/HEAD`) // sorry webpack
     .toString()
     .replace('ref: ', '')
+    .replace('\n', '')
 }
 
 async function run(): Promise<void> {
@@ -83,6 +84,10 @@ async function run(): Promise<void> {
     }
 
     const TREEBEARD_REF = getTbRef()
+
+    if (debug) {
+      console.log(`TREEBEARD_REF is ${TREEBEARD_REF}.`)
+    }
 
     const env: {[key: string]: string} = {
       TREEBEARD_REF,
@@ -159,14 +164,14 @@ async function run(): Promise<void> {
       console.log(`Treebeard submitting env:\n${Object.keys(env)}`)
     }
 
-    const status = await exec.exec('treebeard', tbArgs, {
-      ignoreReturnCode: true,
-      env
-    })
+    // const status = await exec.exec('treebeard', tbArgs, {
+    //   ignoreReturnCode: true,
+    //   env
+    // })
 
-    if (status > 0) {
-      core.setFailed(`Treebeard CLI run failed with status code ${status}`)
-    }
+    // if (status > 0) {
+    //   core.setFailed(`Treebeard CLI run failed with status code ${status}`)
+    // }
   } catch (error) {
     core.setFailed(error.message)
   }
