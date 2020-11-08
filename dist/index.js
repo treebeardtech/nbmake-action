@@ -1877,8 +1877,8 @@ function isUsageLoggingEnabled() {
 }
 function getTbRef() {
     const repoName = process.env.GITHUB_REPOSITORY;
-    console.log(`Repo name: ${repoName}`);
-    if (repoName === 'treebeardtech/hello-treebeard' &&
+    // enable internal PRs to run successfully
+    if (repoName === 'treebeardtech/treebeard' &&
         process.env.GITHUB_EVENT_NAME === 'pull_request') {
         const ev = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH).toString());
         return `refs/pull/${ev.number}/merge`;
@@ -1974,13 +1974,13 @@ function run() {
             if (debug) {
                 console.log(`Treebeard submitting env:\n${Object.keys(env)}`);
             }
-            // const status = await exec.exec('treebeard', tbArgs, {
-            //   ignoreReturnCode: true,
-            //   env
-            // })
-            // if (status > 0) {
-            //   core.setFailed(`Treebeard CLI run failed with status code ${status}`)
-            // }
+            const status = yield exec.exec('treebeard', tbArgs, {
+                ignoreReturnCode: true,
+                env
+            });
+            if (status > 0) {
+                core.setFailed(`Treebeard CLI run failed with status code ${status}`);
+            }
         }
         catch (error) {
             core.setFailed(error.message);
