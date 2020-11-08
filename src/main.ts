@@ -24,13 +24,22 @@ async function isUsageLoggingEnabled(): Promise<boolean> {
 }
 
 function getTbRef(): string {
-  if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+  const repoName = process.env.GITHUB_REPOSITORY
+  console.log(`Repo name: ${repoName}`)
+  if (
+    repoName === 'treebeardtech/hello-treebeard' &&
+    process.env.GITHUB_EVENT_NAME === 'pull_request'
+  ) {
     const ev = JSON.parse(
       fs.readFileSync(process.env.GITHUB_EVENT_PATH as string).toString()
     )
     return `refs/pull/${ev.number}/merge`
   }
-  return process.env.GITHUB_SHA as string
+
+  return fs
+    .readFileSync(`${__dirname}/../.git/HEAD`)
+    .toString()
+    .replace('ref: ', '')
 }
 
 async function run(): Promise<void> {

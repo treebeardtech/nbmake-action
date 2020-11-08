@@ -1876,11 +1876,17 @@ function isUsageLoggingEnabled() {
     });
 }
 function getTbRef() {
-    if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+    const repoName = process.env.GITHUB_REPOSITORY;
+    console.log(`Repo name: ${repoName}`);
+    if (repoName === 'treebeardtech/hello-treebeard' &&
+        process.env.GITHUB_EVENT_NAME === 'pull_request') {
         const ev = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH).toString());
         return `refs/pull/${ev.number}/merge`;
     }
-    return process.env.GITHUB_SHA;
+    return fs
+        .readFileSync(__webpack_require__.ab + "HEAD")
+        .toString()
+        .replace('ref: ', '');
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
