@@ -1884,7 +1884,7 @@ function getTbRef() {
         return `refs/pull/${ev.number}/merge`;
     }
     return fs
-        .readFileSync(__webpack_require__.ab + "HEAD")
+        .readFileSync(`/home/runner/work/treebeard/treebeard/.git/HEAD`)
         .toString()
         .replace('ref: ', '');
 }

@@ -37,7 +37,7 @@ function getTbRef(): string {
   }
 
   return fs
-    .readFileSync(`${__dirname}/../.git/HEAD`)
+    .readFileSync(`/home/runner/work/treebeard/treebeard/.git/HEAD`)
     .toString()
     .replace('ref: ', '')
 }
