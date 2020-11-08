@@ -24,13 +24,24 @@ async function isUsageLoggingEnabled(): Promise<boolean> {
 }
 
 function getTbRef(): string {
-  if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+  const repoName = process.env.GITHUB_REPOSITORY
+
+  // enable internal PRs to run successfully
+  if (
+    repoName === 'treebeardtech/treebeard' &&
+    process.env.GITHUB_EVENT_NAME === 'pull_request'
+  ) {
     const ev = JSON.parse(
       fs.readFileSync(process.env.GITHUB_EVENT_PATH as string).toString()
     )
     return `refs/pull/${ev.number}/merge`
   }
-  return process.env.GITHUB_SHA as string
+
+  return fs
+    .readFileSync(`${process.env.JKASDFLKJSA || __dirname}/../.git/HEAD`) // sorry webpack
+    .toString()
+    .replace('ref: ', '')
+    .replace('\n', '')
 }
 
 async function run(): Promise<void> {
@@ -74,6 +85,10 @@ async function run(): Promise<void> {
     }
 
     const TREEBEARD_REF = getTbRef()
+
+    if (debug) {
+      console.log(`TREEBEARD_REF is ${TREEBEARD_REF}.`)
+    }
 
     const env: {[key: string]: string} = {
       TREEBEARD_REF,

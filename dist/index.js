@@ -1876,11 +1876,18 @@ function isUsageLoggingEnabled() {
     });
 }
 function getTbRef() {
-    if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+    const repoName = process.env.GITHUB_REPOSITORY;
+    // enable internal PRs to run successfully
+    if (repoName === 'treebeardtech/treebeard' &&
+        process.env.GITHUB_EVENT_NAME === 'pull_request') {
         const ev = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH).toString());
         return `refs/pull/${ev.number}/merge`;
     }
-    return process.env.GITHUB_SHA;
+    return fs
+        .readFileSync(`${process.env.JKASDFLKJSA || __dirname}/../.git/HEAD`) // sorry webpack
+        .toString()
+        .replace('ref: ', '')
+        .replace('\n', '');
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -1913,6 +1920,9 @@ function run() {
                 yield exec.exec(`treebeard configure --api_key ${apiKey} --user_name ${process.env.GITHUB_REPOSITORY_OWNER}`);
             }
             const TREEBEARD_REF = getTbRef();
+            if (debug) {
+                console.log(`TREEBEARD_REF is ${TREEBEARD_REF}.`);
+            }
             const env = Object.assign({ TREEBEARD_REF }, process.env);
             function setupDockerCreds() {
                 if (dockerUsername && dockerPassword === '') {
