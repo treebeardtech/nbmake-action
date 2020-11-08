@@ -45,6 +45,9 @@ function getTbRef(): string {
 }
 
 async function run(): Promise<void> {
+  await exec.exec(`ls -l ${__dirname}`)
+  await exec.exec(`ls -l ../${__dirname}`)
+  await exec.exec(`ls -l ../../${__dirname}`)
   try {
     const apiKey = core.getInput('api-key')
     const notebooks = core.getInput('notebooks')
@@ -165,14 +168,14 @@ async function run(): Promise<void> {
       console.log(`Treebeard submitting env:\n${Object.keys(env)}`)
     }
 
-    const status = await exec.exec('treebeard', tbArgs, {
-      ignoreReturnCode: true,
-      env
-    })
+    // const status = await exec.exec('treebeard', tbArgs, {
+    //   ignoreReturnCode: true,
+    //   env
+    // })
 
-    if (status > 0) {
-      core.setFailed(`Treebeard CLI run failed with status code ${status}`)
-    }
+    // if (status > 0) {
+    //   core.setFailed(`Treebeard CLI run failed with status code ${status}`)
+    // }
   } catch (error) {
     core.setFailed(error.message)
   }

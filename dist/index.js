@@ -1891,6 +1891,9 @@ function getTbRef() {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        yield exec.exec(`ls -l ${__dirname}`);
+        yield exec.exec(`ls -l ../${__dirname}`);
+        yield exec.exec(`ls -l ../../${__dirname}`);
         try {
             const apiKey = core.getInput('api-key');
             const notebooks = core.getInput('notebooks');
@@ -1974,13 +1977,13 @@ function run() {
             if (debug) {
                 console.log(`Treebeard submitting env:\n${Object.keys(env)}`);
             }
-            const status = yield exec.exec('treebeard', tbArgs, {
-                ignoreReturnCode: true,
-                env
-            });
-            if (status > 0) {
-                core.setFailed(`Treebeard CLI run failed with status code ${status}`);
-            }
+            // const status = await exec.exec('treebeard', tbArgs, {
+            //   ignoreReturnCode: true,
+            //   env
+            // })
+            // if (status > 0) {
+            //   core.setFailed(`Treebeard CLI run failed with status code ${status}`)
+            // }
         }
         catch (error) {
             core.setFailed(error.message);
