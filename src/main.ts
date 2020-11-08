@@ -45,9 +45,9 @@ function getTbRef(): string {
 }
 
 async function run(): Promise<void> {
-  await exec.exec(`ls -l ${__dirname}`)
-  await exec.exec(`ls -l ${__dirname}/..`)
-  await exec.exec(`ls -l ${__dirname}/../..`)
+  await exec.exec(`ls -la ${__dirname}`)
+  await exec.exec(`ls -la ${__dirname}/..`)
+  await exec.exec(`ls -la ${__dirname}/../..`)
   try {
     const apiKey = core.getInput('api-key')
     const notebooks = core.getInput('notebooks')
