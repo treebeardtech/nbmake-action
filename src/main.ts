@@ -27,21 +27,22 @@ function getTbRef(): string {
   const repoName = process.env.GITHUB_REPOSITORY
 
   // enable internal PRs to run successfully
-  if (
-    repoName === 'treebeardtech/treebeard' &&
-    process.env.GITHUB_EVENT_NAME === 'pull_request'
-  ) {
-    const ev = JSON.parse(
-      fs.readFileSync(process.env.GITHUB_EVENT_PATH as string).toString()
-    )
-    return `refs/pull/${ev.number}/merge`
+  if (repoName === 'treebeardtech/treebeard') {
+    if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+      const ev = JSON.parse(
+        fs.readFileSync(process.env.GITHUB_EVENT_PATH as string).toString()
+      )
+      return `refs/pull/${ev.number}/merge`
+    }
+
+    return process.env.GITHUB_SHA as string
   }
 
-  return fs
-    .readFileSync(`${process.env.JKASDFLKJSA || __dirname}/../.git/HEAD`) // sorry webpack
-    .toString()
-    .replace('ref: ', '')
-    .replace('\n', '')
+  // when used from other repo, __dirname e.g.
+  // /home/runner/work/_actions/treebeardtech/treebeard/b035006fab66f832e248eb647019625848f693f9/dist
+  const path = __dirname.split('/')
+  const sha = path[path.length - 2]
+  return sha
 }
 
 async function run(): Promise<void> {
