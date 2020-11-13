@@ -18,7 +18,7 @@ def run_image(
     client: Any = docker.from_env()  # type: ignore
 
     treebeard_config = treebeard_context.treebeard_config
-    pip_treebeard = f"$(which pip || which pip3) install -U git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib"
+    pip_treebeard = f"$(which pip || which pip3) install --quiet -U git+https://github.com/treebeardtech/treebeard.git@{treebeard_config.treebeard_ref}#subdirectory=treebeard-lib"
 
     treebeard_env = treebeard_context.treebeard_env
     env: Dict[str, str] = {
@@ -73,7 +73,7 @@ def create_script(notebook: str, treebeard_ref: str):
 set -xeu
 
 echo Running {notebook}
-$(which pip || which pip3) install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_ref}#subdirectory=treebeard-lib"
+$(which pip || which pip3) install --quiet -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_ref}#subdirectory=treebeard-lib"
 
 papermill \\
   --stdout-file /dev/stdout \\
