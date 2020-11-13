@@ -6,7 +6,10 @@ inputs:
     description: "treebeard api key"
     required: false
   notebooks:
-    description: "notebooks to run"
+    description: "notebooks to run, enter patterns delimited by newlines"
+    required: false
+  ignore:
+    description: "notebooks or config files to ignore, enter patterns delimited by newlines"
     required: false
   docker-username:
     description: ""
