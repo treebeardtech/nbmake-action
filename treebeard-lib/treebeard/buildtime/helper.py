@@ -56,7 +56,7 @@ def run_image(
     debug = " --debug " if treebeard_config.debug else " "
     container = client.containers.run(
         image_name,
-        f"bash -cxeu '({pip_treebeard} > /dev/null 2>&1) && treebeard run {debug} --no-use-docker {upload_flag} {usagelogging_flag} --confirm'",
+        f"bash -cxeu '({pip_treebeard}) && treebeard run {debug} --no-use-docker {upload_flag} {usagelogging_flag} --confirm'",
         environment=env,
         detach=True,
     )
@@ -73,7 +73,7 @@ def create_script(notebook: str, treebeard_ref: str):
 set -xeu
 
 echo Running {notebook}
-pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_ref}#subdirectory=treebeard-lib" > /dev/null 2>&1
+pip install -U "git+https://github.com/treebeardtech/treebeard.git@{treebeard_ref}#subdirectory=treebeard-lib"
 
 papermill \\
   --stdout-file /dev/stdout \\
