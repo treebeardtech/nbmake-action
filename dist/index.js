@@ -1896,6 +1896,7 @@ function run() {
         try {
             const apiKey = core.getInput('api-key');
             const notebooks = core.getInput('notebooks');
+            const ignore = core.getInput('ignore');
             const dockerUsername = core.getInput('docker-username');
             const dockerPassword = core.getInput('docker-password');
             const dockerImageName = core.getInput('docker-image-name');
@@ -1960,7 +1961,16 @@ function run() {
                 tbArgs.push('--env', key);
             }
             if (notebooks) {
-                tbArgs.push('--notebooks', notebooks);
+                const notebookPatterns = notebooks.split('\n');
+                for (const pattern of notebookPatterns) {
+                    tbArgs.push('--notebooks', pattern.trim());
+                }
+            }
+            if (ignore) {
+                const ignorePatterns = ignore.split('\n');
+                for (const pattern of ignorePatterns) {
+                    tbArgs.push('--ignore', pattern.trim());
+                }
             }
             tbArgs.push(useDocker ? '--use-docker' : '--no-use-docker');
             if (debug) {
