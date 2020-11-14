@@ -7,8 +7,6 @@ from typing import Dict, List
 import click
 import papermill as pm  # type: ignore
 from sentry_sdk import capture_exception, capture_message  # type: ignore
-
-from treebeard import helper
 from treebeard.conf import (
     TreebeardConfig,
     TreebeardContext,
@@ -24,6 +22,8 @@ from treebeard.runtime.helper import (
     get_health_bar,
     get_summary,
 )
+
+from treebeard import helper
 
 bucket_name = "treebeard-notebook-outputs"
 
@@ -79,10 +79,28 @@ class NotebookRun:
             helper.log(
                 f"Executing Notebook {notebook_name} in {'.' if len(notebook_dir) == 0 else notebook_dir}"
             )
+
+            kernel_name = self._treebeard_config.kernel_name
+
+            if kernel_name.startswith("python"):
+
+                nb_kernel_name = notebook_name.replace(".ipynb", "").replace("/", "_")
+                venv_path = f"venvs/{nb_kernel_name}"
+                subprocess.check_output(
+                    f"""
+set -euo pipefail
+virtualenv --system-site-packages {venv_path}"
+. {venv_path}/bin/activate
+python -m ipykernel install --user --name {nb_kernel_name}
+""",
+                    shell=True,
+                )
+                kernel_name = nb_kernel_name
+
             pm.execute_notebook(  # type: ignore
                 notebook_path,
                 notebook_path,
-                kernel_name=self._treebeard_config.kernel_name,
+                kernel_name=kernel_name,
                 progress_bar=False,
                 request_save_on_cell_execute=True,
                 autosave_cell_every=10,
@@ -165,14 +183,20 @@ class NotebookRun:
             notebook_results[notebook_path] = result
             if upload:
                 self.upload_nb(
-                    notebook_path, result.status, set_as_thumbnail,
+                    notebook_path,
+                    result.status,
+                    set_as_thumbnail,
                 )
             set_as_thumbnail = False
 
         return notebook_results
 
     def finish(
-        self, status: int, should_upload_outputs: bool, results: str, logging: bool,
+        self,
+        status: int,
+        should_upload_outputs: bool,
+        results: str,
+        logging: bool,
     ):
         def get_status_str():
             if status == 0:
