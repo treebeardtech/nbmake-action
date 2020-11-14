@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import subprocess
 from traceback import format_exc
 from typing import Dict, List
@@ -86,9 +87,10 @@ class NotebookRun:
 
                 nb_kernel_name = notebook_name.replace(".ipynb", "").replace("/", "_")
                 venv_path = f"venvs/{nb_kernel_name}"
+                shutil.rmtree(venv_path, ignore_errors=True)
+                print("creating venv")
                 subprocess.check_output(
                     f"""
-set -euo pipefail
 virtualenv --system-site-packages {venv_path}
 . {venv_path}/bin/activate
 python -m ipykernel install --user --name {nb_kernel_name}
