@@ -89,7 +89,7 @@ class NotebookRun:
                 subprocess.check_output(
                     f"""
 set -euo pipefail
-virtualenv --system-site-packages {venv_path}"
+virtualenv --system-site-packages {venv_path}
 . {venv_path}/bin/activate
 python -m ipykernel install --user --name {nb_kernel_name}
 """,
