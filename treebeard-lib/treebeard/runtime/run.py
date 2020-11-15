@@ -99,12 +99,15 @@ class NotebookRun:
 virtualenv --system-site-packages {venv_path}
 . {get_activate_script()}
 python -m ipykernel install --user --name {nb_kernel_name}
+ipython kernelspec list
 """
                 print(f"ckc: {create_kernel_cmd}")
-                subprocess.check_output(
+                out = subprocess.check_output(
                     create_kernel_cmd,
                     shell=True,
                 )
+
+                print(f"out: {out}")
                 kernel_name = nb_kernel_name
 
             pm.execute_notebook(  # type: ignore
