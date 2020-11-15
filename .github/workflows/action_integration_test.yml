@@ -11,10 +11,10 @@ jobs:
         with:
           python-version: 3.8
       - run: pip install virtualenv ipython ipykernel
-      - run: virtualenv --system-site-packages venvs\testenv
+      - run: virtualenv --system-site-packages venvs\main
       - run: |
-          . venvs\testenv\Scripts\activate.ps1
-          python -m ipykernel install --user --name testenv
+          . venvs\main\Scripts\activate.ps1
+          python -m ipykernel install --user --name main
       - run: ipython kernelspec list
       - uses: ./
         with:
