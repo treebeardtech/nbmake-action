@@ -88,12 +88,13 @@ class NotebookRun:
 
                 nb_kernel_name = notebook_name.replace(".ipynb", "").replace("/", "_")
                 venv_path = Path(f"venvs/{nb_kernel_name}")
+                activate_path = Path(f"{venv_path}/bin/activate")
                 shutil.rmtree(venv_path, ignore_errors=True)
                 print("creating venv")
                 subprocess.check_output(
                     f"""
 virtualenv --system-site-packages {venv_path}
-. {venv_path}/bin/activate
+. {activate_path}
 python -m ipykernel install --user --name {nb_kernel_name}
 """,
                     shell=True,
