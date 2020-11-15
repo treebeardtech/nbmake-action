@@ -89,17 +89,16 @@ class NotebookRun:
                 nb_kernel_name = notebook_name.replace(".ipynb", "").replace("/", "_")
                 venv_path = Path(f"venvs/{nb_kernel_name}")
 
-                def get_activate_cmd():
+                def get_activate_script():
                     if os.name == "nt":
-                        return Path(f"{venv_path}/bin/activate.ps1")
-                    return f" . {venv_path}/bin/activate"
+                        return Path(f"{venv_path}/Scripts/activate.ps1")
+                    return f"{venv_path}/bin/activate"
 
                 shutil.rmtree(venv_path, ignore_errors=True)
-                print("creating venv")
                 subprocess.check_output(
                     f"""
 virtualenv --system-site-packages {venv_path}
-{get_activate_cmd()}
+. {get_activate_script()}
 python -m ipykernel install --user --name {nb_kernel_name}
 """,
                     shell=True,
