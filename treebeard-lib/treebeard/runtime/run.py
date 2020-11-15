@@ -103,8 +103,7 @@ ipython kernelspec list
 """
                 print(f"ckc: {create_kernel_cmd}")
                 out = subprocess.check_output(
-                    create_kernel_cmd,
-                    shell=True,
+                    create_kernel_cmd, shell=True, stderr=subprocess.STDOUT
                 )
 
                 print(f"out: {out}")
