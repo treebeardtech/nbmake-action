@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 import subprocess
+from pathlib import Path
 from traceback import format_exc
 from typing import Dict, List
 
@@ -86,7 +87,7 @@ class NotebookRun:
             if kernel_name.startswith("python"):
 
                 nb_kernel_name = notebook_name.replace(".ipynb", "").replace("/", "_")
-                venv_path = f"venvs/{nb_kernel_name}"
+                venv_path = Path(f"venvs/{nb_kernel_name}")
                 shutil.rmtree(venv_path, ignore_errors=True)
                 print("creating venv")
                 subprocess.check_output(
