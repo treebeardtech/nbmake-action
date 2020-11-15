@@ -16,7 +16,7 @@ jobs:
           . venvs\testenv\Scripts\activate.ps1
           python -m ipykernel install --user --name testenv
       - run: ipython kernelspec list
-      # - uses: ./
-      #   with:
-      #     use-docker: false
-      #     path: ./examples/hello_treebeard
+      - uses: ./
+        with:
+          use-docker: false
+          path: ./examples/hello_treebeard
