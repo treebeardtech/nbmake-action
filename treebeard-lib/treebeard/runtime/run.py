@@ -15,6 +15,7 @@ from treebeard.conf import (
     TreebeardEnv,
     api_url,
 )
+from treebeard.helper import shell
 from treebeard.importchecker.imports import check_imports
 from treebeard.logs import log as tb_log
 from treebeard.logs.helpers import clean_log_file
@@ -98,23 +99,8 @@ class NotebookRun:
                 create_venv_cmd = f"virtualenv --system-site-packages {venv_path}"
                 create_kernel_cmd = f"{venv_activate_script}; python -m ipykernel install --user --name {nb_kernel_name}"
 
-                if os.name == "nt":
-                    subprocess.check_output(
-                        ["powershell", "-command", create_venv_cmd],
-                        stderr=subprocess.STDOUT,
-                    )
-                    subprocess.check_output(
-                        ["powershell", "-command", create_kernel_cmd],
-                        stderr=subprocess.STDOUT,
-                    )
-                else:
-                    subprocess.check_output(
-                        create_venv_cmd, shell=True, stderr=subprocess.STDOUT
-                    )
-                    subprocess.check_output(
-                        create_kernel_cmd, shell=True, stderr=subprocess.STDOUT
-                    )
-
+                shell(create_venv_cmd)
+                shell(create_kernel_cmd)
                 kernel_name = nb_kernel_name
 
             pm_cmd = f"""
@@ -130,8 +116,7 @@ papermill \
   {notebook_path} \
   {notebook_path}
 """
-            print(pm_cmd)
-            subprocess.check_output(["bash", "-c", pm_cmd])
+            shell(pm_cmd)
 
             helper.log(f"{status_emojis['SUCCESS']} Notebook {notebook_path} passed!\n")
             nb_dict = get_nb_dict()
