@@ -107,7 +107,7 @@ class NotebookRun:
                             stderr=subprocess.STDOUT,
                         )
                         out = subprocess.check_output(
-                            ["-command", f". '{create_kernel_cmd}'"],
+                            create_kernel_cmd,
                             shell=True,
                             stderr=subprocess.STDOUT,
                         )
