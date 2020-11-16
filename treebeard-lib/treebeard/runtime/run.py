@@ -98,27 +98,22 @@ class NotebookRun:
                 create_venv_cmd = f"virtualenv --system-site-packages {venv_path}"
                 create_kernel_cmd = f". {get_activate_script()}; python -m ipykernel install --user --name {nb_kernel_name}"
 
-                print(f"ckc: {create_kernel_cmd}")
-                out = ""
-                try:
-                    if os.name == "nt":
-                        out = subprocess.check_output(
-                            ["virtualenv", "--system-site-packages", venv_path],
-                            stderr=subprocess.STDOUT,
-                        )
-                        out = subprocess.check_output(
-                            ["powershell", "-command", create_kernel_cmd],
-                            stderr=subprocess.STDOUT,
-                        )
-                    else:
-                        out = subprocess.check_output(
-                            create_venv_cmd, shell=True, stderr=subprocess.STDOUT
-                        )
-                        out = subprocess.check_output(
-                            create_kernel_cmd, shell=True, stderr=subprocess.STDOUT
-                        )
-                except Exception as ex:
-                    print(f"Venv creation failed: {out}\n {ex}")
+                if os.name == "nt":
+                    subprocess.check_output(
+                        ["powershell", "-command", create_venv_cmd],
+                        stderr=subprocess.STDOUT,
+                    )
+                    subprocess.check_output(
+                        ["powershell", "-command", create_kernel_cmd],
+                        stderr=subprocess.STDOUT,
+                    )
+                else:
+                    subprocess.check_output(
+                        create_venv_cmd, shell=True, stderr=subprocess.STDOUT
+                    )
+                    subprocess.check_output(
+                        create_kernel_cmd, shell=True, stderr=subprocess.STDOUT
+                    )
 
                 kernel_name = nb_kernel_name
 
