@@ -134,23 +134,7 @@ def shell(command: str):
         ]
     )
 
-    with subprocess.Popen(
-        shell_cmd + [command],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        bufsize=1,
-        universal_newlines=True,
-    ) as p:
-        if p.stdout:
-            for line in p.stdout:
-                print(line, end="")  # process line here
-
-        if p.stderr:
-            for line in p.stderr:
-                print(line, end="", file=sys.stderr)  # process line here
-
-    if p.returncode != 0:
-        raise subprocess.CalledProcessError(p.returncode, p.args)
+    subprocess.check_output(shell_cmd + [command])
 
 
 def upload_artifact(
