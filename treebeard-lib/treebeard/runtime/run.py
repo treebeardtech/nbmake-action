@@ -103,8 +103,7 @@ class NotebookRun:
                 try:
                     if os.name == "nt":
                         out = subprocess.check_output(
-                            f"C:\\Program Files\\PowerShell\\7\\pwsh.EXE -command \". '{create_venv_cmd}'\"",
-                            shell=True,
+                            ["virtualenv", "--system-site-packages", venv_path],
                             stderr=subprocess.STDOUT,
                         )
                         out = subprocess.check_output(
