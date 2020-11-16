@@ -96,7 +96,7 @@ class NotebookRun:
 
                 shutil.rmtree(venv_path, ignore_errors=True)
                 create_venv_cmd = f"virtualenv --system-site-packages {venv_path}"
-                create_kernel_cmd = f". {get_activate_script()} && python -m ipykernel install --user --name {nb_kernel_name}"
+                create_kernel_cmd = f". {get_activate_script()}; python -m ipykernel install --user --name {nb_kernel_name}"
 
                 print(f"ckc: {create_kernel_cmd}")
                 out = ""
@@ -107,8 +107,7 @@ class NotebookRun:
                             stderr=subprocess.STDOUT,
                         )
                         out = subprocess.check_output(
-                            f"powershell -command . '{create_kernel_cmd}'",
-                            shell=True,
+                            ["powershell", "-command", create_kernel_cmd],
                             stderr=subprocess.STDOUT,
                         )
                     else:
