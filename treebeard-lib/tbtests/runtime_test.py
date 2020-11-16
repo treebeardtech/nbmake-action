@@ -3,17 +3,16 @@ from unittest.mock import ANY, DEFAULT, Mock, patch
 
 from tbtests.test_helper import MockValidator
 from treebeard.conf import (
+    TreebeardConfig,
     TreebeardContext,
     get_treebeard_config,
     get_treebeard_env,
 )
 from treebeard.runtime.run import NotebookRun
 
-config = get_treebeard_config()
-config.notebooks = ["tbtests/resources/test_runtime.ipynb"]
-treebeard_env = get_treebeard_env(None)
-
 #  runtime should always log unless usagelogging flag is False
+
+treebeard_env = get_treebeard_env(None)
 
 
 class RuntimeTest(unittest.TestCase):
@@ -21,6 +20,8 @@ class RuntimeTest(unittest.TestCase):
     def test_runtime_always_logs_unless_flag_is_set(self, helper: Mock = Mock()):
         # helper.run_image.return_value = 0  # type: ignore
         # tb_helper.sanitise_repo_short_name.side_effect = tb_helper_real.sanitise_repo_short_name  # type: ignore
+        config = get_treebeard_config()
+        config.notebooks = ["tbtests/resources/test_runtime.ipynb"]
 
         nbrun = NotebookRun(
             TreebeardContext(treebeard_env=treebeard_env, treebeard_config=config)
@@ -34,6 +35,14 @@ class RuntimeTest(unittest.TestCase):
             return url.endswith("/log")
 
         helper.update.assert_called_once_with(ANY, update_url=MockValidator(validate_log), status=ANY)  # type: ignore
+
+    def test_each_notebook_runs_in_a_virtualenv(self):
+        config = TreebeardConfig(notebooks=["tbtests/resources/venvtest/*ipynb"])
+        nbrun = NotebookRun(
+            TreebeardContext(treebeard_config=config, treebeard_env=treebeard_env)
+        )
+        status = nbrun.start()
+        assert status == 0
 
 
 if __name__ == "__main__":
