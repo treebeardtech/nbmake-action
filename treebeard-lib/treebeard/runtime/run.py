@@ -102,18 +102,21 @@ python -m ipykernel install --user --name {nb_kernel_name}
 ipython kernelspec list
 """
                 print(f"ckc: {create_kernel_cmd}")
-                if os.name == "nt":
-                    out = subprocess.check_output(
-                        f"C:\\Program Files\\PowerShell\\7\\pwsh.EXE -command \". '{create_kernel_cmd}'\"",
-                        shell=True,
-                        stderr=subprocess.STDOUT,
-                    )
-                else:
-                    out = subprocess.check_output(
-                        create_kernel_cmd, shell=True, stderr=subprocess.STDOUT
-                    )
+                out = ""
+                try:
+                    if os.name == "nt":
+                        out = subprocess.check_output(
+                            f"C:\\Program Files\\PowerShell\\7\\pwsh.EXE -command \". '{create_kernel_cmd}'\"",
+                            shell=True,
+                            stderr=subprocess.STDOUT,
+                        )
+                    else:
+                        out = subprocess.check_output(
+                            create_kernel_cmd, shell=True, stderr=subprocess.STDOUT
+                        )
+                except Exception as ex:
+                    print(f"Venv creation failed: {out}\n {ex}")
 
-                print(f"out: {out}")
                 kernel_name = nb_kernel_name
 
             pm.execute_notebook(  # type: ignore
