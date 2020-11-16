@@ -91,7 +91,7 @@ class NotebookRun:
 
                 def get_activate_script():
                     if os.name == "nt":
-                        return Path(f"{venv_path}/Scripts/activate.ps1")
+                        return f"{venv_path}\\Scripts\\activate.ps1"
                     return f"{venv_path}/bin/activate"
 
                 shutil.rmtree(venv_path, ignore_errors=True)
