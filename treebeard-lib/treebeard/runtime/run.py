@@ -107,7 +107,11 @@ class NotebookRun:
                             stderr=subprocess.STDOUT,
                         )
                         out = subprocess.check_output(
-                            ["-command", f". '{create_kernel_cmd}'"],
+                            [
+                                "C:\\Program Files\\PowerShell\\7\\pwsh.EXE",
+                                "-command",
+                                f". '{create_kernel_cmd}'",
+                            ],
                             stderr=subprocess.STDOUT,
                         )
                     else:
