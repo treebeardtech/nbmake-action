@@ -118,7 +118,7 @@ class NotebookRun:
                 kernel_name = nb_kernel_name
 
             pm_cmd = f"""
-{venv_activate_script} \
+{venv_activate_script}; \
 papermill \
   --kernel {kernel_name} \
   --no-progress-bar \
