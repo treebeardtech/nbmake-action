@@ -1,0 +1,17 @@
+name: CLI Test
+
+on: [push, pull_request]
+
+jobs:
+  python_cli_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - run: pip install -e ./treebeard-lib
+      - run: |
+          set -eux
+          export TREEBEARD_REF=$(git rev-parse --abbrev-ref HEAD)
+          cd ./integration-test/virtualenv && treebeard run --confirm
