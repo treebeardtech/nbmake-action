@@ -95,22 +95,27 @@ class NotebookRun:
                     return f"{venv_path}/bin/activate"
 
                 shutil.rmtree(venv_path, ignore_errors=True)
-                create_kernel_cmd = f"""
-virtualenv --system-site-packages {venv_path}
-. {get_activate_script()}
-python -m ipykernel install --user --name {nb_kernel_name}
-ipython kernelspec list
-"""
+                create_venv_cmd = f"virtualenv --system-site-packages {venv_path}"
+                create_kernel_cmd = f". {get_activate_script()} && python -m ipykernel install --user --name {nb_kernel_name}"
+
                 print(f"ckc: {create_kernel_cmd}")
                 out = ""
                 try:
                     if os.name == "nt":
+                        out = subprocess.check_output(
+                            f"C:\\Program Files\\PowerShell\\7\\pwsh.EXE -command \". '{create_venv_cmd}'\"",
+                            shell=True,
+                            stderr=subprocess.STDOUT,
+                        )
                         out = subprocess.check_output(
                             f"C:\\Program Files\\PowerShell\\7\\pwsh.EXE -command \". '{create_kernel_cmd}'\"",
                             shell=True,
                             stderr=subprocess.STDOUT,
                         )
                     else:
+                        out = subprocess.check_output(
+                            create_venv_cmd, shell=True, stderr=subprocess.STDOUT
+                        )
                         out = subprocess.check_output(
                             create_kernel_cmd, shell=True, stderr=subprocess.STDOUT
                         )
