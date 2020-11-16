@@ -20,3 +20,6 @@ jobs:
           notebooks: "treebeard-lib/run_tests.ipynb" # run: pytest
           api-key: ${{ secrets.TREEBEARD_API_KEY }}
           use-docker: False
+      - uses: codecov/codecov-action@v1
+        with:
+          file: ./treebeard-lib/coverage.xml
