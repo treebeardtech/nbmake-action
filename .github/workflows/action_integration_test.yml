@@ -1,159 +1,159 @@
-name: Action Integration Test
+# name: Action Integration Test
 
-on: [push, pull_request]
+# on: [push, pull_request]
 
-jobs:
-  tutorial:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-      - run: gcloud auth configure-docker
-      - uses: "./"
-        with:
-          notebooks: "tutorial/tutorial.ipynb"
-          docker-registry-prefix: gcr.io/treebeard-259315/tests
-          debug: "true"
-  conda:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-      - run: gcloud auth configure-docker
-      - uses: "./"
-        with:
-          docker-registry-prefix: gcr.io/treebeard-259315/tests
-          debug: "true"
-          path: "./integration-test/conda"
+# jobs:
+#   tutorial:
+#     timeout-minutes: 20
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
+#       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
+#         with:
+#           project_id: ${{ secrets.GCP_PROJECT_ID }}
+#           service_account_key: ${{ secrets.GCP_SA_KEY }}
+#           export_default_credentials: true
+#       - run: gcloud auth configure-docker
+#       - uses: "./"
+#         with:
+#           notebooks: "tutorial/tutorial.ipynb"
+#           docker-registry-prefix: gcr.io/treebeard-259315/tests
+#           debug: "true"
+#   conda:
+#     timeout-minutes: 20
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
+#       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
+#         with:
+#           project_id: ${{ secrets.GCP_PROJECT_ID }}
+#           service_account_key: ${{ secrets.GCP_SA_KEY }}
+#           export_default_credentials: true
+#       - run: gcloud auth configure-docker
+#       - uses: "./"
+#         with:
+#           docker-registry-prefix: gcr.io/treebeard-259315/tests
+#           debug: "true"
+#           path: "./integration-test/conda"
           
-  different_req_file:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - uses: "./"
-        with:
-          debug: "true"
-          path: "./integration-test/different_req_file"
-          req-file-path: "req_file_dir/requirements.txt"
+#   different_req_file:
+#     timeout-minutes: 20
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
+#       - uses: "./"
+#         with:
+#           debug: "true"
+#           path: "./integration-test/different_req_file"
+#           req-file-path: "req_file_dir/requirements.txt"
 
-  partially_passing:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-      - run: gcloud auth configure-docker
-      - uses: "./"
-        with:
-          api-key: ${{ secrets.TREEBEARD_API_KEY }}
-          docker-registry-prefix: gcr.io/treebeard-259315/tests
-          debug: "true"
-          path: "./integration-test/partially_passing"
-          notebooks: "main.ipynb"
+#   partially_passing:
+#     timeout-minutes: 20
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
+#       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
+#         with:
+#           project_id: ${{ secrets.GCP_PROJECT_ID }}
+#           service_account_key: ${{ secrets.GCP_SA_KEY }}
+#           export_default_credentials: true
+#       - run: gcloud auth configure-docker
+#       - uses: "./"
+#         with:
+#           api-key: ${{ secrets.TREEBEARD_API_KEY }}
+#           docker-registry-prefix: gcr.io/treebeard-259315/tests
+#           debug: "true"
+#           path: "./integration-test/partially_passing"
+#           notebooks: "main.ipynb"
 
-  partially_passing_2:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-      - run: gcloud auth configure-docker
-      - uses: "./"
-        with:
-          api-key: ${{ secrets.TREEBEARD_API_KEY }}
-          docker-registry-prefix: gcr.io/treebeard-259315/tests
-          debug: "true"
-          path: "./integration-test/partially_passing"
-          # notebooks configured in treebeard.yaml
+#   partially_passing_2:
+#     timeout-minutes: 20
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
+#       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
+#         with:
+#           project_id: ${{ secrets.GCP_PROJECT_ID }}
+#           service_account_key: ${{ secrets.GCP_SA_KEY }}
+#           export_default_credentials: true
+#       - run: gcloud auth configure-docker
+#       - uses: "./"
+#         with:
+#           api-key: ${{ secrets.TREEBEARD_API_KEY }}
+#           docker-registry-prefix: gcr.io/treebeard-259315/tests
+#           debug: "true"
+#           path: "./integration-test/partially_passing"
+#           # notebooks configured in treebeard.yaml
 
-  failing_build:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-      - run: gcloud auth configure-docker
-      - uses: "./"
-        id: run
-        with:
-          docker-registry-prefix: gcr.io/treebeard-259315/tests
-          debug: "true"
-          path: "./integration-test/failing_build"
-        continue-on-error: true
-      - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
-  failing_notebook:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-      - run: gcloud auth configure-docker
-      - uses: "./"
-        id: run
-        with:
-          docker-registry-prefix: gcr.io/treebeard-259315/tests
-          debug: "true"
-          path: "./integration-test/failing_notebook"
-        continue-on-error: true
-      - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
-  windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - run: pip install -r requirements.txt # Manually install python deps as running dockerless
-        working-directory: "./examples/hello_treebeard"
-      - uses: ./
-        with:
-          use-docker: false
-          path: ./examples/hello_treebeard
+#   failing_build:
+#     timeout-minutes: 20
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
+#       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
+#         with:
+#           project_id: ${{ secrets.GCP_PROJECT_ID }}
+#           service_account_key: ${{ secrets.GCP_SA_KEY }}
+#           export_default_credentials: true
+#       - run: gcloud auth configure-docker
+#       - uses: "./"
+#         id: run
+#         with:
+#           docker-registry-prefix: gcr.io/treebeard-259315/tests
+#           debug: "true"
+#           path: "./integration-test/failing_build"
+#         continue-on-error: true
+#       - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
+#   failing_notebook:
+#     timeout-minutes: 20
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
+#       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
+#         with:
+#           project_id: ${{ secrets.GCP_PROJECT_ID }}
+#           service_account_key: ${{ secrets.GCP_SA_KEY }}
+#           export_default_credentials: true
+#       - run: gcloud auth configure-docker
+#       - uses: "./"
+#         id: run
+#         with:
+#           docker-registry-prefix: gcr.io/treebeard-259315/tests
+#           debug: "true"
+#           path: "./integration-test/failing_notebook"
+#         continue-on-error: true
+#       - run: '[[ ${{ steps.run.outcome }} == "failure" &&  ${{ steps.run.conclusion }} == "success" ]]'
+#   windows:
+#     runs-on: windows-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
+#       - run: pip install -r requirements.txt # Manually install python deps as running dockerless
+#         working-directory: "./examples/hello_treebeard"
+#       - uses: ./
+#         with:
+#           use-docker: false
+#           path: ./examples/hello_treebeard
