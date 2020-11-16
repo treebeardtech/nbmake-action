@@ -83,20 +83,20 @@ class NotebookRun:
             )
 
             kernel_name = self._treebeard_config.kernel_name
-
+            venv_activate_script = ""
             if kernel_name.startswith("python"):
 
                 nb_kernel_name = notebook_name.replace(".ipynb", "").replace("/", "_")
                 venv_path = Path(f"venvs/{nb_kernel_name}")
 
-                def get_activate_script():
-                    if os.name == "nt":
-                        return f"{venv_path}\\Scripts\\activate.ps1"
-                    return f"{venv_path}/bin/activate"
+                if os.name == "nt":
+                    venv_activate_script = f". {venv_path}\\Scripts\\activate.ps1"
+                else:
+                    venv_activate_script = f". {venv_path}/bin/activate"
 
                 shutil.rmtree(venv_path, ignore_errors=True)
                 create_venv_cmd = f"virtualenv --system-site-packages {venv_path}"
-                create_kernel_cmd = f". {get_activate_script()}; python -m ipykernel install --user --name {nb_kernel_name}"
+                create_kernel_cmd = f"{venv_activate_script}; python -m ipykernel install --user --name {nb_kernel_name}"
 
                 if os.name == "nt":
                     subprocess.check_output(
@@ -117,18 +117,22 @@ class NotebookRun:
 
                 kernel_name = nb_kernel_name
 
-            pm.execute_notebook(  # type: ignore
-                notebook_path,
-                notebook_path,
-                kernel_name=kernel_name,
-                progress_bar=False,
-                request_save_on_cell_execute=True,
-                autosave_cell_every=10,
-                execution_timeout=self._treebeard_config.cell_execution_timeout_seconds,
-                log_output=True,
-                nest_asyncio=True,  #  https://github.com/nteract/papermill/issues/490
-                cwd=f"{os.getcwd()}/{notebook_dir}",
-            )
+            pm_cmd = f"""
+{venv_activate_script} \
+papermill \
+  --kernel {kernel_name} \
+  --no-progress-bar \
+  --request-save-on-cell-execute \
+  --autosave-cell-every 10 \
+  --execution-timeout {self._treebeard_config.cell_execution_timeout_seconds} \
+  --log-output \
+  --cwd {os.getcwd()}/{notebook_dir} \
+  {notebook_path} \
+  {notebook_path}
+"""
+            print(pm_cmd)
+            subprocess.check_output(["bash", "-c", pm_cmd])
+
             helper.log(f"{status_emojis['SUCCESS']} Notebook {notebook_path} passed!\n")
             nb_dict = get_nb_dict()
             num_cells = len(nb_dict["cells"])
