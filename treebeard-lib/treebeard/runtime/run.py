@@ -1,20 +1,21 @@
 import json
 import os
+import shutil
 import subprocess
+from pathlib import Path
 from traceback import format_exc
 from typing import Dict, List
 
 import click
 import papermill as pm  # type: ignore
 from sentry_sdk import capture_exception, capture_message  # type: ignore
-
-from treebeard import helper
 from treebeard.conf import (
     TreebeardConfig,
     TreebeardContext,
     TreebeardEnv,
     api_url,
 )
+from treebeard.helper import shell
 from treebeard.importchecker.imports import check_imports
 from treebeard.logs import log as tb_log
 from treebeard.logs.helpers import clean_log_file
@@ -24,6 +25,8 @@ from treebeard.runtime.helper import (
     get_health_bar,
     get_summary,
 )
+
+from treebeard import helper
 
 bucket_name = "treebeard-notebook-outputs"
 
@@ -79,18 +82,42 @@ class NotebookRun:
             helper.log(
                 f"Executing Notebook {notebook_name} in {'.' if len(notebook_dir) == 0 else notebook_dir}"
             )
-            pm.execute_notebook(  # type: ignore
-                notebook_path,
-                notebook_path,
-                kernel_name=self._treebeard_config.kernel_name,
-                progress_bar=False,
-                request_save_on_cell_execute=True,
-                autosave_cell_every=10,
-                execution_timeout=self._treebeard_config.cell_execution_timeout_seconds,
-                log_output=True,
-                nest_asyncio=True,  #  https://github.com/nteract/papermill/issues/490
-                cwd=f"{os.getcwd()}/{notebook_dir}",
-            )
+
+            kernel_name = self._treebeard_config.kernel_name
+            venv_activate_script = ""
+            if kernel_name.startswith("python"):
+
+                nb_kernel_name = notebook_name.replace(".ipynb", "").replace("/", "_")
+                venv_path = Path(f"venvs/{nb_kernel_name}")
+
+                if os.name == "nt":
+                    venv_activate_script = f". {venv_path}\\Scripts\\activate.ps1"
+                else:
+                    venv_activate_script = f". {venv_path}/bin/activate"
+
+                shutil.rmtree(venv_path, ignore_errors=True)
+                create_venv_cmd = f"virtualenv --system-site-packages {venv_path}"
+                create_kernel_cmd = f"{venv_activate_script}; python -m ipykernel install --user --name {nb_kernel_name}"
+
+                shell(create_venv_cmd)
+                shell(create_kernel_cmd)
+                kernel_name = nb_kernel_name
+
+            pm_cmd = f"""
+{venv_activate_script}; \
+papermill \
+  --kernel {kernel_name} \
+  --no-progress-bar \
+  --request-save-on-cell-execute \
+  --autosave-cell-every 10 \
+  --execution-timeout {self._treebeard_config.cell_execution_timeout_seconds} \
+  --log-output \
+  --cwd {os.getcwd()}/{notebook_dir} \
+  {notebook_path} \
+  {notebook_path}
+"""
+            shell(pm_cmd)
+
             helper.log(f"{status_emojis['SUCCESS']} Notebook {notebook_path} passed!\n")
             nb_dict = get_nb_dict()
             num_cells = len(nb_dict["cells"])
@@ -165,14 +192,20 @@ class NotebookRun:
             notebook_results[notebook_path] = result
             if upload:
                 self.upload_nb(
-                    notebook_path, result.status, set_as_thumbnail,
+                    notebook_path,
+                    result.status,
+                    set_as_thumbnail,
                 )
             set_as_thumbnail = False
 
         return notebook_results
 
     def finish(
-        self, status: int, should_upload_outputs: bool, results: str, logging: bool,
+        self,
+        status: int,
+        should_upload_outputs: bool,
+        results: str,
+        logging: bool,
     ):
         def get_status_str():
             if status == 0:

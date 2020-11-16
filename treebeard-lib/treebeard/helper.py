@@ -6,14 +6,13 @@ import os
 import subprocess
 import sys
 from glob import glob
-from typing import Optional
+from typing import List, Optional
 
 import click
 import requests
 from pydantic import BaseModel  # type: ignore
 from requests import Response
 from sentry_sdk import capture_message  # type: ignore
-
 from treebeard.conf import (
     META_NOTEBOOKS,
     TreebeardContext,
@@ -112,7 +111,9 @@ def update(
 
     treebeard_env = treebeard_context.treebeard_env
     resp = requests.post(  # type:ignore
-        update_url, json=data, headers={"api_key": treebeard_env.api_key},
+        update_url,
+        json=data,
+        headers={"api_key": treebeard_env.api_key},
     )
 
     treebeard_config = treebeard_context.treebeard_config
@@ -124,23 +125,16 @@ def update(
 
 
 def shell(command: str):
-    with subprocess.Popen(
-        ["bash", "-c", command],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        bufsize=1,
-        universal_newlines=True,
-    ) as p:
-        if p.stdout:
-            for line in p.stdout:
-                print(line, end="")  # process line here
+    shell_cmd: List[str] = (
+        ["powershell", "-command"]
+        if os.name == "nt"
+        else [
+            "bash",
+            "-c",
+        ]
+    )
 
-        if p.stderr:
-            for line in p.stderr:
-                print(line, end="", file=sys.stderr)  # process line here
-
-    if p.returncode != 0:
-        raise subprocess.CalledProcessError(p.returncode, p.args)
+    subprocess.check_output(shell_cmd + [command])
 
 
 def upload_artifact(
@@ -160,7 +154,8 @@ def upload_artifact(
 
     with open(filename, "rb") as data:
         resp: Response = requests.get(  # type: ignore
-            f"{api_url}/get_upload_url/{upload_path}", params=get_url_params,
+            f"{api_url}/get_upload_url/{upload_path}",
+            params=get_url_params,
         )
         if resp.status_code != 200:
             msg = (
@@ -169,7 +164,11 @@ def upload_artifact(
             capture_message(msg)
             raise (Exception(msg))
         signed_url: str = resp.text
-        put_resp = requests.put(signed_url, data, headers=put_object_headers,)  # type: ignore
+        put_resp = requests.put(
+            signed_url,
+            data,
+            headers=put_object_headers,
+        )  # type: ignore
         if put_resp.status_code != 200:
             msg = f"Put object failed for {filename}, {put_resp.status_code}\n{put_resp.text}"
             capture_message(msg)
