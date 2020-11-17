@@ -55,7 +55,8 @@ setuptools.setup(  # type: ignore
     entry_points={
         "console_scripts": [
             "treebeard = treebeard:cli",
-        ]
+        ],
+        "pytest11": ["treebeard = treebeard.pytestplugin"],
     },
     install_requires=install_requires,
     url="https://github.com/treebeardtech/treebeard",
