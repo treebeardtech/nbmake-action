@@ -1,7 +1,7 @@
 import setuptools  # type: ignore
 
 """
-Treebeard - CLI and Github app for running notebooks
+Treebeard - Test Notebooks
 ====================================================
 
 Check out [GitHub](https://github.com/treebeardtech/treebeard) to find out more.
