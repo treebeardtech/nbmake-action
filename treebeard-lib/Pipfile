@@ -11,6 +11,7 @@ pytest = "*"
 python-magic = "*"
 assertpy = "*"
 atomicwrites = "*"
+pytest-cov = "*"
 
 [packages]
 treebeard = {editable = true,path = "."}
