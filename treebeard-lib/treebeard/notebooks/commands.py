@@ -2,8 +2,6 @@ import json
 import os
 import os.path
 import pprint
-import shutil
-import subprocess
 import sys
 import tempfile
 from distutils.dir_util import copy_tree
@@ -25,7 +23,6 @@ from treebeard.conf import (
 )
 from treebeard.helper import CliContext, get_time, update
 from treebeard.sentry_setup import setup_sentry
-from treebeard.version import get_version
 
 from treebeard import conf
 

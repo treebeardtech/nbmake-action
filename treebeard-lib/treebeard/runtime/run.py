@@ -87,7 +87,11 @@ class NotebookRun:
             venv_activate_script = ""
             if kernel_name.startswith("python"):
 
-                nb_kernel_name = notebook_name.replace(".ipynb", "").replace("/", "_")
+                nb_kernel_name = (
+                    notebook_name.replace(".ipynb", "")
+                    .replace("/", "_")
+                    .replace(" ", "_")
+                )
                 venv_path = Path(f"venvs/{nb_kernel_name}")
 
                 if os.name == "nt":
