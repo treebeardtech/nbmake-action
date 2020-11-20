@@ -2,8 +2,6 @@ import json
 import os
 import os.path
 import pprint
-import shutil
-import subprocess
 import sys
 import tempfile
 from distutils.dir_util import copy_tree
@@ -25,7 +23,6 @@ from treebeard.conf import (
 )
 from treebeard.helper import CliContext, get_time, update
 from treebeard.sentry_setup import setup_sentry
-from treebeard.version import get_version
 
 from treebeard import conf
 
@@ -205,7 +202,7 @@ def run_repo(
         # Note: import runtime.run causes win/darwin devices missing magic to fail at start
         import treebeard.runtime.run
 
-        nbrun = treebeard.runtime.run.NotebookRun(treebeard_context)
+        nbrun = treebeard.runtime.run.NotebookRun(treebeard_context)  # pytest
 
         status = nbrun.start(upload=upload, logging=usagelogging)
         return status

@@ -4,7 +4,6 @@ import json
 import mimetypes
 import os
 import subprocess
-import sys
 from glob import glob
 from typing import List, Optional
 

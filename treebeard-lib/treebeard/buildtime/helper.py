@@ -55,7 +55,7 @@ def run_image(
     usagelogging_flag = " --usagelogging" if usagelogging else " "
     debug = " --debug " if treebeard_config.debug else " "
     container = client.containers.run(
-        image_name,
+        image_name,  # pytest
         f"bash -cxeu '({pip_treebeard}) && treebeard run {debug} --no-use-docker {upload_flag} {usagelogging_flag} --confirm'",
         environment=env,
         detach=True,
