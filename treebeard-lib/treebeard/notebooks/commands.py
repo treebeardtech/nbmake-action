@@ -202,7 +202,7 @@ def run_repo(
         # Note: import runtime.run causes win/darwin devices missing magic to fail at start
         import treebeard.runtime.run
 
-        nbrun = treebeard.runtime.run.NotebookRun(treebeard_context)  # pytest
+        nbrun = treebeard.runtime.run.NotebookRun(treebeard_context)
 
         status = nbrun.start(upload=upload, logging=usagelogging)
         return status
