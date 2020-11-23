@@ -117,8 +117,8 @@ papermill \
   --execution-timeout {self._treebeard_config.cell_execution_timeout_seconds} \
   --log-output \
   --cwd {os.getcwd()}/{notebook_dir} \
-  {notebook_path} \
-  {notebook_path}
+  '{notebook_path}' \
+  '{notebook_path}'
 """
             shell(pm_cmd)
 
