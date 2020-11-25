@@ -145,7 +145,7 @@ Automatically generated docker images can be sent to a dockerhub container regis
 
 | Action input                | example                          | definition                                                                                               |
 |-----------------------------|------------------------------------------------------------|------------------------------------------------------------------------------------|
-| `notebooks`                | `"my_notebook_to_run.ipynb"` | Filenames of Jupyter notebooks to run\. By default a glob pattern will be used (`**/*ipynb`)    |
+| `notebooks`                |  `"docs/*.ipynb"` | List of filename patterns of Jupyter notebooks to run\. By default a glob pattern will be used (`**/*ipynb`)    |
 | `docker-username`         | `"treebeardtech"`        | Dockerhub username                                                                                       |
 | `docker-password`         | `"${{ secrets.DOCKER_PASSWORD }}"`        | Dockerhub password                                                                                       |
 | `docker-image-name`      | `"project_docker_image"`            | the name of the image built by treebeard                                                                 |
@@ -153,27 +153,21 @@ Automatically generated docker images can be sent to a dockerhub container regis
 | `use-docker`              | `true`                             | Run treebeard inside repo2docker \- disable building a docker image with this flag \- on by default      |
 | `debug`                    | `false`                            | Enable debug logging                                                                                     |
 | `path`                     | `"examples/notebooks/"`            | Path of the repo to run from                                                                             |
-| `api-key`                 | `"${{ secrets.TREEBEARD_API_KEY }}"`                   | treebeard teams api key                                                                                  |
 
 # FAQ
 ## Should I `use-docker` or not?
 
-By default, Treebeard will use repo2docker to containerise the repo before running the notebooks inside the container.
+By default, Treebeard will use [repo2docker](https://github.com/jupyter/repo2docker) to containerise the repo before running the notebooks inside the container.
 
 This is great for simplicity as it will try to install your dependencies based on setup.py/requirements, but more advanced users may prefer to bypass containerisation because
 1. You prefer to install dependencies yourself (could be as simple as `pip install -r requirements.txt`)
 2. You would like to use GitHub Actions to integrate with GCP, AWS etc without having to pass credentials into a container
 3. You would like to use windows. Repo2docker builds Ubuntu images.
 
-## How do I pass secrets/variables into the runtime container?
+## How do I pass secrets/variables into the container when using docker?
 
-Any variable beginning with `TB_` will be forwarded into the container at runtime.
-
-## How do I install dependencies that don't work in an `environment.yml`?
-
-By default, repo2docker installs your conda, pipenv, or pip requirements based on files on your repo. It also supports [several other config files]().
+By default all environment variables apart from ones which need to be overriden (e.g. PATH) will be passed into the container.
 
 ## More Information
 
-- [Website](https://treebeard.io)
 - [Guide to python dependency management choices](https://towardsdatascience.com/devops-for-data-science-making-your-python-project-reproducible-f55646e110fa)
