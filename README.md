@@ -1,24 +1,8 @@
-# 🌲 Treebeard
+# Treebeard
 
-**A Notebook-First Continuous Integration Framework**
+**The simplest way to automate notebook testing in Python projects**
 
 ![Action Integration Test](https://github.com/treebeardtech/treebeard/workflows/Action%20Integration%20Test/badge.svg) ![Teams Integration Test](https://github.com/treebeardtech/treebeard/workflows/Teams%20Integration%20Test/badge.svg) ![Pytest](https://github.com/treebeardtech/treebeard/workflows/Pytest/badge.svg) <a href="https://gitter.im/treebeardtech/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the Gitter Chat"></a> [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/tutorial.ipynb) [![Twitter](https://img.shields.io/twitter/follow/treebeardtech?style=social)](https://twitter.com/treebeardtech)
-
-Treebeard is the simplest way to automate notebook testing in Python projects.
-
-## What Does Treebeard Do?
-
-1. Runs on GitHub Actions
-
-2. Automatically containerises your repo
-
-3. Runs all Jupyter notebooks, flagging errors
-
-4. On failure, provides a list of missing Python dependencies
-
-# <img width=23 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/>  Getting Started via GitHub Actions
-
-If you haven't used GitHub actions before, it is a GitHub feature which lets you trigger jobs in response to events on your repo. See the following example.
 
 ## Minimal Quickstart
 
@@ -44,6 +28,8 @@ jobs:
         with:
           python-version: 3.8
       - uses: treebeardtech/treebeard@master
+        with:
+          use-docker: false
 ```
 
 ### Output Example
@@ -170,11 +156,11 @@ Automatically generated docker images can be sent to a dockerhub container regis
 | `api-key`                 | `"${{ secrets.TREEBEARD_API_KEY }}"`                   | treebeard teams api key                                                                                  |
 
 # FAQ
- ## 🐳 Should I `use-docker` or not?
+## Should I `use-docker` or not?
 
 By default, Treebeard will use repo2docker to containerise the repo before running the notebooks inside the container.
 
-This is great for simplicity and binder-compatibility but more advanced users may prefer to bypass containerisation because
+This is great for simplicity as it will try to install your dependencies based on setup.py/requirements, but more advanced users may prefer to bypass containerisation because
 1. You prefer to install dependencies yourself (could be as simple as `pip install -r requirements.txt`)
 2. You would like to use GitHub Actions to integrate with GCP, AWS etc without having to pass credentials into a container
 3. You would like to use windows. Repo2docker builds Ubuntu images.
@@ -186,20 +172,6 @@ Any variable beginning with `TB_` will be forwarded into the container at runtim
 ## How do I install dependencies that don't work in an `environment.yml`?
 
 By default, repo2docker installs your conda, pipenv, or pip requirements based on files on your repo. It also supports [several other config files]().
-
-# 🙌  Contributing
-
-The most valuable contribution to us is feedback and issues raised via Gitter or Issues.
-
-If you want to hack on the internal treebeard Python package then we encourage you to jump into our interactive tutorial:
-
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/tutorial.ipynb)
-
-chat with us if you want to make changes, we are here to help!
-
-# <img width=30 src="https://treebeard.io/static/logo-f65d0b1f4c26063572398ee1da01edd7.png"></src> Hire Treebeard
-
-Need help with data engineering or devops? Drop us a message at alex@treebeard.io
 
 ## More Information
 
