@@ -1,24 +1,8 @@
 # 🌲 Treebeard
 
-**A Notebook-First Continuous Integration Framework**
+**The simplest way to automate notebook testing in Python projects**
 
 ![Action Integration Test](https://github.com/treebeardtech/treebeard/workflows/Action%20Integration%20Test/badge.svg) ![Teams Integration Test](https://github.com/treebeardtech/treebeard/workflows/Teams%20Integration%20Test/badge.svg) ![Pytest](https://github.com/treebeardtech/treebeard/workflows/Pytest/badge.svg) <a href="https://gitter.im/treebeardtech/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the Gitter Chat"></a> [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/tutorial.ipynb) [![Twitter](https://img.shields.io/twitter/follow/treebeardtech?style=social)](https://twitter.com/treebeardtech)
-
-Treebeard is the simplest way to automate notebook testing in Python projects.
-
-## What Does Treebeard Do?
-
-1. Runs on GitHub Actions
-
-2. Automatically containerises your repo
-
-3. Runs all Jupyter notebooks, flagging errors
-
-4. On failure, provides a list of missing Python dependencies
-
-# <img width=23 src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg"/>  Getting Started via GitHub Actions
-
-If you haven't used GitHub actions before, it is a GitHub feature which lets you trigger jobs in response to events on your repo. See the following example.
 
 ## Minimal Quickstart
 
@@ -44,6 +28,8 @@ jobs:
         with:
           python-version: 3.8
       - uses: treebeardtech/treebeard@master
+        with:
+          use-docker: false
 ```
 
 ### Output Example
@@ -174,7 +160,7 @@ Automatically generated docker images can be sent to a dockerhub container regis
 
 By default, Treebeard will use repo2docker to containerise the repo before running the notebooks inside the container.
 
-This is great for simplicity and binder-compatibility but more advanced users may prefer to bypass containerisation because
+This is great for simplicity as it will try to install your dependencies based on setup.py/requirements, but more advanced users may prefer to bypass containerisation because
 1. You prefer to install dependencies yourself (could be as simple as `pip install -r requirements.txt`)
 2. You would like to use GitHub Actions to integrate with GCP, AWS etc without having to pass credentials into a container
 3. You would like to use windows. Repo2docker builds Ubuntu images.
