@@ -1,4 +1,4 @@
-# 🌲 Treebeard
+# Treebeard
 
 **The simplest way to automate notebook testing in Python projects**
 
@@ -156,7 +156,7 @@ Automatically generated docker images can be sent to a dockerhub container regis
 | `api-key`                 | `"${{ secrets.TREEBEARD_API_KEY }}"`                   | treebeard teams api key                                                                                  |
 
 # FAQ
- ## 🐳 Should I `use-docker` or not?
+## Should I `use-docker` or not?
 
 By default, Treebeard will use repo2docker to containerise the repo before running the notebooks inside the container.
 
@@ -172,20 +172,6 @@ Any variable beginning with `TB_` will be forwarded into the container at runtim
 ## How do I install dependencies that don't work in an `environment.yml`?
 
 By default, repo2docker installs your conda, pipenv, or pip requirements based on files on your repo. It also supports [several other config files]().
-
-# 🙌  Contributing
-
-The most valuable contribution to us is feedback and issues raised via Gitter or Issues.
-
-If you want to hack on the internal treebeard Python package then we encourage you to jump into our interactive tutorial:
-
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/treebeardtech/treebeard/master?urlpath=lab/tree/tutorial/tutorial.ipynb)
-
-chat with us if you want to make changes, we are here to help!
-
-# <img width=30 src="https://treebeard.io/static/logo-f65d0b1f4c26063572398ee1da01edd7.png"></src> Hire Treebeard
-
-Need help with data engineering or devops? Drop us a message at alex@treebeard.io
 
 ## More Information
 
