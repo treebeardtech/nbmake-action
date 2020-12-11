@@ -4429,7 +4429,6 @@ class Logger {
                 return r.status === 200 && r.data === '';
             }
             catch (_a) {
-                console.log('Non-fatal usage-logging error ocurred.');
                 return false;
             }
         });
