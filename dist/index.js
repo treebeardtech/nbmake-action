@@ -2878,7 +2878,7 @@ function run() {
             // const pkg = `git+https://github.com/treebeardtech/nbmake.git@main${
             //   pathOutput ? '#egg=nbmake[html]' : ''
             // }`
-            const pkg = `nbmake${pathOutput ? '[html]' : ''}==0.2`;
+            const pkg = `nbmake${pathOutput ? '[html]' : ''}==0.1`;
             yield exec.exec(`pip install ${pkg}`);
             core.endGroup();
             const paths = notebooks.split('\n').filter(n => n);
