@@ -23,7 +23,6 @@ inputs:
   path-output:
     description: "Create an html report to `{path_output}_build/html`"
     required: false
-    default: "."
 
   overwrite:
     description: >

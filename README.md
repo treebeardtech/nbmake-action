@@ -13,7 +13,7 @@ Tests notebooks using [nbmake](https://github.com/treebeardtech/nbmake) via pyte
       - uses: "treebeardtech/nbmake-action@v0.2"
         with:
           path: "./examples"
-          html: true
+          path-output: .
           notebooks: |
             nb1.ipynb
             'sub dir/*.ipynb'

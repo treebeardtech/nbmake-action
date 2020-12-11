@@ -2875,9 +2875,7 @@ function run() {
                 yield exec.exec('bash', ['-c', 'pwd && ls -la']);
             }
             core.startGroup('Install test packages');
-            const pkg = `git+https://github.com/treebeardtech/nbmake.git@main${pathOutput
-                ? '#egg=nbmake[html]'
-                : ''}`;
+            const pkg = `git+https://github.com/treebeardtech/nbmake.git@main${pathOutput ? '#egg=nbmake[html]' : ''}`;
             yield exec.exec(`pip install ${pkg}`);
             core.endGroup();
             const paths = notebooks.split('\n').filter(n => n);
