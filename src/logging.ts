@@ -32,7 +32,6 @@ export class Logger {
       })
       return r.status === 200 && r.data === ''
     } catch {
-      console.log('Non-fatal usage-logging error ocurred.')
       return false
     }
   }
