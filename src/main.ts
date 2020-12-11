@@ -27,7 +27,7 @@ async function run(): Promise<void> {
     // const pkg = `git+https://github.com/treebeardtech/nbmake.git@main${
     //   pathOutput ? '#egg=nbmake[html]' : ''
     // }`
-    const pkg = `nbmake${pathOutput ? '[html]' : ''}==0.2`
+    const pkg = `nbmake${pathOutput ? '[html]' : ''}==0.1`
     await exec.exec(`pip install ${pkg}`)
     core.endGroup()
 
