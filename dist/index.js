@@ -2866,7 +2866,7 @@ function run() {
             const notebooks = core.getInput('notebooks');
             const ignore = core.getInput('ignore');
             const workdir = core.getInput('workdir');
-            const pathOutput = path.resolve(core.getInput('path-output'));
+            const pathOutput = core.getInput('path-output') && path.resolve(core.getInput('path-output'));
             const verbose = core.getInput('verbose').toLowerCase() === 'true';
             const overwrite = core.getInput('overwrite').toLowerCase() === 'true';
             const extraPytestArgs = core.getInput('extra-pytest-args');
@@ -2875,7 +2875,11 @@ function run() {
                 yield exec.exec('bash', ['-c', 'pwd && ls -la']);
             }
             core.startGroup('Install test packages');
-            yield exec.exec('pip install pytest "git+https://github.com/treebeardtech/nbmake.git@main"');
+            // const pkg = `git+https://github.com/treebeardtech/nbmake.git@main${
+            //   pathOutput ? '#egg=nbmake[html]' : ''
+            // }`
+            const pkg = `nbmake${pathOutput ? '[html]' : ''}==0.1`;
+            yield exec.exec(`pip install ${pkg}`);
             core.endGroup();
             const paths = notebooks.split('\n').filter(n => n);
             const ignores = ignore.split('\n').filter(i => i);
