@@ -10,7 +10,7 @@ Tests notebooks using [nbmake](https://github.com/treebeardtech/nbmake) via pyte
 ## Quick Start
 
 ```yaml
-      - uses: "treebeardtech/nbmake@v0.2"
+      - uses: "treebeardtech/nbmake-action@v0.2"
         with:
           path: "./examples"
           html: true

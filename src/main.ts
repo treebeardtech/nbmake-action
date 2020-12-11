@@ -11,7 +11,8 @@ async function run(): Promise<void> {
     const notebooks = core.getInput('notebooks')
     const ignore = core.getInput('ignore')
     const workdir = core.getInput('workdir')
-    const pathOutput = path.resolve(core.getInput('path-output'))
+    const pathOutput =
+      core.getInput('path-output') && path.resolve(core.getInput('path-output'))
     const verbose = core.getInput('verbose').toLowerCase() === 'true'
     const overwrite = core.getInput('overwrite').toLowerCase() === 'true'
     const extraPytestArgs = core.getInput('extra-pytest-args')
@@ -23,9 +24,10 @@ async function run(): Promise<void> {
     }
 
     core.startGroup('Install test packages')
-    await exec.exec(
-      'pip install pytest "git+https://github.com/treebeardtech/nbmake.git@main"'
-    )
+    const pkg = `git+https://github.com/treebeardtech/nbmake.git@main${
+      pathOutput ? '#egg=nbmake[html]' : ''
+    }`
+    await exec.exec(`pip install ${pkg}`)
     core.endGroup()
 
     const paths = notebooks.split('\n').filter(n => n)
