@@ -1,0 +1,33 @@
+name: Action Integration Test
+
+on: [push, pull_request]
+
+jobs:
+  test-elastix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: InsightSoftwareConsortium/ITKElastix
+          ref: 9e3402f558f215c0024033c8d63ef9e081df1b45
+      - uses: actions/checkout@v2
+        with:
+          path: nbmake-action
+      - name: Set Up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - run: |
+          cd examples
+          pip install -r requirements.txt
+
+          pip install pytest-tornasync
+          python -m ipykernel install --user --name elastixenv
+          python -m ipykernel install --user --name elastixenv2
+          python -m ipykernel install --user --name itktestenvdebug
+      - uses: ./nbmake-action
+        with:
+          notebooks: examples/*.ipynb
+          path-output: .
+      - if: always()
+        run: netlify deploy --dir=_build/html --auth=${{ secrets.NETLIFY_TOKEN }} --site=${{ secrets.NETLIFY_SITE_API_ID }}

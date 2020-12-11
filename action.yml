@@ -1,0 +1,55 @@
+name: "nbmake"
+author: "treebeardtech"
+description: "Test notebooks"
+inputs:
+  notebooks:
+    description: "Newline-delimited list of glob patterns of ipynb files to test"
+    required: false
+    default: "**/*ipynb"
+
+  ignore:
+    description: >
+      Newline-delimited list of glob patterns of ipynb files to ignore. This is not the same as pytest `glob-ignore`.
+      
+      Read src/main.ts for details.
+    required: false
+    default: ""
+
+  workdir:
+    description: "workdir that pytest --nbmake is called from"
+    required: false
+    default: "."
+
+  path-output:
+    description: "Create an html report to `{path_output}_build/html`"
+    required: false
+    default: "."
+
+  overwrite:
+    description: >
+      Write notebooks back into the repo directory.
+      This allows you to commit them to the repo or run additional build tools on the outputs e.g. jupyter-book"
+    required: false
+    default: "false"
+
+  verbose:
+    description: "Show debug information"
+    required: false
+    default: "false"
+
+  extra-pytest-args:
+    description: "Newline-delimited list of pytest args"
+    required: false
+    default: ""
+    
+  open-usage-logging:
+    description: >
+      Provide usage metadata to treebeardtech when used in *open source repos*.
+      
+      This allows me to fix issues without you reporting them.
+    required: false
+    default: "true"
+
+runs:
+  using: "node12"
+  main: "dist/index.js"

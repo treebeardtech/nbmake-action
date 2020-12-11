@@ -1,0 +1,4 @@
+notebook-env: |
+  FOO='bar'
+    baz=42
+blah: true

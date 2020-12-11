@@ -1,0 +1,73 @@
+name: Action Unit Test
+
+on: [push, pull_request]
+
+jobs:
+  unit-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg:
+          - os: ubuntu-latest
+            python-version: "3.6"
+          - os: ubuntu-latest
+            python-version: "3.7"
+          - os: ubuntu-latest
+            python-version: "3.8"
+          - os: ubuntu-latest
+            python-version: "3.9"
+          - os: macos-latest
+            python-version: "3.6"
+          - os: macos-latest
+            python-version: "3.7"
+          - os: macos-latest
+            python-version: "3.8"
+          - os: macos-latest
+            python-version: "3.9"
+    runs-on: ${{ matrix.cfg.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.cfg.python-version }}
+      - uses: "./"
+        name: run_passing_nbs
+        with:
+          workdir: "./__tests__/resources"
+          notebooks: |
+            passing.ipynb
+            'sub dir/another passing.ipynb'
+          path-output: .
+          extra-pytest-args: |
+            --capture=tee-sys
+            -v
+      - uses: "./"
+        name: glob_passing_nbs
+        with:
+          workdir: "./__tests__/resources"
+          notebooks: |
+            sub dir/*
+      - uses: "./"
+        name: ignore_failing_nb
+        with:
+          workdir: "./__tests__/resources"
+          ignore: |
+            failing.ipynb
+          verbose: true
+          path-output: .
+      - uses: "./"
+        name: glob_ignore_nbs
+        with:
+          workdir: "./__tests__/resources"
+          ignore: |
+            *.ipynb
+          verbose: true
+      - uses: "./"
+        name: fail_running_all
+        id: run
+        with:
+          workdir: "./__tests__/resources"
+          verbose: true
+        continue-on-error: true
+      - run: '[[ ${{ steps.run.outcome }} == "failure" ]]'
+        shell: bash
