@@ -1,7 +1,12 @@
 # nbmake-action
 
-GitHub Action for testing notebooks
 (repo renamed from 'treebeard').
+
+**What?** A GitHub Action for testing notebooks, runs them from top-to-bottom
+
+**Why?** To raise the quality of scientific material through better automation
+
+**Who is this for?** Scientists/Developers who have written docs in notebooks and want to CI test them after every commit
 
 ## Functionality
 
