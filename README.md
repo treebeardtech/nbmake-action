@@ -12,9 +12,13 @@
 
 Tests notebooks using [nbmake](https://github.com/treebeardtech/nbmake) via pytest.
 
+**Note: If you have some experience setting up GitHub actions already you will probably prefer the flexibility of using the `nbmake` pip package directly.**
+
 ## Quick Start
 
 ```yaml
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
       - uses: "treebeardtech/nbmake-action@v0.2"
         with:
           path: "./examples"
