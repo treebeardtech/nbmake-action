@@ -30,16 +30,6 @@ Tests notebooks using [nbmake](https://github.com/treebeardtech/nbmake) via pyte
 
 See [action.yml](action.yml) for the parameters you can pass to this action, and see [unit tests](.github/workflows/action_unit_test.yml) and [integ tests](.github/workflows/action_integration_test.yml) for example invocations.
 
-## Uploading Test Reports
-
-Any static site hosting platform will work, e.g. S3, Firebase, Netlify.
-
-[Docs on using netlify](https://treebeardtech.github.io/nbmake/landing-page.html#run-and-upload-report-on-github-actions-using-netlify)
-
-### HTML Report Example
-
-![HTML Report](docs/screen.png)
-
 ## Developing
 
 ### Install local package
