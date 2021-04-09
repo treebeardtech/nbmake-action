@@ -29,5 +29,3 @@ jobs:
         with:
           notebooks: examples/*.ipynb
           path-output: .
-      - if: always()
-        run: netlify deploy --dir=_build/html --auth=${{ secrets.NETLIFY_TOKEN }} --site=${{ secrets.NETLIFY_SITE_API_ID }}
