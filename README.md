@@ -1,3 +1,5 @@
+**⚠️ Please use [nbmake](https://github.com/treebeardtech/nbmake) instead**
+
 # nbmake-action
 
 (repo renamed from 'treebeard').
